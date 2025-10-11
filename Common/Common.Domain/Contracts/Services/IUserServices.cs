@@ -9,5 +9,6 @@ namespace Common.Domain.Contracts.Services
         string GenerateToken(Claim[] claims);
 
         string HashPassword(string password);
+        bool VerifyPassword(string password, string hashedPassword);
     }
 }

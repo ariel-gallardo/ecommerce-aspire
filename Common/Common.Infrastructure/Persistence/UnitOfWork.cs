@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
 using Common.Domain.DTOS.Base.Contracts;
+using Common.Domain.DTOS.Base.Entities;
 using Common.Domain.Entities.Contracts;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
@@ -26,6 +27,7 @@ namespace Common.Infrastructure
             _usrServices = userServices;
         }
 
+        #region ABM
         public async Task AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken)
             where OnDB : class, IEntity, IIdentifiable, IAuditable
         {
@@ -82,7 +84,9 @@ namespace Common.Infrastructure
                 throw new EntityNotFoundException(typeof(OnDB).Name, ActionEnum.Delete, id, ex);
             }
         }
+        #endregion
 
+        #region FindById
         public async Task<bool> ExistsById<OnDB>(Guid id, CancellationToken cancellationToken)
         where OnDB : class, IIdentifiable
         => await _ctx.Set<OnDB>().AsNoTracking().Where(x => x.Id == id).AnyAsync(cancellationToken);
@@ -95,7 +99,9 @@ namespace Common.Infrastructure
             where OnDB : class, IIdentifiable
             where OnDTO : class, IIdentifiableDTO, IAuditableDTO
             => await _ctx.Set<OnDB>().AsNoTracking().Where(x => x.Id == id).ProjectTo<OnDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+        #endregion
 
+        #region Expressions
         public async Task<List<OnDB>> GetAllAsync<OnDB>(Expression<Func<OnDB, bool>> where, CancellationToken cancellationToken)
             where OnDB : class, IEntity, IIdentifiable, IAuditable
              => await _ctx.Set<OnDB>().AsNoTracking().Where(where).ToListAsync(cancellationToken);
@@ -104,7 +110,27 @@ namespace Common.Infrastructure
             where OnDB : class, IEntity, IIdentifiable, IAuditable
             where OnDTO : class, IEntityDTO, IIdentifiableDTO, IAuditableDTO
              => await _ctx.Set<OnDB>().AsNoTracking().Where(where).ProjectTo<OnDTO>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
+        #endregion
 
+        #region QuerieFilters
+        public async Task<OnDB?> FirstOrDefaultByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        where OnDB : class, IEntity, IIdentifiable, IAuditable
+        => await _ctx.Set<OnDB>().Where(filters.Expressions).FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<OnDTO?> FirstOrDefaultByQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        where OnDB : class, IEntity, IIdentifiable, IAuditable
+        where OnDTO : class, IEntityDTO, IIdentifiableDTO, IAuditableDTO
+        => await _ctx.Set<OnDB>().Where(filters.Expressions).ProjectTo<OnDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<List<OnDB>> GetAllByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        where OnDB : class, IEntity, IIdentifiable, IAuditable
+        => await _ctx.Set<OnDB>().Where(filters.Expressions).ToListAsync(cancellationToken);
+
+        public async Task<List<OnDTO>> GetAllQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        where OnDB : class, IEntity, IIdentifiable, IAuditable
+        where OnDTO : class, IEntityDTO, IIdentifiableDTO, IAuditableDTO
+        => await _ctx.Set<OnDB>().Where(filters.Expressions).ProjectTo<OnDTO>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
+        #endregion
 
         #region Transaction
         public async Task BeginTransaction(CancellationToken cancellationToken)

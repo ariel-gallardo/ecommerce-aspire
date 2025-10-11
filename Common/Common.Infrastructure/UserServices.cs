@@ -1,5 +1,7 @@
 ﻿using Common.Domain.Configurations;
+using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
+using Common.Domain.DTOS.Entities.User;
 using Common.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -14,14 +16,16 @@ namespace Common.Infrastructure
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppSettings _appSettings;
+        private readonly IUnitOfWork _unitOfWork;
 
         private ClaimsPrincipal User => _httpContextAccessor.HttpContext.User;
 
 
-        public UserServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings)
+        public UserServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IUnitOfWork unitOfWork)
         {
             _httpContextAccessor = httpContext;
             _appSettings = appSettings.Value;
+            _unitOfWork = unitOfWork;
         }
 
         public string? ClaimValue(string claimType)
@@ -60,5 +64,13 @@ namespace Common.Infrastructure
 
         public string HashPassword(string password)
         => BCrypt.Net.BCrypt.HashPassword(password, BCrypt.Net.BCrypt.GenerateSalt());
+
+        public bool VerifyPassword(string password, string hashedPassword)
+        => BCrypt.Net.BCrypt.Verify(password, hashedPassword);
+
+        public string AuthUser(UserLoginDTO dto)
+        {
+            _unitOfWork.FirstOrDefaultByIdAsync
+        }
     }
 }
