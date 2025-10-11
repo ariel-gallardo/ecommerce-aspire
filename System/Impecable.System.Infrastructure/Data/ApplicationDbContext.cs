@@ -12,7 +12,7 @@ namespace Impecable.System.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var infraAssembly = Assembly.LoadWithPartialName("Base.Infrastructure");
+            var infraAssembly = Assembly.LoadWithPartialName("Common.Infrastructure");
             var assembly = Assembly.GetExecutingAssembly();
             modelBuilder.ApplyConfigurationsFromAssembly(infraAssembly);
             modelBuilder.ApplyConfigurationsFromAssembly(assembly);

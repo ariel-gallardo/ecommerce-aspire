@@ -1,6 +1,6 @@
 ﻿using Common.Domain.DTOS.Base.Entities;
 
-namespace Common.Domain.DTOS.Entities
+namespace Application.DTOS.Entities
 {
     public class AddressDTO : DTO
     {

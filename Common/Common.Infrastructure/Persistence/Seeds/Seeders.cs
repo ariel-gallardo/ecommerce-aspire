@@ -15,7 +15,7 @@ namespace Common.Infrastructure.Persistence.Seeds
         #region User
         private static List<User> _users = new List<User>();
 
-        private static void GenerateUsers(IUserServices userServices)
+        private static void GenerateUsers(IAuthServices userServices)
         {
             _users.AddRange(Enumerable.Range(1, _quantity).Select(x =>
             {
@@ -24,7 +24,7 @@ namespace Common.Infrastructure.Persistence.Seeds
                 {
                     Id = Guid.NewGuid(),
                     Email = $"user_email_{x}@mail.com",
-                    Userame = $"user_name_{x}",
+                    Username = $"user_name_{x}",
                     Password = userServices.HashPassword("123456aA$"),
                 };
             }));
@@ -74,7 +74,7 @@ namespace Common.Infrastructure.Persistence.Seeds
 
         #endregion
 
-        private static void Generators(DbContext context, IUserServices userServices)
+        private static void Generators(DbContext context, IAuthServices userServices)
         {
             GenerateUsers(userServices);
             GeneratePeopleWithAddressAndCoordinates();
@@ -84,7 +84,7 @@ namespace Common.Infrastructure.Persistence.Seeds
             context.AddRange(_users);
         }
 
-        public static void Seed(DbContext context, IUserServices userService, IOptions<AppSettings> appSettings)
+        public static void Seed(DbContext context, IAuthServices userService, IOptions<AppSettings> appSettings)
         {
             _random = new Random();
             _quantity = appSettings.Value.Development.QuantityToGenerate;

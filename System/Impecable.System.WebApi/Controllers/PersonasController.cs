@@ -1,4 +1,4 @@
-﻿using Common.Domain.DTOS.Entities;
+﻿using Application.DTOS.Entities;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Impecable.System.WebApi.Controllers

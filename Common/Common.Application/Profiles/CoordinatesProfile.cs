@@ -1,6 +1,6 @@
 ﻿
 using AutoMapper;
-using Common.Domain.DTOS.Entities;
+using Application.DTOS.Entities;
 using Common.Domain.ValueObjects;
 
 namespace Base.Application.Profiles

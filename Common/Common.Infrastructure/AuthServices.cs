@@ -1,7 +1,7 @@
-﻿using Common.Domain.Configurations;
+﻿using AutoMapper;
+using Common.Domain.Configurations;
 using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
-using Common.Domain.DTOS.Entities.User;
 using Common.Domain.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
@@ -12,20 +12,21 @@ using System.Text;
 
 namespace Common.Infrastructure
 {
-    public class UserServices : IUserServices
+    public class AuthServices : IAuthServices
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppSettings _appSettings;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
         private ClaimsPrincipal User => _httpContextAccessor.HttpContext.User;
 
 
-        public UserServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IUnitOfWork unitOfWork)
+        public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IMapper mapper)
         {
             _httpContextAccessor = httpContext;
             _appSettings = appSettings.Value;
-            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
         public string? ClaimValue(string claimType)
@@ -59,7 +60,7 @@ namespace Common.Infrastructure
                 signingCredentials: creds
             );
 
-            return new JwtSecurityTokenHandler().WriteToken(token);
+            return $"Bearer {new JwtSecurityTokenHandler().WriteToken(token)}";
         }
 
         public string HashPassword(string password)
@@ -68,9 +69,5 @@ namespace Common.Infrastructure
         public bool VerifyPassword(string password, string hashedPassword)
         => BCrypt.Net.BCrypt.Verify(password, hashedPassword);
 
-        public string AuthUser(UserLoginDTO dto)
-        {
-            _unitOfWork.FirstOrDefaultByIdAsync
-        }
     }
 }

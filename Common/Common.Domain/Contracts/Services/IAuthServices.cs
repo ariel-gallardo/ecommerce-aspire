@@ -2,7 +2,7 @@
 
 namespace Common.Domain.Contracts.Services
 {
-    public interface IUserServices
+    public interface IAuthServices
     {
         Guid Id { get; }
         string? ClaimValue(string claimType);

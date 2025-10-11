@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.DTOS.Entities.User
+﻿namespace Application.DTOS.Entities.User
 {
     public class UserRegisterDTO : UserDTO
     {

@@ -9,11 +9,11 @@ namespace Common.Infrastructure.Persistence.Configurations
         {
             ConfigureIdentifiable(builder);
 
-            builder.Property(x => x.Userame).IsRequired(true);
+            builder.Property(x => x.Username).IsRequired(true);
             builder.Property(x => x.Email).IsRequired(true);
             builder.Property(x => x.Password).IsRequired(true);
 
-            builder.HasIndex(x => x.Userame).IsUnique();
+            builder.HasIndex(x => x.Username).IsUnique();
             builder.HasIndex(x => x.Email).IsUnique();
             builder.HasIndex(x => x.Password);
 

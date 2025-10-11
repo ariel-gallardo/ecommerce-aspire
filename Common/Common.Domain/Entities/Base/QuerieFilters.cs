@@ -10,7 +10,7 @@ namespace Common.Domain.Entities.Base
         {
             get
             {
-                var expressions = GetExpressions();
+                var expressions = GetExpressions().ToList();
 
                 if (!expressions.Any())
                     return x => true;
@@ -32,26 +32,32 @@ namespace Common.Domain.Entities.Base
 
         protected virtual IEnumerable<Expression<Func<T, bool>>> GetExpressions()
         {
-            var props = GetType()
-                .GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(p => typeof(Expression<Func<T, bool>>).IsAssignableFrom(p.PropertyType));
+            var type = GetType();
 
-            foreach (var prop in props)
+            // Campos
+            foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                var value = prop.GetValue(this) as Expression<Func<T, bool>>;
-                if (value != null)
-                    yield return value;
+                if (typeof(Expression<Func<T, bool>>).IsAssignableFrom(field.FieldType))
+                {
+                    var value = field.GetValue(this) as Expression<Func<T, bool>>;
+                    if (value != null)
+                        yield return value;
+                }
             }
 
-            var fields = GetType()
-                .GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                .Where(f => typeof(Expression<Func<T, bool>>).IsAssignableFrom(f.FieldType));
-
-            foreach (var field in fields)
+            // Propiedades
+            foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
-                var value = field.GetValue(this) as Expression<Func<T, bool>>;
-                if (value != null)
-                    yield return value;
+                // Ignoramos la propiedad Expressions para evitar stackoverflow
+                if (prop.Name == nameof(Expressions))
+                    continue;
+
+                if (typeof(Expression<Func<T, bool>>).IsAssignableFrom(prop.PropertyType))
+                {
+                    var value = prop.GetValue(this) as Expression<Func<T, bool>>;
+                    if (value != null)
+                        yield return value;
+                }
             }
         }
 

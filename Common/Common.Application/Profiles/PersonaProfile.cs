@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Domain.DTOS.Entities;
+using Application.DTOS.Entities;
 using Common.Domain.Entities;
 
 namespace Base.Application.Profiles
