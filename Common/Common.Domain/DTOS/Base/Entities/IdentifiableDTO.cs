@@ -4,6 +4,6 @@ namespace Common.Domain.DTOS.Base.Entities
 {
     public class IdentifiableDTO : DTO, IIdentifiableDTO
     {
-        public Guid Id { get; set; }
+        public string Id { get; set; }
     }
 }

@@ -4,19 +4,19 @@ namespace Common.Domain.DTOS.Base.Entities
 {
     public class AuditableDTO : IdentifiableDTO, IAuditableDTO
     {
-        public Guid CreatedById { get; set; }
-        public Guid? UpdatedById { get; set; }
-        public Guid? DeletedById { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime? UpdatedAt { get; set; }
-        public DateTime? DeletedAt { get; set; }
+        public string CreatedById { get; set; }
+        public string UpdatedById { get; set; }
+        public string DeletedById { get; set; }
+        public string CreatedAt { get; set; }
+        public string UpdatedAt { get; set; }
+        public string DeletedAt { get; set; }
 
         public override bool Equals(object? obj)
         {
             return obj is AuditableDTO dTO &&
-                   CreatedById.Equals(dTO.CreatedById) &&
-                   EqualityComparer<Guid?>.Default.Equals(UpdatedById, dTO.UpdatedById) &&
-                   EqualityComparer<Guid?>.Default.Equals(DeletedById, dTO.DeletedById) &&
+                   CreatedById == dTO.CreatedById &&
+                   UpdatedById == dTO.UpdatedById &&
+                   DeletedById == dTO.DeletedById &&
                    CreatedAt == dTO.CreatedAt &&
                    UpdatedAt == dTO.UpdatedAt &&
                    DeletedAt == dTO.DeletedAt;
@@ -24,7 +24,7 @@ namespace Common.Domain.DTOS.Base.Entities
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(Id, CreatedById, UpdatedById, DeletedById, CreatedAt, UpdatedAt, DeletedAt);
+            return HashCode.Combine(CreatedById, UpdatedById, DeletedById, CreatedAt, UpdatedAt, DeletedAt);
         }
     }
 }

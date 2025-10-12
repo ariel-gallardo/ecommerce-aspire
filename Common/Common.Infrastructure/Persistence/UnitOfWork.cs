@@ -36,6 +36,16 @@ namespace Common.Infrastructure
             {
                 a.CreatedAt = DateTime.UtcNow;
                 a.CreatedById = _usrServices.Id;
+                _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
+                _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
+                await _ctx.AddAsync(a, cancellationToken);
+                await _ctx.SaveChangesAsync(cancellationToken);
+                return;
             }
             await _ctx.AddAsync(entity, cancellationToken);
             await _ctx.SaveChangesAsync(cancellationToken);
@@ -54,10 +64,20 @@ namespace Common.Infrastructure
                 if (!await ExistsById<OnDB>(iE.Id, cancellationToken))
                     throw new EntityNotFoundException(typeof(OnDB).Name, ActionEnum.Update, iE.Id);
             }
-            if (entity is IAuditable aE)
+            if (entity is IAuditable a)
             {
-                aE.UpdatedById = _usrServices.Id;
-                aE.UpdatedAt = DateTime.UtcNow;
+                a.UpdatedById = _usrServices.Id;
+                a.UpdatedAt = DateTime.UtcNow;
+                _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
+                _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
+                _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+                _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
+                _ctx.Update(a);
+                await _ctx.SaveChangesAsync(cancellationToken);
+                return;
             }
             _ctx.Update(entity);
             await _ctx.SaveChangesAsync(cancellationToken);
@@ -73,11 +93,21 @@ namespace Common.Infrastructure
         {
             try
             {
-                var entity = await _ctx.Set<OnDB>().FirstAsync(x => x.Id == id, cancellationToken);
-                if (entity is IAuditable iE)
+                var entity = await _ctx.Set<OnDB>().FirstAsync(x => Guid.Parse(x.Id) == id, cancellationToken);
+                if (entity is IAuditable a)
                 {
-                    iE.DeletedById = _usrServices.Id;
-                    iE.DeletedAt = DateTime.UtcNow;
+                    a.DeletedById = _usrServices.Id;
+                    a.DeletedAt = DateTime.UtcNow;
+                    _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
+                    _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+                    _ctx.Update(entity);
+                    await _ctx.SaveChangesAsync(cancellationToken);
+                    return;
                 }
             }
             catch (Exception ex) 

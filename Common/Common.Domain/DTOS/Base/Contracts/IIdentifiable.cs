@@ -2,6 +2,6 @@
 {
     public interface IIdentifiableDTO : IEntityDTO
     {
-        Guid Id { get; set; }
+        string Id { get; set; }
     }
 }
