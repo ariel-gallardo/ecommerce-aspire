@@ -16,7 +16,8 @@ namespace Common.Api
         private static Assembly[] _autoMapperAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _validatorAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _serviceAssemblies = Array.Empty<Assembly>();
-        private static Assembly[] _seederAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _seederDevAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _jsonConverterAssemblies = Array.Empty<Assembly>();
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
             _autoMapperAssemblies = assemblies;
@@ -34,32 +35,38 @@ namespace Common.Api
             return builder;
         }
 
-        public static WebApplicationBuilder AddSeederDevelopmentAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        public static WebApplicationBuilder AddJsonConverterAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            if (builder.Environment.IsDevelopment())
-            {
-                _seederAssemblies = assemblies;
-
-                var seederTypes = assemblies
-                    .SelectMany(a => a.GetTypes())
-                    .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract).ToList();
-                foreach (var type in seederTypes)
-                {
-                    builder.Services.AddScoped(type);
-                }
-                var types = new Assembly[] { typeof(UserSeeder).Assembly }.Concat(assemblies).SelectMany(a => a.GetTypes())
-                    .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
-                foreach (var type in types)
-                    builder.Services.AddScoped(type);
-
-                builder.Services.AddScoped(sp =>
-                {
-                    var context = sp.GetRequiredService<DbContext>();
-                    return new SeedersRunner(sp, context, types);
-                });
-            }
+            _serviceAssemblies = assemblies;
             return builder;
         }
+
+        public static WebApplicationBuilder AddSeederDevelopmentAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _seederDevAssemblies = assemblies;
+            return builder;
+        }
+
+        private static void UseSeederIfDevelopment(this WebApplication app, IHostEnvironment env)
+        {
+            if (env.IsDevelopment()) 
+            {
+                using var scope = app.Services.CreateScope();
+                var seedRunner = scope.ServiceProvider.GetRequiredService<SeedersRunner>();
+                seedRunner.RunAsync().GetAwaiter().GetResult();
+            }
+
+        }
+
+        private static void UseSwaggerIfDevelopment(this WebApplication app)
+        {
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+        }
+
         public static WebApplication BuildApi<DBContext>(this WebApplicationBuilder builder)  where DBContext : DbContext
         {
             var env = builder.Environment;
@@ -68,19 +75,11 @@ namespace Common.Api
             builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
+            builder.Services.AddApplicationDevelopmentSeeders(env, _seederDevAssemblies);
             builder.Services.AddApi();
-
             var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                using var scope = app.Services.CreateScope();
-                var seedRunner = scope.ServiceProvider.GetRequiredService<SeedersRunner>();
-                seedRunner.RunAsync().GetAwaiter().GetResult();
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
+            app.UseSeederIfDevelopment(env);
+            app.UseSwaggerIfDevelopment();
             app.UseHttpsRedirection();
             app.UseAuthorization();
             app.MapControllers();

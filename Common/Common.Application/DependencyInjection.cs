@@ -2,8 +2,13 @@
 using Common.Application.Rules;
 using Common.Domain.Contracts.Services;
 using Common.Infrastructure;
+using Common.Infrastructure.Persistence.Seeds;
+using Common.Infrastructure.Persistence.Seeds.Base;
+using Common.Infrastructure.Persistence.Seeds.Entities;
 using FluentValidation;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace Common.Application
@@ -45,6 +50,30 @@ namespace Common.Application
                     foreach (var i in interfaces)
                         services.AddTransient(i, type);
                 }
+            }
+            return services;
+        }
+
+        public static IServiceCollection AddApplicationDevelopmentSeeders(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
+        {
+            if (env.IsDevelopment())
+            {
+                var seederTypes = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
+
+                foreach (var type in seederTypes) services.AddScoped(type);
+                
+                var types = new Assembly[] { typeof(UserSeeder).Assembly }.Concat(assemblies).SelectMany(a => a.GetTypes())
+                    .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
+                foreach (var type in types)
+                    services.AddScoped(type);
+
+                services.AddScoped(sp =>
+                {
+                    var context = sp.GetRequiredService<DbContext>();
+                    return new SeedersRunner(sp, context, types);
+                });
             }
             return services;
         }
