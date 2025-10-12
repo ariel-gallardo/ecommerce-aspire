@@ -1,4 +1,7 @@
-﻿namespace Common.Domain.Entities.Contracts
+﻿using Common.Contracts.Entities;
+using Common.Domain.Entities;
+
+namespace Common.Domain.Contracts.Entities
 {
     public interface IAuditable : IIdentifiable
     {

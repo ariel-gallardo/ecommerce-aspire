@@ -1,6 +1,7 @@
 ﻿using System.Linq.Expressions;
+using Common.Contracts.Entities;
 
-namespace Common.Domain.Entities.Contracts
+namespace Common.Contracts.Queries
 {
     public interface IQuerieFilters<T> where T : class, IEntity
     {

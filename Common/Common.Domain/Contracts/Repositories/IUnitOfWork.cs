@@ -1,10 +1,12 @@
-﻿using Common.Domain.DTOS.Base.Contracts;
-using Common.Domain.Entities.Contracts;
+﻿using Common.Contracts;
+using Common.Contracts.DTOS;
+using Common.Contracts.Entities;
+using Common.Contracts.Queries;
 using System.Linq.Expressions;
 
 namespace Common.Domain.Contracts.Repositories
 {
-    public interface IUnitOfWork
+    public interface IUnitOfWork : IScoped
     {
         #region ABM
         Task AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 

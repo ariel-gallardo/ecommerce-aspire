@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
-using Application.DTOS.Entities.User;
+using Common.Application.DTOS.Entities.User;
 using System.Security.Claims;
 using Common.Domain.Filters.Queries;
 using Common.Domain.Entities;
 using Common.Domain.Enums;
 
-namespace Base.Application.Profiles
+namespace Common.Application.Profiles
 {
     public class UserProfile : Profile
     {

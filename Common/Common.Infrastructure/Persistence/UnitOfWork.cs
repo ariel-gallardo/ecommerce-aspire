@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Contracts.DTOS;
+using Common.Contracts.Entities;
+using Common.Contracts.Queries;
+using Common.Domain.Contracts.Entities;
 using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
-using Common.Domain.DTOS.Base.Contracts;
-using Common.Domain.DTOS.Base.Entities;
-using Common.Domain.Entities.Base;
-using Common.Domain.Entities.Contracts;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
 using Microsoft.EntityFrameworkCore;

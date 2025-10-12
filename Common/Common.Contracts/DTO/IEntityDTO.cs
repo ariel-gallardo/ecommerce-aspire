@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.DTOS.Base.Contracts
+﻿namespace Common.Contracts.DTOS
 {
     public interface IEntityDTO
     {

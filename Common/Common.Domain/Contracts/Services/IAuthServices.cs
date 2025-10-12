@@ -1,8 +1,9 @@
-﻿using System.Security.Claims;
+﻿using Common.Contracts;
+using System.Security.Claims;
 
 namespace Common.Domain.Contracts.Services
 {
-    public interface IAuthServices
+    public interface IAuthServices : IScoped
     {
         Guid Id { get; }
         string? ClaimValue(string claimType);

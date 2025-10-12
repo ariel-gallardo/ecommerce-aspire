@@ -1,9 +1,9 @@
 ﻿
 using AutoMapper;
-using Application.DTOS.Entities;
+using Common.Application.DTOS.Entities;
 using Common.Domain.ValueObjects;
 
-namespace Base.Application.Profiles
+namespace Common.Application.Profiles
 {
     public class CoordinatesProfile : Profile
     {

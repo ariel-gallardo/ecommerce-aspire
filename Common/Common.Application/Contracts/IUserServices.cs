@@ -1,9 +1,10 @@
-﻿using Application.DTOS.Entities.User;
+﻿using Common.Application.DTOS.Entities.User;
+using Common.Contracts;
 using Common.Domain.DTOS.Base.Entities;
 
-namespace Application.Contracts.Services
+namespace Common.Application.Contracts.Services
 {
-    public interface IUserServices
+    public interface IUserServices : IScoped
     {
         Task<Response> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken);
     }

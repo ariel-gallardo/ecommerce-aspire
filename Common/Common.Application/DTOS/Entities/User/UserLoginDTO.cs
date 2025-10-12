@@ -1,4 +1,4 @@
-﻿namespace Application.DTOS.Entities.User
+﻿namespace Common.Application.DTOS.Entities.User
 {
     public class UserLoginDTO
     {

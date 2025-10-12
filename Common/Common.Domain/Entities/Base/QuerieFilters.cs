@@ -1,4 +1,5 @@
-﻿using Common.Domain.Entities.Contracts;
+﻿using Common.Contracts.Entities;
+using Common.Contracts.Queries;
 using System.Linq.Expressions;
 using System.Reflection;
 

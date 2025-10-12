@@ -1,7 +1,7 @@
 ﻿using Common.Domain.DTOS.Base.Entities;
 using System.Text.Json.Serialization;
 
-namespace Application.DTOS.Entities.User
+namespace Common.Application.DTOS.Entities.User
 {
     public class UserDTO : AuditableDTO
     {

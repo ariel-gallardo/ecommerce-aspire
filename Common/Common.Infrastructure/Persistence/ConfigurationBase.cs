@@ -1,5 +1,6 @@
-﻿using Common.Domain.Entities.Base;
-using Common.Domain.Entities.Contracts;
+﻿using Common.Contracts.Entities;
+using Common.Domain.Contracts.Entities;
+using Common.Domain.Entities.Base;
 using Common.Infrastructure.Factory;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;

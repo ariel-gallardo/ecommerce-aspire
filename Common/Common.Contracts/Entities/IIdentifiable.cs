@@ -1,4 +1,4 @@
-﻿namespace Common.Domain.Entities.Contracts
+﻿namespace Common.Contracts.Entities
 {
     public interface IIdentifiable : IEntity
     {
