@@ -23,7 +23,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\..\Common\Common.Infrastructure\Common.Infrastructure.csproj" />
-    <ProjectReference Include="..\..\Common\Common.SwaggerExamples\Common.Api.csproj" />
+    <ProjectReference Include="..\..\Common\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Impecable.Application\Impecable.Application.csproj" />
     <ProjectReference Include="..\Impecable.Infrastructure\Impecable.Infrastructure.csproj" />
   </ItemGroup>
