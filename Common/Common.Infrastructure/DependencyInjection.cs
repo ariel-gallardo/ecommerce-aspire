@@ -1,9 +1,11 @@
 ﻿using Common.Domain.Contracts.Repositories;
-using Common.Domain.Contracts.Services;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds;
+using Common.Infrastructure.Persistence.Seeds.Base;
+using Common.Infrastructure.Persistence.Seeds.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.DependencyInjection;
+using System.Reflection;
 
 namespace Common.Infrastructure
 {
@@ -21,23 +23,8 @@ namespace Common.Infrastructure
             });
             services.AddScoped<DbContext, IDBContext>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
-            return services;
-        }
 
-        public static WebApplication ConfigureDevelopmentSeeders<IDBContext>(this WebApplication app) where IDBContext : DbContext
-        {
-            if (app.Environment.IsDevelopment())
-            {
-                using (var scope = app.Services.CreateScope())
-                {
-                    var services = scope.ServiceProvider;
-                    var context = services.GetRequiredService<IDBContext>();
-                    var userService = services.GetRequiredService<IAuthServices>();
-                    var appSettings = services.GetRequiredService<IOptions<AppSettings>>();
-                    Seeders.Seed(context, userService, appSettings);
-                }
-            }
-            return app;
+            return services;
         }
     }
 }
