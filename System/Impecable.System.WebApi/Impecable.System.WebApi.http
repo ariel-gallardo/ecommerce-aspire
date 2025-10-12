@@ -1,6 +1,0 @@
-@Impecable.System.WebApi_HostAddress = http://localhost:5117
-
-GET {{Impecable.System.WebApi_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

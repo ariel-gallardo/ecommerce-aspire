@@ -1,7 +1,7 @@
-﻿using Common.Domain.Configurations;
-using Common.Domain.Contracts.Services;
+﻿using Common.Domain.Contracts.Services;
 using Common.Domain.Entities;
 using Common.Domain.ValueObjects;
+using Common.Infrastructure.Configurations;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 

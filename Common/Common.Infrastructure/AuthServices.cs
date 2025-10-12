@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using Common.Domain.Configurations;
 using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
 using Common.Domain.Exceptions;
-using Microsoft.AspNetCore.Http;
+using Common.Infrastructure.Configurations;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
