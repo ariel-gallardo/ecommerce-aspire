@@ -1,5 +1,9 @@
-﻿using Common.Api.Filters;
+﻿using Common.Api.CustomAttributes;
+using Common.Api.Filters.FluentValidation;
+using Common.Api.Filters.Swagger;
 using Common.Api.SwaggerExamples.UserLogin;
+using Common.Contracts.DTOS;
+using Common.Domain.Contracts.Entities;
 using FluentValidation.AspNetCore;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Filters;
@@ -25,7 +29,13 @@ namespace Common.Api
             services.AddFluentValidationAutoValidation();
             services.AddSwaggerExamplesFromAssemblies(typeof(UserLoginRequestExample).Assembly);
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen(c => { c.ExampleFilters();});
+            services.AddSwaggerGen(c => 
+                {
+                    c.ExampleFilters();
+                    c.SchemaFilter<IgnorePropertiesSwaggerFilter<IAuditableDTO,IgnoreAuditableAttribute>>();
+                    c.SchemaFilter<IgnorePropertiesSwaggerFilter<IIdentifiableDTO,IgnoreIdentifiableAttribute>>();
+                }
+            );
             return services;
         }
     }
