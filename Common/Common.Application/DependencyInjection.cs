@@ -32,11 +32,14 @@ namespace Common.Application
             var defaultValidatorAssemblies = new[] { typeof(UserLoginDTOValidator).Assembly };
             return services.AddValidatorsFromAssemblies(addDefaultAssemblies ? defaultValidatorAssemblies.Concat(assemblies) : assemblies);
         }
-        public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
+        public static IServiceCollection AddApplicationServices(this IServiceCollection services, bool addDefaultAssemblies, params Assembly[] assemblies) 
         {
+            var defaultAssemblies = new Assembly[] { typeof(AuthServices).Assembly, typeof(UserServices).Assembly };
+            var currentAssemblies = addDefaultAssemblies ? defaultAssemblies.Concat(assemblies) : defaultAssemblies;
+
             services.AddHttpContextAccessor();
 
-            var allTypes = assemblies.Concat(new Assembly[] { typeof(AuthServices).Assembly, typeof(UserServices).Assembly })
+            var allTypes = currentAssemblies
             .SelectMany(a => a.GetTypes())
             .Where(t => t.IsClass && !t.IsAbstract &&
                    (

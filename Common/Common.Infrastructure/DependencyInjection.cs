@@ -22,8 +22,6 @@ namespace Common.Infrastructure
                 }
             });
             services.AddScoped<DbContext, IDBContext>();
-            //services.AddScoped<IUnitOfWork, UnitOfWork>();
-
             return services;
         }
     }
