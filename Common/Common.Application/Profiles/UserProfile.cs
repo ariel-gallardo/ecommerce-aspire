@@ -1,22 +1,21 @@
 ﻿using AutoMapper;
 using Common.Application.DTOS.Entities.User;
-using Common.Domain.Contracts.Services;
+using Common.Application.Profiles.Resolvers;
 using Common.Domain.Entities;
 using Common.Domain.Enums;
 using Common.Domain.Filters.Queries;
-using Common.Infrastructure;
 using System.Security.Claims;
 
 namespace Common.Application.Profiles
 {
     public class UserProfile : Profile
     {
-        public UserProfile(IAuthServices authServices) : base()
+        public UserProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<UserLoginDTO, UserQuerieFilters>();
             CreateMap<UserRegisterDTO, UserQuerieFilters>();
-            CreateMap<UserRegisterDTO, User>().ForMember(dest => dest.Password, opt => opt.MapFrom(src => authServices.HashPassword(src.Password)));
+            CreateMap<UserRegisterDTO, User>().ForMember(dest => dest.Password, opt => opt.MapFrom<PasswordHashResolver>());
             #region Claims
             CreateMap<User, Claim[]>()
                 .ConvertUsing((user, ctx) =>

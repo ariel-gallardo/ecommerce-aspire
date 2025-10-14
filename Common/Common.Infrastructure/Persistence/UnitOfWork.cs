@@ -29,7 +29,7 @@ namespace Common.Infrastructure
         }
 
         #region ABM
-        public async Task AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken)
+        public async Task<OnDB> AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken)
             where OnDB : class, IIdentifiable
         {
             if(entity is IAuditable a)
@@ -45,18 +45,20 @@ namespace Common.Infrastructure
                 _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 await _ctx.AddAsync(a, cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
-                return;
+                return entity;
             }
             await _ctx.AddAsync(entity, cancellationToken);
             await _ctx.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public async Task AddAsync<OnDTO,OnDB>(OnDTO entity, CancellationToken cancellationToken)
+        public async Task<OnResult> AddAsync<OnDTO,OnDB,OnResult>(OnDTO entity, CancellationToken cancellationToken)
             where OnDTO : class, IIdentifiableDTO
             where OnDB : class, IIdentifiable
-            => await AddAsync(_map.Map<OnDB>(entity), cancellationToken);
+            where OnResult : class
+            => _map.Map<OnResult>(await AddAsync(_map.Map<OnDB>(entity), cancellationToken));
 
-        public async Task UpdateAsync<OnDB>(OnDB entity, CancellationToken cancellationToken)
+        public async Task<OnDB> UpdateAsync<OnDB>(OnDB entity, CancellationToken cancellationToken)
             where OnDB : class, IIdentifiable
         {
             if (entity is IIdentifiable iE)
@@ -77,16 +79,18 @@ namespace Common.Infrastructure
                 _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 _ctx.Update(a);
                 await _ctx.SaveChangesAsync(cancellationToken);
-                return;
+                return entity;
             }
             _ctx.Update(entity);
             await _ctx.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public async Task UpdateAsync<OnDTO, OnDB>(OnDTO entity, CancellationToken cancellationToken)
+        public async Task<OnResult> UpdateAsync<OnDTO, OnDB,OnResult>(OnDTO entity, CancellationToken cancellationToken)
             where OnDTO : class, IIdentifiableDTO
             where OnDB : class, IIdentifiable
-            => await UpdateAsync(_map.Map<OnDB>(entity), cancellationToken);
+            where OnResult : class
+            => _map.Map<OnResult>(await UpdateAsync(_map.Map<OnDB>(entity), cancellationToken));
 
         public async Task DeleteAsync<OnDB>(Guid id, CancellationToken cancellationToken)
             where OnDB : class, IIdentifiableDTO

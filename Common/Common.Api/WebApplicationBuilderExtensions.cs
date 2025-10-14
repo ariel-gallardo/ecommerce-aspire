@@ -1,8 +1,6 @@
 ﻿using Common.Application;
 using Common.Infrastructure;
 using Common.Infrastructure.Persistence.Seeds;
-using Common.Infrastructure.Persistence.Seeds.Base;
-using Common.Infrastructure.Persistence.Seeds.Entities;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -47,17 +45,6 @@ namespace Common.Api
             return builder;
         }
 
-        private static void UseSeederIfDevelopment(this WebApplication app, IHostEnvironment env)
-        {
-            if (env.IsDevelopment()) 
-            {
-                using var scope = app.Services.CreateScope();
-                var seedRunner = scope.ServiceProvider.GetRequiredService<SeedersRunner>();
-                seedRunner.RunAsync().GetAwaiter().GetResult();
-            }
-
-        }
-
         private static void UseSwaggerIfDevelopment(this WebApplication app)
         {
             if (app.Environment.IsDevelopment())
@@ -70,7 +57,6 @@ namespace Common.Api
         public static WebApplication BuildApi<DBContext>(this WebApplicationBuilder builder)  where DBContext : DbContext
         {
             var env = builder.Environment;
-
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env);
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationDevelopmentSeeders(env, _seederDevAssemblies);
@@ -78,7 +64,6 @@ namespace Common.Api
             builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddApi();
             var app = builder.Build();
-            app.UseSeederIfDevelopment(env);
             app.UseSwaggerIfDevelopment();
             app.UseHttpsRedirection();
             app.UseAuthorization();

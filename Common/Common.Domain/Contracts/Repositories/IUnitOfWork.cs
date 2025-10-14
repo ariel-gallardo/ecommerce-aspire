@@ -9,16 +9,18 @@ namespace Common.Domain.Contracts.Repositories
     public interface IUnitOfWork : IScoped
     {
         #region ABM
-        Task AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
+        Task<OnDB> AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
             where OnDB : class, IIdentifiable;
-        Task AddAsync<OnDTO, OnDB>(OnDTO entity, CancellationToken cancellationToken) 
+        Task<OnResult> AddAsync<OnDTO, OnDB, OnResult>(OnDTO entity, CancellationToken cancellationToken) 
             where OnDTO : class, IIdentifiableDTO 
+            where OnDB : class, IIdentifiable
+            where OnResult : class;
+        Task<OnDB> UpdateAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
             where OnDB : class, IIdentifiable;
-        Task UpdateAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
-            where OnDB : class, IIdentifiable;
-        Task UpdateAsync<OnDTO, OnDB>(OnDTO entity, CancellationToken cancellationToken)
+        Task<OnResult> UpdateAsync<OnDTO, OnDB, OnResult>(OnDTO entity, CancellationToken cancellationToken)
             where OnDTO : class, IIdentifiableDTO 
-            where OnDB : class, IIdentifiable;
+            where OnDB : class, IIdentifiable
+            where OnResult : class;
         Task DeleteAsync<OnDB>(Guid id, CancellationToken cancellationToken)
             where OnDB : class, IIdentifiableDTO;
         #endregion

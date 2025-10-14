@@ -49,10 +49,9 @@ namespace Common.Application
             var filters = _mapper.Map<UserQuerieFilters>(dto);
             if(!await _unitOfWork.ExistsByQuerieFiltersAsync(filters, cancellationToken))
             {
-                await _unitOfWork.AddAsync<UserRegisterDTO, User>(dto, cancellationToken);
                 return new Response<UserDTO>
                 {
-                    Data = _mapper.Map<UserDTO>(dto),
+                    Data = _mapper.Map<UserDTO>(await _unitOfWork.AddAsync<UserRegisterDTO, User, UserDTO>(dto, cancellationToken)),
                     Message = "Account created successfully.",
                     StatusCode = StatusCodes.Status201Created
                 };

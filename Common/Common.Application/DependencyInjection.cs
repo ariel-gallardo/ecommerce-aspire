@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Application.Profiles;
 using Common.Application.Rules;
 using Common.Contracts;
 using Common.Infrastructure;
@@ -17,34 +18,10 @@ namespace Common.Application
     {
         public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, params Assembly[] assemblies)
         {
-            services.AddSingleton(provider =>
+            services.AddAutoMapper(cfg =>
             {
-                using (var scope = provider.CreateScope())
-                {
-                    var profileTypes = new[] { typeof(Profiles.UserProfile).Assembly }.Concat(assemblies)
-                        .SelectMany(a => a.GetTypes())
-                        .Where(t => typeof(Profile).IsAssignableFrom(t) && !t.IsAbstract);
-                    var config = new MapperConfiguration(cfg =>
-                    {
-                        foreach (var type in profileTypes)
-                        {
-                            var constructors = type.GetConstructors();
-                            var constructor = constructors.FirstOrDefault();
-                            if (constructor != null)
-                            {
-
-                                var parameters = constructor.GetParameters()
-                                .Select(p => scope.ServiceProvider.GetRequiredService(p.ParameterType))
-                                .ToArray();
-
-                                var profile = (Profile)Activator.CreateInstance(type, parameters);
-                                cfg.AddProfile(profile);
-                            }
-                        }
-                    });
-                    return config.CreateMapper();
-                }
-            });
+                cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
+            }, new[] { typeof(Profiles.UserProfile).Assembly }.Concat(assemblies));
 
             return services;
         }
