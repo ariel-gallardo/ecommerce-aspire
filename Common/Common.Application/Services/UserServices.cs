@@ -26,7 +26,7 @@ namespace Common.Application
         public async Task<Response> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken)
         {
             var filters = _mapper.Map<UserQuerieFilters>(dto);
-            var user = await _unitOfWork.FirstOrDefaultByQuerieFiltersAsync(filters, cancellationToken);
+            var user = await _unitOfWork.FirstOrDefaultAsync(filters, cancellationToken);
             if (user != null && _authServices.VerifyPassword(dto.Password, user.Password))
             {
                 var userClaims = _mapper.Map<Claim[]>(user);
@@ -47,7 +47,7 @@ namespace Common.Application
         public async Task<Response> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken)
         {
             var filters = _mapper.Map<UserQuerieFilters>(dto);
-            if(!await _unitOfWork.ExistsByQuerieFiltersAsync(filters, cancellationToken))
+            if(!await _unitOfWork.ExistsAsync(filters, cancellationToken))
             {
                 return new Response<UserDTO>
                 {

@@ -44,18 +44,18 @@ namespace Common.Domain.Contracts.Repositories
         #endregion
 
         #region QuerieFilters
-        Task<OnDB> FirstOrDefaultByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        Task<OnDB> FirstOrDefaultAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity;
-        Task<OnDTO> FirstOrDefaultByQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        Task<OnDTO> FirstOrDefaultAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         where OnDTO : class;
 
-        Task<bool> ExistsByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        Task<bool> ExistsAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity;
 
-        Task<List<OnDB>> GetAllByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        Task<List<OnDB>> GetAllAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity;
-        Task<List<OnDTO>> GetAllQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        Task<List<OnDTO>> GetAllAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         where OnDTO : class;
         #endregion

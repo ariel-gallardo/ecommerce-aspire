@@ -148,24 +148,24 @@ namespace Common.Infrastructure
         #endregion
 
         #region QuerieFilters
-        public async Task<OnDB> FirstOrDefaultByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        public async Task<OnDB> FirstOrDefaultAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         => await _ctx.Set<OnDB>().Where(filters.Expressions).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<OnDTO> FirstOrDefaultByQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        public async Task<OnDTO> FirstOrDefaultAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         where OnDTO : class
         => await _ctx.Set<OnDB>().Where(filters.Expressions).ProjectTo<OnDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<bool> ExistsByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        public async Task<bool> ExistsAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
             where OnDB : class, IEntity
         => await _ctx.Set<OnDB>().Where(filters.Expressions).AnyAsync(cancellationToken);
 
-        public async Task<List<OnDB>> GetAllByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        public async Task<List<OnDB>> GetAllAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         => await _ctx.Set<OnDB>().Where(filters.Expressions).ToListAsync(cancellationToken);
 
-        public async Task<List<OnDTO>> GetAllQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        public async Task<List<OnDTO>> GetAllAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
         where OnDB : class, IEntity
         where OnDTO : class
         => await _ctx.Set<OnDB>().Where(filters.Expressions).ProjectTo<OnDTO>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
