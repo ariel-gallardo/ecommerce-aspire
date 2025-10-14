@@ -1,9 +1,7 @@
 ﻿using Common.Application;
 using Common.Infrastructure;
-using Common.Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
@@ -66,7 +64,6 @@ namespace Common.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
             }
         }
 

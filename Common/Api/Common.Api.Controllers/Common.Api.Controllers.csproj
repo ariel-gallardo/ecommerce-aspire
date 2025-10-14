@@ -4,11 +4,11 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	 <OutputType>Library</OutputType>
+	<OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\Common.Api.SwaggerExamples\Common.Api.SwaggerExamples.csproj" />
   </ItemGroup>
 

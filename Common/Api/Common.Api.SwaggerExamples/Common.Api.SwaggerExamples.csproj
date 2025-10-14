@@ -5,12 +5,14 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-	<ItemGroup>
-		<PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.6" />
-		<PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0" />
-	</ItemGroup>
-	<ItemGroup>
-	  <ProjectReference Include="..\..\Common.Application\Common.Application.csproj" />
-	  <ProjectReference Include="..\..\Common.Domain\Common.Domain.csproj" />
-	</ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="..\..\Domain\Common.Domain\Common.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
