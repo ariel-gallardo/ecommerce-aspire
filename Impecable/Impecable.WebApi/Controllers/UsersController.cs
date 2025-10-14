@@ -3,6 +3,7 @@ using Common.Application.DTOS.Entities.User;
 using Common.Api.SwaggerExamples.UserLogin;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Filters;
+using Common.Api.SwaggerExamples.UserRegister;
 
 namespace Impecable.WebApi.Controllers
 {
@@ -18,9 +19,12 @@ namespace Impecable.WebApi.Controllers
         }
 
         [HttpPost("register")]
+        [SwaggerRequestExample(typeof(UserRegisterDTO), typeof(UserRegisterRequestExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(UserRegisterResponseOk))]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO dto, CancellationToken cancellationToken)
         {
-            return Ok();
+            var result = await _userServices.RegisterUser(dto, cancellationToken);
+            return StatusCode(result.StatusCode, result);
         }
 
         [HttpPost("login")]
@@ -30,13 +34,7 @@ namespace Impecable.WebApi.Controllers
         public async Task<IActionResult> Login([FromBody] UserLoginDTO dto, CancellationToken cancellationToken)
         {
             var result = await _userServices.AuthUser(dto, cancellationToken);
-
-            return result.StatusCode switch
-            {
-                StatusCodes.Status200OK => Ok(result),
-                StatusCodes.Status401Unauthorized => Unauthorized(result),
-                _ => StatusCode(result.StatusCode, result)
-            };
+            return StatusCode(result.StatusCode, result);
         }
 
     }

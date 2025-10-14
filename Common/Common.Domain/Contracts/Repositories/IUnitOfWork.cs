@@ -43,15 +43,18 @@ namespace Common.Domain.Contracts.Repositories
 
         #region QuerieFilters
         Task<OnDB> FirstOrDefaultByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IIdentifiable;
+        where OnDB : class, IEntity;
         Task<OnDTO> FirstOrDefaultByQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IIdentifiable
+        where OnDB : class, IEntity
         where OnDTO : class;
 
+        Task<bool> ExistsByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
+        where OnDB : class, IEntity;
+
         Task<List<OnDB>> GetAllByQuerieFiltersAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IIdentifiable;
+        where OnDB : class, IEntity;
         Task<List<OnDTO>> GetAllQuerieFiltersAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IIdentifiable
+        where OnDB : class, IEntity
         where OnDTO : class;
         #endregion
 

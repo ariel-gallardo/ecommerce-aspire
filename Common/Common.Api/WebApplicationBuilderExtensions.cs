@@ -72,10 +72,10 @@ namespace Common.Api
             var env = builder.Environment;
 
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env);
-            builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
-            builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationDevelopmentSeeders(env, _seederDevAssemblies);
+            builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
+            builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddApi();
             var app = builder.Build();
             app.UseSeederIfDevelopment(env);

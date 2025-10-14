@@ -7,6 +7,7 @@ using Common.Domain.DTOS.Base.Entities;
 using Common.Domain.Filters.Queries;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
+using Common.Domain.Entities;
 
 namespace Common.Application
 {
@@ -41,6 +42,28 @@ namespace Common.Application
                 Message = "Invalid credentials.",
                 StatusCode = StatusCodes.Status401Unauthorized
             };
+        }
+
+        public async Task<Response> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken)
+        {
+            var filters = _mapper.Map<UserQuerieFilters>(dto);
+            if(!await _unitOfWork.ExistsByQuerieFiltersAsync(filters, cancellationToken))
+            {
+                await _unitOfWork.AddAsync<UserRegisterDTO, User>(dto, cancellationToken);
+                return new Response<UserDTO>
+                {
+                    Data = _mapper.Map<UserDTO>(dto),
+                    Message = "Account created successfully.",
+                    StatusCode = StatusCodes.Status201Created
+                };
+            }else
+            {
+                return new Response
+                {
+                    Message = "User already exists.",
+                    StatusCode = StatusCodes.Status400BadRequest
+                };
+            }
         }
     }
 }

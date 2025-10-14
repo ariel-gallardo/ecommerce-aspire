@@ -30,6 +30,12 @@ namespace Common.Api.SwaggerExamples.UserLogin
                 Password = "123456aA$",
                 Username = "user_name_2"
             });
+
+            yield return SwaggerExample.Create("User Register", new UserLoginDTO
+            {
+                Username = "user_register",
+                Password = "123456aA$",
+            });
         }
     }
 }

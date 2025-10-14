@@ -1,5 +1,6 @@
 ﻿using Common.Domain.Entities;
 using Common.Domain.Entities.Base;
+using System;
 using System.Linq.Expressions;
 
 namespace Common.Domain.Filters.Queries
@@ -8,6 +9,7 @@ namespace Common.Domain.Filters.Queries
     {
         public string Username { get; set; }
         public string Email { get; set; }
+        public Guid? PersonaId { get; set; }
 
         #region Expressions
         public Expression<Func<User, bool>> FindByUserName
@@ -17,6 +19,10 @@ namespace Common.Domain.Filters.Queries
         public Expression<Func<User, bool>> FindByEmail
         {
             get => x => !string.IsNullOrEmpty(Email) && string.Equals(x.Email, Email, StringComparison.InvariantCultureIgnoreCase);
+        }
+        public Expression<Func<User, bool>> FindByPersonaId
+        {
+            get => x => PersonaId.HasValue && PersonaId == x.PersonaId;
         }
         #endregion
     }
