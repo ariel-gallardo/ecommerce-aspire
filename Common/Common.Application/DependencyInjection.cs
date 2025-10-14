@@ -16,18 +16,22 @@ namespace Common.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, bool addDefaultAssemblies, params Assembly[] assemblies)
         {
+            var defaultAssemblies = new[] { typeof(Profiles.UserProfile).Assembly };
             services.AddAutoMapper(cfg =>
             {
                 cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-            }, new[] { typeof(Profiles.UserProfile).Assembly }.Concat(assemblies));
+            }, addDefaultAssemblies ? defaultAssemblies.Concat(assemblies) : assemblies);
 
             return services;
         }
 
-        public static IServiceCollection AddApplicationValidators(this IServiceCollection services, params Assembly[] assemblies)
-        => services.AddValidatorsFromAssemblies(new[] { typeof(UserLoginDTOValidator).Assembly }.Concat(assemblies));
+        public static IServiceCollection AddApplicationValidators(this IServiceCollection services, bool addDefaultAssemblies, params Assembly[] assemblies)
+        {
+            var defaultValidatorAssemblies = new[] { typeof(UserLoginDTOValidator).Assembly };
+            return services.AddValidatorsFromAssemblies(addDefaultAssemblies ? defaultValidatorAssemblies.Concat(assemblies) : assemblies);
+        }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
         {
             services.AddHttpContextAccessor();
@@ -52,17 +56,20 @@ namespace Common.Application
             return services;
         }
 
-        public static IServiceCollection AddApplicationDevelopmentSeeders(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationDevelopmentSeeders(this IServiceCollection services, IHostEnvironment env, bool addDefaultAssemblies, params Assembly[] assemblies)
         {
             if (env.IsDevelopment())
             {
-                var seederTypes = assemblies
+                var defaultAssemblies = new Assembly[] { typeof(UserSeeder).Assembly };
+                var currentAssemblies = addDefaultAssemblies ? defaultAssemblies.Concat(assemblies) : assemblies;
+
+                var seederTypes = currentAssemblies
                 .SelectMany(a => a.GetTypes())
                 .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
 
                 foreach (var type in seederTypes) services.AddScoped(type);
                 
-                var types = new Assembly[] { typeof(UserSeeder).Assembly }.Concat(assemblies).SelectMany(a => a.GetTypes())
+                var types = currentAssemblies.SelectMany(a => a.GetTypes())
                     .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
                 foreach (var type in types) services.AddScoped(type);
 
