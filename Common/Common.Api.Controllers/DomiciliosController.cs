@@ -1,7 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Impecable.WebApi.Controllers
+namespace Common.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

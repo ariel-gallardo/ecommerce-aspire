@@ -11,11 +11,21 @@ namespace Common.Api
 {
     public static class WebApplicationBuilderExtensions
     {
+        private static bool _addDefaultAssemblies = false;
         private static Assembly[] _autoMapperAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _validatorAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _serviceAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _seederDevAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _jsonConverterAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _controllerAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _swaggerExampleAssemblies = Array.Empty<Assembly>();
+        
+        public static WebApplicationBuilder AddDefaultAssemblies(this WebApplicationBuilder builder)
+        {
+            _addDefaultAssemblies = true;
+            return builder;
+        }
+
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
             _autoMapperAssemblies = assemblies;
@@ -45,6 +55,12 @@ namespace Common.Api
             return builder;
         }
 
+        public static WebApplicationBuilder AddControllerAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _controllerAssemblies = assemblies;
+            return builder;
+        }
+
         private static void UseSwaggerIfDevelopment(this WebApplication app)
         {
             if (app.Environment.IsDevelopment())
@@ -62,7 +78,7 @@ namespace Common.Api
             builder.Services.AddApplicationDevelopmentSeeders(env, _seederDevAssemblies);
             builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
-            builder.Services.AddApi();
+            builder.Services.AddApi(_addDefaultAssemblies, _controllerAssemblies,_swaggerExampleAssemblies);
             var app = builder.Build();
             app.UseSwaggerIfDevelopment();
             app.UseHttpsRedirection();

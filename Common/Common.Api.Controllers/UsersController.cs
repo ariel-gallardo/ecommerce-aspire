@@ -2,10 +2,10 @@
 using Common.Application.DTOS.Entities.User;
 using Common.Api.SwaggerExamples.UserLogin;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.AspNetCore.Filters;
 using Common.Api.SwaggerExamples.UserRegister;
+using Swashbuckle.AspNetCore.Examples;
 
-namespace Impecable.WebApi.Controllers
+namespace Common.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]

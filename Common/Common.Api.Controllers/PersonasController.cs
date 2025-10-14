@@ -1,7 +1,7 @@
 ﻿using Common.Application.DTOS.Entities;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Impecable.WebApi.Controllers
+namespace Common.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
