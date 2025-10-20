@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
-    <ProjectReference Include="..\Common.Api.SwaggerExamples\Common.Api.SwaggerExamples.csproj" />
   </ItemGroup>
 
 </Project>

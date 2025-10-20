@@ -4,12 +4,13 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Impecable.Application\Impecable.Application.csproj" />
+    <ProjectReference Include="..\Impecable.Controllers\Impecable.Controllers.csproj" />
     <ProjectReference Include="..\Impecable.Infrastructure\Impecable.Infrastructure.csproj" />
   </ItemGroup>
-
 </Project>

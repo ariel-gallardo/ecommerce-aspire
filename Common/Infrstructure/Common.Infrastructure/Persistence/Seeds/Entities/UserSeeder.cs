@@ -1,5 +1,6 @@
 ﻿using Common.Domain.Contracts.Services;
 using Common.Domain.Entities;
+using Common.Domain.Enums;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Microsoft.EntityFrameworkCore;
@@ -23,27 +24,24 @@ namespace Common.Infrastructure.Persistence.Seeds.Entities
             Users = new List<User>();
         }
 
-        public Task SeedAsync(DbContext context)
+        public async Task SeedAsync(DbContext context)
         {
             Users = Enumerable.Range(1, _quantity).Select(x =>
             {
                 return new User
                 {
                     Id = Guid.NewGuid(),
+                    Rol = x % 3 == 0 ? RoleEnum.Administrator : x % 5 == 0 ? RoleEnum.Operator : RoleEnum.Client,
                     Email = $"user_email_{x}@mail.com",
                     Username = $"user_name_{x}",
                     Password = _authServices.HashPassword("123456aA$")
                 };
             }).ToList();
 
-            // Asociar personas
             for (int i = 0; i < _quantity; i++)
-            {
                 Users[i].PersonaId = i % 4 == 0 ? _personaSeeder.People.ElementAt(i).Id : null;
-            }
 
-            context.AddRange(Users);
-            return Task.CompletedTask;
+            await context.AddRangeAsync(Users);
         }
     }
 

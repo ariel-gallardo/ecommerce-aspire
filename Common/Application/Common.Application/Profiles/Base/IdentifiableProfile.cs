@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Domain.DTOS.Base.Entities;
+using Common.Application.DTO.Base.Entities;
 using Common.Domain.Entities.Base;
 
 namespace Common.Application.Profiles.Base
@@ -12,6 +12,12 @@ namespace Common.Application.Profiles.Base
             .ForMember(dest => dest.Id, opt => opt.Ignore());
 
             CreateMap<IdentifiableEntity, IdentifiableDTO>();
+
+            CreateMap<IdentifiableDTO, Guid>()
+                .ConvertUsing(src => Guid.Parse(src.Id));
+
+            CreateMap<Guid, IdentifiableEntity>()
+                .ConvertUsing(guid => new IdentifiableEntity { Id = guid });
         }
     }
 }

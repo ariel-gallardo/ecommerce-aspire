@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using Common.Application.DTOS.Entities.User;
+using Common.Application.DTO.Entities.User;
 using Common.Domain.Contracts.Services;
 using Common.Domain.Entities;
 

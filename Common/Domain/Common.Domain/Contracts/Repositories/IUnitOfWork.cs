@@ -1,63 +1,93 @@
 ﻿using Common.Contracts;
-using Common.Contracts.DTOS;
+using Common.Contracts.DTO.ABM;
+using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
+using Common.Domain.Entities.Base;
 using System.Linq.Expressions;
 
 namespace Common.Domain.Contracts.Repositories
 {
     public interface IUnitOfWork : IScoped
     {
-        #region ABM
-        Task<OnDB> AddAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
-            where OnDB : class, IIdentifiable;
-        Task<OnResult> AddAsync<OnDTO, OnDB, OnResult>(OnDTO entity, CancellationToken cancellationToken) 
-            where OnDTO : class, IIdentifiableDTO 
-            where OnDB : class, IIdentifiable
-            where OnResult : class;
-        Task<OnDB> UpdateAsync<OnDB>(OnDB entity, CancellationToken cancellationToken) 
-            where OnDB : class, IIdentifiable;
-        Task<OnResult> UpdateAsync<OnDTO, OnDB, OnResult>(OnDTO entity, CancellationToken cancellationToken)
-            where OnDTO : class, IIdentifiableDTO 
-            where OnDB : class, IIdentifiable
-            where OnResult : class;
-        Task DeleteAsync<OnDB>(Guid id, CancellationToken cancellationToken)
-            where OnDB : class, IIdentifiableDTO;
+        #region Add
+        Task<DomainEntity> AddAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken) 
+            where DomainEntity : class, IEntity;
+        Task<ResultDTO> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
+            where AddDTO : class, IEntityDTO
+            where DomainEntity : class, IEntity
+            where ResultDTO : class, IResultDTO, IEntityDTO;
+        Task<IList<DomainEntity>> AddAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
+            where DomainEntity : class, IEntity;
+        Task<IList<ResultDTO>> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entity, CancellationToken cancellationToken)
+            where AddDTO : class, IEntityDTO
+            where DomainEntity : class, IEntity
+            where ResultDTO : class, IResultDTO, IEntityDTO;
         #endregion
 
-        #region FindById
-        Task<bool> ExistsById<OnDB>(Guid id, CancellationToken cancellationToken)
-            where OnDB : class, IIdentifiable;
-        Task<OnDB> FirstOrDefaultByIdAsync<OnDB>(Guid id, CancellationToken cancellationToken)
-            where OnDB : class, IIdentifiable;
-        Task<OnDTO> FirstOrDefaultByIdAsync<OnDB, OnDTO>(Guid id, CancellationToken cancellationToken)
-            where OnDB : class, IIdentifiable
-            where OnDTO : class;
+        #region Update
+        Task<DomainEntity> UpdateAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken) 
+            where DomainEntity : class, IEntity;
+        Task<ResultDTO> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
+            where UpdateDTO : class, IUpdateDTO, IEntityDTO 
+            where DomainEntity : class, IEntity
+            where ResultDTO : class, IResultDTO, IEntityDTO;
+        Task<IList<DomainEntity>> UpdateAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
+            where DomainEntity : class, IEntity;
+        Task<IList<ResultDTO>> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entity, CancellationToken cancellationToken)
+            where UpdateDTO : class, IUpdateDTO, IEntityDTO
+            where DomainEntity : class, IEntity
+            where ResultDTO : class, IResultDTO, IEntityDTO;
         #endregion
 
-        #region Expressions
-        Task<List<OnDB>> GetAllAsync<OnDB>(Expression<Func<OnDB, bool>> where, CancellationToken cancellationToken)
-             where OnDB : class, IIdentifiable;
-        Task<List<OnDTO>> GetAllAsync<OnDB,OnDTO>(Expression<Func<OnDB, bool>> where, CancellationToken cancellationToken)
-            where OnDB : class, IIdentifiable
-            where OnDTO : class, IIdentifiableDTO;
+
+        #region Delete
+        Task DeleteAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+            where DomainEntity : class, IEntity;
+        Task DeleteAsync<DomainEntity>(IList<Guid> id, CancellationToken cancellationToken)
+            where DomainEntity : class, IEntity;
         #endregion
 
-        #region QuerieFilters
-        Task<OnDB> FirstOrDefaultAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IEntity;
-        Task<OnDTO> FirstOrDefaultAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IEntity
-        where OnDTO : class;
+        #region Exists
+        Task<bool> ExistsAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<(bool, IList<Guid>)> ExistsAsync<DomainEntity>(IList<Guid> ids, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<bool> ExistsAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        #endregion
 
-        Task<bool> ExistsAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IEntity;
+        #region SearchOne
+        Task<DomainEntity> SearchOneAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<ResultDTO> SearchOneAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
+        #endregion
 
-        Task<List<OnDB>> GetAllAsync<OnDB>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IEntity;
-        Task<List<OnDTO>> GetAllAsync<OnDB, OnDTO>(IQuerieFilters<OnDB> filters, CancellationToken cancellationToken)
-        where OnDB : class, IEntity
-        where OnDTO : class;
+        #region Search
+        Task<DomainEntity> SearchAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(Guid id, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
+
+        Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
+        Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
+
+        Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity;
+        Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
         #endregion
 
         #region Transactions

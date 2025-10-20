@@ -6,6 +6,7 @@ var builder = WebApplication.CreateBuilder(args)
     .AddAutoMapperAssemblies(typeof(Impecable.Application.Profiles.TurnoProfile).Assembly)
     .AddValidatorAssemblies()
     .AddServiceAssemblies()
-    .AddSeederDevelopmentAssemblies();
+    .AddSeederDevelopmentAssemblies()
+    .AddControllerAssemblies(typeof(Impecable.Controllers.TurnosController).Assembly);
 var app = builder.BuildApi<ApplicationDbContext>();
 app.Run();

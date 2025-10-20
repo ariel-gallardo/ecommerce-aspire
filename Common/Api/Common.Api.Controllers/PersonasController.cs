@@ -1,18 +1,17 @@
-﻿using Common.Application.DTOS.Entities;
+﻿using Common.Api.Controllers.Contracts;
+using Common.Application.DTO.Entities.Base;
+using Common.Contracts;
+using Common.Domain.Entities;
+using Common.Domain.Filters.Queries;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers
 {
     [Route("api/[controller]")]
-    [ApiController]
-    public class PersonasController : ControllerBase
+    public class PersonasController : CommonController<Persona, PersonaDTO, PersonaDTO, PersonaDTO,PersonaQuerieFilter>, IPersonasController
     {
-        [HttpPost]
-        public async Task<IActionResult> Crear([FromBody] PersonaDTO dto)
+        public PersonasController(ICommonServices services) : base(services)
         {
-
-            return Ok();
         }
-
     }
 }

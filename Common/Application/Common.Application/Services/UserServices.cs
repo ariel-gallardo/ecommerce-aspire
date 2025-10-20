@@ -1,13 +1,14 @@
 ﻿using Common.Application.Contracts.Services;
-using Common.Application.DTOS.Entities.User;
 using AutoMapper;
 using Common.Domain.Contracts.Repositories;
 using Common.Domain.Contracts.Services;
-using Common.Domain.DTOS.Base.Entities;
 using Common.Domain.Filters.Queries;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Common.Domain.Entities;
+using Common.Infrastructure.Entities;
+using Common.Application.DTO.Entities.User;
+using Common.Application.DTO.Entities.Base;
 
 namespace Common.Application
 {
@@ -25,8 +26,8 @@ namespace Common.Application
         }
         public async Task<Response> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken)
         {
-            var filters = _mapper.Map<UserQuerieFilters>(dto);
-            var user = await _unitOfWork.FirstOrDefaultAsync(filters, cancellationToken);
+            var filters = _mapper.Map<UserQuerieFilter>(dto);
+            var user = await _unitOfWork.SearchOneAsync<User>(filters, cancellationToken);
             if (user != null && _authServices.VerifyPassword(dto.Password, user.Password))
             {
                 var userClaims = _mapper.Map<Claim[]>(user);
@@ -46,8 +47,8 @@ namespace Common.Application
 
         public async Task<Response> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken)
         {
-            var filters = _mapper.Map<UserQuerieFilters>(dto);
-            if(!await _unitOfWork.ExistsAsync(filters, cancellationToken))
+            var filters = _mapper.Map<UserQuerieFilter>(dto);
+            if(!await _unitOfWork.ExistsAsync<User>(filters, cancellationToken))
             {
                 return new Response<UserDTO>
                 {

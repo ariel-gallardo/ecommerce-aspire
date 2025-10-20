@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Common.Application.Profiles;
-using Common.Application.Rules;
+﻿using Common.Application.Rules;
 using Common.Contracts;
 using Common.Infrastructure;
 using Common.Infrastructure.Persistence.Seeds;
@@ -36,7 +34,8 @@ namespace Common.Application
         {
             var defaultAssemblies = new Assembly[] { typeof(AuthServices).Assembly, typeof(UserServices).Assembly };
             var currentAssemblies = addDefaultAssemblies ? defaultAssemblies.Concat(assemblies) : defaultAssemblies;
-
+            services.AddAuthorization();
+            services.AddAuthentication();
             services.AddHttpContextAccessor();
 
             var allTypes = currentAssemblies

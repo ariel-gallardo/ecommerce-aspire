@@ -1,6 +1,6 @@
-﻿using Common.Application.DTOS.Entities.User;
+﻿using Common.Application.DTO.Entities.User;
 using Common.Contracts;
-using Common.Domain.DTOS.Base.Entities;
+using Common.Infrastructure.Entities;
 
 namespace Common.Application.Contracts.Services
 {

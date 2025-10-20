@@ -15,17 +15,14 @@ namespace Common.Infrastructure
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppSettings _appSettings;
-        private readonly IUnitOfWork _unitOfWork;
-        private readonly IMapper _mapper;
 
         private ClaimsPrincipal User => _httpContextAccessor.HttpContext.User;
 
 
-        public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IMapper mapper)
+        public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings)
         {
             _httpContextAccessor = httpContext;
             _appSettings = appSettings.Value;
-            _mapper = mapper;
         }
 
         public string? ClaimValue(string claimType)

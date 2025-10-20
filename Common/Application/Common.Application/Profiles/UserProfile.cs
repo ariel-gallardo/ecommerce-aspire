@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Common.Application.DTOS.Entities.User;
+using Common.Application.DTO.Entities.Base;
+using Common.Application.DTO.Entities.User;
 using Common.Application.Profiles.Resolvers;
 using Common.Domain.Entities;
 using Common.Domain.Enums;
@@ -12,16 +13,24 @@ namespace Common.Application.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<UserLoginDTO, UserQuerieFilters>();
-            CreateMap<UserRegisterDTO, UserQuerieFilters>();
-            CreateMap<UserRegisterDTO, User>().ForMember(dest => dest.Password, opt => opt.MapFrom<PasswordHashResolver>());
+            CreateMap<User, UserDTO>()
+                .ForMember(dest => dest.Rol, opt => opt.MapFrom(src => src.Rol.ToString()))
+                .ReverseMap()
+                .ForMember(dest => dest.Rol, opt => opt.MapFrom(src => Enum.Parse<RoleEnum>(src.Rol)));
+            CreateMap<UserLoginDTO, UserQuerieFilter>();
+            CreateMap<UserRegisterDTO, UserQuerieFilter>();
+            CreateMap<UserRegisterDTO, User>()
+                .ForMember(dest => dest.Password, opt => opt.MapFrom<PasswordHashResolver>())
+                .ForMember(dest => dest.Rol, opt => opt.MapFrom(src => Enum.Parse<RoleEnum>(src.Rol)))
+                .ReverseMap()
+                .ForMember(dest => dest.Rol, opt => opt.MapFrom(src => src.Rol.ToString()));
             #region Claims
             CreateMap<User, Claim[]>()
                 .ConvertUsing((user, ctx) =>
                 {
                     var claims = new List<Claim>
                     {
+                        new Claim(ClaimTypes.Role, user.Rol.ToString()),
                         new Claim(ClaimTypes.Name, user.Username),
                         new Claim(ClaimTypes.Email, user.Email)
                     };

@@ -1,10 +1,9 @@
-﻿using System.Linq.Expressions;
-using Common.Contracts.Entities;
-
-namespace Common.Contracts.Queries
+﻿namespace Common.Contracts.Queries
 {
-    public interface IQuerieFilters<T> where T : class, IEntity
+    public interface IQuerieFilter
     {
-        Expression<Func<T, bool>> Expressions { get; }
+        string OrderBy { get; set; }
+        int Page { get; set; }
+        int PageSize { get; set; }
     }
 }

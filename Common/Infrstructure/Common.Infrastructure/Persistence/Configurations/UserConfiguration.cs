@@ -1,4 +1,6 @@
-﻿using Common.Domain.Entities;
+﻿using Common.Domain.Converters;
+using Common.Domain.Entities;
+using Common.Domain.Enums;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Common.Infrastructure.Persistence.Configurations
@@ -8,7 +10,10 @@ namespace Common.Infrastructure.Persistence.Configurations
         public override void Configure(EntityTypeBuilder<User> builder)
         {
             ConfigureIdentifiable(builder);
-
+            builder.Property(x => x.Rol)
+                .HasConversion(new EnumToStringConverter<RoleEnum>())
+                .HasMaxLength(30)
+                .IsRequired(true);
             builder.Property(x => x.Username).IsRequired(true);
             builder.Property(x => x.Email).IsRequired(true);
             builder.Property(x => x.Password).IsRequired(true);

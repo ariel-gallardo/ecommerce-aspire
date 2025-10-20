@@ -1,4 +1,4 @@
-﻿using Common.Application.DTOS.Entities.User;
+﻿using Common.Application.DTO.Entities.User;
 using FluentValidation;
 
 

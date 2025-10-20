@@ -2,7 +2,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Common.Api.CustomAttributes;
-using Common.Contracts.DTOS;
+using Common.Contracts.DTO.Base;
 
 namespace Common.Api.Converters.JSON
 {

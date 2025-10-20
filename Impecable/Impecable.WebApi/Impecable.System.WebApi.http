@@ -1,6 +1,6 @@
 @Impecable.WebApi_HostAddress = http://localhost:5117
 
-GET {{Impecable.WebApi_HostAddress}}/weatherforecast/
+GET {{Impecable.WebApi_HostAddress}}/scalar/
 Accept: application/json
 
 ###

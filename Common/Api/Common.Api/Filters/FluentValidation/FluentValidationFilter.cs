@@ -1,4 +1,4 @@
-﻿using Common.Domain.DTOS.Base.Entities;
+﻿using Common.Infrastructure.Entities;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
