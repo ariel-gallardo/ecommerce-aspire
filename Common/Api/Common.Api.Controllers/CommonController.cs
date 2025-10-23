@@ -3,9 +3,8 @@ using Common.Contracts.DTO.ABM;
 using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
-using Common.Domain.Entities.Base;
+using Common.Infrastructure.Entities;
 using Microsoft.AspNetCore.Mvc;
-using System.Net.Mime;
 
 namespace Common.Api.Controllers
 {

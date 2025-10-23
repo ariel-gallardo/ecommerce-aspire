@@ -1,11 +1,12 @@
-﻿using Common.Application.Contracts.Services;
-using Microsoft.AspNetCore.Mvc;
-using Common.Domain.Filters.Queries;
+﻿using Common.Api.Controllers.Contracts;
+using Common.Application.Contracts.Services;
+using Common.Application.DTO.Entities.Base;
+using Common.Application.DTO.Entities.User;
 using Common.Contracts;
 using Common.Domain.Entities;
-using Common.Api.Controllers.Contracts;
-using Common.Application.DTO.Entities.User;
-using Common.Application.DTO.Entities.Base;
+using Common.Domain.Filters.Queries;
+using Common.Infrastructure.Entities;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers
 {
@@ -20,12 +21,16 @@ namespace Common.Api.Controllers
         }
 
         [HttpPost("register")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<dynamic>))]
+        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response))]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO dto, CancellationToken cancellationToken)
         {
             var result = await _userServices.RegisterUser(dto, cancellationToken);
             return StatusCode(result.StatusCode, result);
         }
         [HttpPost("login")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<dynamic>))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Response))]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO dto, CancellationToken cancellationToken)
         {
             var result = await _userServices.AuthUser(dto, cancellationToken);

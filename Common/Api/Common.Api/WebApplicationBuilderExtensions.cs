@@ -1,11 +1,11 @@
-﻿using Common.Application;
+﻿using Common.Api.Filters.OpenApi;
+using Common.Application;
 using Common.Infrastructure;
 using Common.Infrastructure.Persistence.Seeds;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi;
 using System.Reflection;
 
 namespace Common.Api
@@ -67,10 +67,10 @@ namespace Common.Api
             builder.Services.AddApplicationAutoMapper(_addDefaultAssemblies, _autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_addDefaultAssemblies, _validatorAssemblies);
             builder.Services.AddApi(_addDefaultAssemblies, _controllerAssemblies);
-            builder.Services.AddOpenApi();
-            builder.Services.AddSwaggerGen(o =>
+            builder.Services.AddSwaggerGen();
+            builder.Services.AddOpenApi(c =>
             {
-                
+                c.AddOperationTransformer<DynamicResponseOperationTransformer>();
             });
 
             var app = builder.Build();
