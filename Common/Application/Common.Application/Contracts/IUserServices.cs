@@ -6,7 +6,7 @@ namespace Common.Application.Contracts.Services
 {
     public interface IUserServices : IScoped
     {
-        Task<Response> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken);
-        Task<Response> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken);
+        Task<BaseResponse> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken);
+        Task<BaseResponse> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken);
     }
 }

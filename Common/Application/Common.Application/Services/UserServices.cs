@@ -24,7 +24,7 @@ namespace Common.Application
             _unitOfWork = unitOfWork;
             _authServices = authServices;
         }
-        public async Task<Response> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken)
+        public async Task<BaseResponse> AuthUser(UserLoginDTO dto, CancellationToken cancellationToken)
         {
             var filters = _mapper.Map<UserQuerieFilter>(dto);
             var user = await _unitOfWork.SearchOneAsync<User>(filters, cancellationToken);
@@ -38,14 +38,14 @@ namespace Common.Application
                     StatusCode = StatusCodes.Status200OK
                 };
             }
-            return new Response
+            return new BaseResponse
             {
                 Message = "Invalid credentials.",
                 StatusCode = StatusCodes.Status401Unauthorized
             };
         }
 
-        public async Task<Response> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken)
+        public async Task<BaseResponse> RegisterUser(UserRegisterDTO dto, CancellationToken cancellationToken)
         {
             var filters = _mapper.Map<UserQuerieFilter>(dto);
             if(!await _unitOfWork.ExistsAsync<User>(filters, cancellationToken))
@@ -58,7 +58,7 @@ namespace Common.Application
                 };
             }else
             {
-                return new Response
+                return new BaseResponse
                 {
                     Message = "User already exists.",
                     StatusCode = StatusCodes.Status400BadRequest

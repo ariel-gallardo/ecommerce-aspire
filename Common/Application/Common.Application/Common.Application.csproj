@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Api\Common.Api.CustomAttributes\Common.Api.CustomAttributes.csproj" />
     <ProjectReference Include="..\..\Domain\Common.Domain\Common.Domain.csproj" />
+    <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Entities\Common.Infrastructure.Entities.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\Common.Application.DTO\Common.Application.DTO.csproj" />
   </ItemGroup>

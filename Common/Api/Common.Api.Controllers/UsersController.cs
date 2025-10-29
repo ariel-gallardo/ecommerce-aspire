@@ -21,16 +21,15 @@ namespace Common.Api.Controllers
         }
 
         [HttpPost("register")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<dynamic>))]
-        [ProducesResponseType(StatusCodes.Status400BadRequest, Type = typeof(Response))]
+        [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(UserDTO))]
         public async Task<IActionResult> Register([FromBody] UserRegisterDTO dto, CancellationToken cancellationToken)
         {
             var result = await _userServices.RegisterUser(dto, cancellationToken);
             return StatusCode(result.StatusCode, result);
         }
         [HttpPost("login")]
-        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response<dynamic>))]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(Response))]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(string))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(BaseResponse))]
         public async Task<IActionResult> Login([FromBody] UserLoginDTO dto, CancellationToken cancellationToken)
         {
             var result = await _userServices.AuthUser(dto, cancellationToken);
