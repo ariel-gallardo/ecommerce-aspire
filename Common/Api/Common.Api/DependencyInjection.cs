@@ -1,8 +1,6 @@
-﻿using AutoMapper.Internal;
-using Common.Api.Controllers;
+﻿using Common.Api.Controllers;
 using Common.Application.Services;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,12 +11,9 @@ namespace Common.Api
     public static class DependencyInjection
     {
         public static IMvcBuilder AddControllersAsServicesFromDI(
-            this IMvcBuilder builder, bool addDefaultAssemblies, Assembly[] controllerAssemblies)
+            this IMvcBuilder builder, Assembly[] controllerAssemblies)
         {
-            var defaultControllerAssemblies = new Assembly[] { typeof(UsersController).Assembly };
-
-            var assembly = addDefaultAssemblies ? controllerAssemblies.Concat(defaultControllerAssemblies) : controllerAssemblies;
-            var controllerTypes = assembly.SelectMany(x => x.GetTypes()
+            var controllerTypes = controllerAssemblies.SelectMany(x => x.GetTypes()
                 .Where(t => !t.IsAbstract && t.IsClass &&
                             t.BaseType != null &&
                             t.BaseType.IsGenericType &&
@@ -38,12 +33,12 @@ namespace Common.Api
 
             return builder;
         }
-        public static IServiceCollection AddApi(this IServiceCollection services, bool addDefaultAssemblies, Assembly[] controllerAssemblies)
+        public static IServiceCollection AddApi(this IServiceCollection services, Assembly[] controllerAssemblies)
         {
 
 
             services.AddMvc()
-            .AddControllersAsServicesFromDI(addDefaultAssemblies, controllerAssemblies)
+            .AddControllersAsServicesFromDI(controllerAssemblies)
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.DefaultIgnoreCondition =

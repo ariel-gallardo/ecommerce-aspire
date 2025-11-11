@@ -12,6 +12,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Reflection.Metadata;
 
 namespace Common.Api.Filters.OpenApi
 {
@@ -196,6 +197,7 @@ namespace Common.Api.Filters.OpenApi
                         };
                     }
                 }
+
             }
         }
     }

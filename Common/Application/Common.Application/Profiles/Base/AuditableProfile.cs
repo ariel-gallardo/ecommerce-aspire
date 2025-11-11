@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Application.DTO.Base.Entities;
 using Common.Domain.Entities.Base;
+using Common.Infrastructure.Messages.Entities;
 
 namespace Common.Application.Profiles.Base
 {
@@ -17,6 +18,7 @@ namespace Common.Application.Profiles.Base
                 .ForMember(dest => dest.DeletedById, opt => opt.Ignore());
 
             CreateMap<AuditableEntity, AuditableDTO>();
+            CreateMap<AuditableEntity, AuditableMessage>();
         }
     }
 }

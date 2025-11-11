@@ -7,15 +7,12 @@ using Common.Contracts.Entities;
 using Common.Contracts.Queries;
 using Common.Domain.Contracts.Entities;
 using Common.Domain.Contracts.Repositories;
-using Common.Domain.Contracts.Services;
-using Common.Domain.Entities.Base;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
-using Common.Infrastructure.Entities;
 using Common.Infrastructure.Extensions;
-using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
+using Security.Infrastructure.Contracts;
 using System.Linq.Expressions;
 
 namespace Common.Infrastructure
@@ -36,6 +33,8 @@ namespace Common.Infrastructure
             _builder = builder;
         }
 
+        public DbContext Context => _ctx;
+
         #region Add
         public async Task<DomainEntity> AddAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
@@ -44,12 +43,9 @@ namespace Common.Infrastructure
             {
                 a.CreatedAt = DateTime.UtcNow;
                 a.CreatedById = _usrServices.Id;
-                _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
                 _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 await _ctx.AddAsync(a, cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
@@ -75,12 +71,12 @@ namespace Common.Infrastructure
                 {
                     a.CreatedAt = DateTime.UtcNow;
                     a.CreatedById = _usrServices.Id;
-                    _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                    
                     _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+
                     _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
                     _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+
                     _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                     return a;
                 }
@@ -117,11 +113,11 @@ namespace Common.Infrastructure
                 a.UpdatedById = _usrServices.Id;
                 a.UpdatedAt = DateTime.UtcNow;
                 _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                
                 _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
-                _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+
                 _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 _ctx.Update(a);
                 await _ctx.SaveChangesAsync(cancellationToken);
@@ -154,11 +150,11 @@ namespace Common.Infrastructure
                     a.UpdatedById = _usrServices.Id;
                     a.UpdatedAt = DateTime.UtcNow;
                     _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                    
                     _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+
                     _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+
                     _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                     return a;
                 }
@@ -190,13 +186,13 @@ namespace Common.Infrastructure
                 {
                     a.DeletedById = _usrServices.Id;
                     a.DeletedAt = DateTime.UtcNow;
-                    _ctx.Entry(a).Property(x => x.CreatedBy).IsModified = false;
+                    
                     _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
                     _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
                     _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.UpdatedBy).IsModified = false;
+
                     _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.DeletedBy).IsModified = false;
+
                     _ctx.Update(entity);
                     await _ctx.SaveChangesAsync(cancellationToken);
                     return;

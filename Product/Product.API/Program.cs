@@ -1,0 +1,23 @@
+using Common.Api;
+using Product.Application.Profiles;
+using Product.Controllers;
+using Product.Infrastructure.Persistence;
+using Product.Infrastructure.Seeders;
+
+namespace Product.API
+{
+    public class Program
+    {
+        public static void Main(string[] args)
+        {
+            var app = WebApplication.CreateBuilder(args)
+            .AddAutoMapperAssemblies(typeof(ProductProfile).Assembly)
+            .AddControllerAssemblies(typeof(ProductController).Assembly)
+            .AddSeederAssemblies(typeof(ProductSeeder).Assembly)
+            .AddValidatorAssemblies()
+            .AddServiceAssemblies()
+            .BuildApi<ProductDbContext>();
+            app.Run();
+        }
+    }
+}

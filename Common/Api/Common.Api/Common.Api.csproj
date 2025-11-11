@@ -11,9 +11,11 @@
     <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\..\Contracts\Common.Contracts\Common.Contracts.csproj" />
     <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Seeder\Common.Infrastructure.Seeder.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\Common.Api.Controllers\Common.Api.Controllers.csproj" />
     <ProjectReference Include="..\Common.Api.CustomAttributes\Common.Api.CustomAttributes.csproj" />
+    <ProjectReference Include="..\Common.Api.ServiceDefaults\Common.Api.ServiceDefaults.csproj" />
   </ItemGroup>
 
   <ItemGroup>

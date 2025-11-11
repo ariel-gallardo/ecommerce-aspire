@@ -1,0 +1,11 @@
+﻿using Cart.Application.DTO;
+using Cart.Domain.Entities;
+using Cart.Domain.Filters.Queries;
+using Common.Contracts;
+
+namespace Cart.Controllers.Contracts
+{
+    public interface ICartItemController : ICommonController<CartItem, CartItemDTO, CartItemDTO, CartItemDTO, CartItemQuerieFilter>
+    {
+    }
+}

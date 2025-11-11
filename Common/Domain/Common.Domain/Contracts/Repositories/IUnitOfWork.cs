@@ -4,12 +4,14 @@ using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
 using Common.Domain.Entities.Base;
+using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
 namespace Common.Domain.Contracts.Repositories
 {
     public interface IUnitOfWork : IScoped
     {
+        DbContext Context { get; }
         #region Add
         Task<DomainEntity> AddAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken) 
             where DomainEntity : class, IEntity;

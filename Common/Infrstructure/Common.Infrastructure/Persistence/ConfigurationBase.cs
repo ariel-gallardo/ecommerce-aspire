@@ -20,9 +20,9 @@ namespace Common.Infrastructure
         protected void ConfigureAuditable<U>(EntityTypeBuilder<U> builder) where U : class, IAuditable
         {
             ConfigureIdentifiable(builder);
-            builder.HasOne(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById).IsRequired(true);
-            builder.HasOne(x => x.UpdatedBy).WithMany().HasForeignKey(x => x.UpdatedById).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
-            builder.HasOne(x => x.DeletedBy).WithMany().HasForeignKey(x => x.DeletedById).IsRequired(false).OnDelete(DeleteBehavior.SetNull);
+            builder.Property(x => x.CreatedById).IsRequired(true);
+            builder.Property(x => x.UpdatedById).IsRequired(false);
+            builder.Property(x => x.DeletedById).IsRequired(false);
         }
     }
 }

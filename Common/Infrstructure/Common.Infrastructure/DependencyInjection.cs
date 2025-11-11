@@ -1,24 +1,42 @@
-﻿using Common.Domain.Contracts.Repositories;
-using Common.Infrastructure.Configurations;
-using Common.Infrastructure.Persistence.Seeds;
-using Common.Infrastructure.Persistence.Seeds.Base;
-using Common.Infrastructure.Persistence.Seeds.Entities;
+﻿using Common.Infrastructure.Configurations;
+using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using System.Reflection;
+using Microsoft.Extensions.Options;
+
 
 namespace Common.Infrastructure
 {
     public static class DependencyInjection
     {
+        private static IServiceCollection AddRabbitMq(this IServiceCollection services, IHostEnvironment env)
+        {            
+            using (var provider = services.BuildServiceProvider())
+            {
+                var appSettings = provider.GetRequiredService<IOptions<AppSettings>>()?.Value;
+                return services.AddMassTransit(c =>
+                {
+                    c.UsingRabbitMq((ctx, cfg) =>
+                    {
+                        cfg.Host(appSettings.RabbitMQ.Host);
+                    });
+                });
+            }
+        }
         public static IServiceCollection AddInfrastructure<IDBContext>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) where IDBContext : DbContext
         {
-            services.Configure<AppSettings>(configuration.GetSection("AppSettings"));
+            services.Configure<AppSettings>(options =>
+            {
+                configuration.GetSection("AppSettings").Bind(options);
+                options.RabbitMQ.Host = configuration.GetConnectionString("rabbit");
+                options.Redis.Configuration = configuration.GetConnectionString("cache");
+            });
+
+            services.AddRabbitMq(env);
             services.AddDbContext<IDBContext>(options =>
             {
                 if (env.IsDevelopment())
                 {
-                    options.UseInMemoryDatabase("InMemoryDB");
+                    options.UseSqlite(configuration.GetConnectionString($"{typeof(IDBContext).Name.Replace("Context", string.Empty)}"));
                 }
             });
             services.AddScoped<DbContext, IDBContext>();
