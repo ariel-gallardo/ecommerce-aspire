@@ -26,9 +26,10 @@ namespace Common.Infrastructure
         {
             services.Configure<AppSettings>(options =>
             {
-                configuration.GetSection("AppSettings").Bind(options);
-                options.RabbitMQ.Host = configuration.GetConnectionString("rabbit");
-                options.Redis.Configuration = configuration.GetConnectionString("cache");
+                var currentCfg = configuration.GetSection("Parameters:AppSettings") ?? configuration.GetSection("AppSettings");
+                currentCfg.Bind(options);
+                options.RabbitMQ.Host = configuration.GetConnectionString("rabbit") ?? $"amqp://{options.RabbitMQ.Username}:{options.RabbitMQ.Password}@localhost:5672";
+                options.Redis.Configuration = configuration.GetConnectionString("cache") ?? options.Redis.Configuration;
             });
 
             services.AddRabbitMq(env);

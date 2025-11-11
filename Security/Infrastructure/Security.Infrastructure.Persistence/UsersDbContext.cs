@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
 namespace Security.Infrastructure.Persistence
@@ -13,6 +14,8 @@ namespace Security.Infrastructure.Persistence
         {
             var assembly = Assembly.GetExecutingAssembly();
             modelBuilder.ApplyConfigurationsFromAssembly(assembly);
+
+          
         }
     }
 }
