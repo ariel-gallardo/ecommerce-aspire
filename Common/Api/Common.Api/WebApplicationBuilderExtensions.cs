@@ -77,7 +77,7 @@ namespace Common.Api
             if (app.Environment.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.MapOpenApi("/openapi/{documentName}/openapi.json");
+                app.MapOpenApi("/swagger/docs/{documentName}/swagger.json");
             }
 
             app.UseHttpsRedirection();

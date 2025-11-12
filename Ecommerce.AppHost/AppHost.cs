@@ -1,4 +1,3 @@
-using Aspire.Hosting;
 using Ecommerce.AppHost;
 using Microsoft.Extensions.Hosting;
 
@@ -27,6 +26,7 @@ if (!string.IsNullOrWhiteSpace(rabbitDataMount))
 }
 
 var cartApi = builder.AddProject<Projects.Cart_API>("cart")
+    .WithOpenApi()
     .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
@@ -35,6 +35,7 @@ var cartApi = builder.AddProject<Projects.Cart_API>("cart")
     .WaitFor(rabbitMQ)
     .WaitFor(cache);
 var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
+    .WithOpenApi()
     .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
@@ -43,6 +44,7 @@ var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
     .WaitFor(rabbitMQ)
     .WaitFor(cache);
 var productApi = builder.AddProject<Projects.Product_API>("product")
+    .WithOpenApi()
     .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
@@ -51,6 +53,7 @@ var productApi = builder.AddProject<Projects.Product_API>("product")
     .WaitFor(rabbitMQ)
     .WaitFor(cache);
 var securityApi = builder.AddProject<Projects.Security_API>("security")
+    .WithOpenApi()
     .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
@@ -58,6 +61,14 @@ var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache);
+
+var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
+    .WithExternalHttpEndpoints()
+    .WithReference(cartApi)
+    .WithReference(inventoryApi)
+    .WithReference(productApi)
+    .WithReference(securityApi);
+
 
 if (builder.Environment.IsDevelopment())
 {

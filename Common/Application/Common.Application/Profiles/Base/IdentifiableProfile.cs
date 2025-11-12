@@ -10,13 +10,15 @@ namespace Common.Application.Profiles.Base
         public IdentifiableProfile()
         {
             CreateMap<IdentifiableDTO, IdentifiableEntity>()
-            .ForMember(dest => dest.Id, opt => opt.Ignore());
-
-            CreateMap<IdentifiableEntity, IdentifiableDTO>();
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)))
+                .ReverseMap()
+                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
 
             CreateMap<IdentifiableDTO, Guid>()
                 .ConvertUsing(src => Guid.Parse(src.Id));
 
+            CreateMap<IdentifiableEntity, Guid>()
+                .ConvertUsing(src => src.Id);
             CreateMap<Guid, IdentifiableEntity>()
                 .ConvertUsing(guid => new IdentifiableEntity { Id = guid });
 

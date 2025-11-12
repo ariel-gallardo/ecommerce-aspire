@@ -211,6 +211,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logs.API", "Logs\Logs.API\L
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Logs.Domain", "Logs\Logs.Domain\Logs.Domain.csproj", "{332C8ADE-8DDE-42B3-90A6-18D6966D05CA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiGateway", "ApiGateway\ApiGateway.csproj", "{26A1DF33-DDCC-429D-949B-A4800FBD0529}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -521,6 +523,10 @@ Global
 		{332C8ADE-8DDE-42B3-90A6-18D6966D05CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{332C8ADE-8DDE-42B3-90A6-18D6966D05CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{332C8ADE-8DDE-42B3-90A6-18D6966D05CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{26A1DF33-DDCC-429D-949B-A4800FBD0529}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{26A1DF33-DDCC-429D-949B-A4800FBD0529}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{26A1DF33-DDCC-429D-949B-A4800FBD0529}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{26A1DF33-DDCC-429D-949B-A4800FBD0529}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

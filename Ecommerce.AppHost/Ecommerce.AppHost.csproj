@@ -11,6 +11,7 @@
   </PropertyGroup>
 	
   <ItemGroup>
+  	<ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
   	<ProjectReference Include="..\Common\Infrstructure\Common.Infrastructure\Common.Infrastructure.csproj" ReferenceOutputAssembly="false" />
   	<ProjectReference Include="..\Security\Security.API\Security.API.csproj" />
   	<ProjectReference Include="..\Product\Product.API\Product.API.csproj" />
