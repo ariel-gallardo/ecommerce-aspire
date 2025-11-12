@@ -1,4 +1,5 @@
-﻿using Common.Domain.Contracts.Repositories;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
@@ -8,20 +9,27 @@ using Microsoft.Extensions.Options;
 using Product.Domain.Entities;
 using Product.Infrastructure.Messaging.Key;
 using Security.Infrastructure.Cache.Key;
-using System.Text.Json;
 
 namespace Product.Infrastructure.Seeders
 {
     public class CategorySeeder : Seeder, IDevelopmentSeeder
     {
         private IEnumerable<Category> Categories { get; set; }
-        public CategorySeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IUnitOfWork unitOfWork) : base(options, cache, unitOfWork)
+        public CategorySeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IMapper mapper, IServiceProvider sp) : base(options, cache, mapper, sp)
         {
 
         }
-        public async Task SeedAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
             _cache.SetCancellationToken(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            await _cache.RemoveAsync(CacheKeyCategory.SeedIds, CacheKeyCategory.SeedCreatedIds);
+            if (await Set<Category>().AnyAsync(cancellationToken))
+            {
+                await _cache.SaveAsync(CacheKeyCategory.SeedIds, await Set<Category>().Where(x => !x.Children.Any()).Take(_quantity).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync());
+                await _cache.SaveAsync(CacheKeyCategory.SeedCreatedIds, true);
+                return Array.Empty<object>();
+            }
             await _cache.WaitAsync(CacheKeyUser.SeedCreatedIdsAdmin, cancellationToken);
             var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin, cancellationToken);
             int total = _quantity;
@@ -71,11 +79,9 @@ namespace Product.Infrastructure.Seeders
             }).ToList();
 
             Categories = catA.Concat(catB).Concat(catC);
-            await Task.WhenAll(
-                _unitOfWork.Context.AddRangeAsync(Categories, cancellationToken),
-                _cache.SaveAsync(CacheKeyCategory.SeedIds, catC.Select(x => x.Id))
-            );
+            await _cache.SaveAsync(CacheKeyCategory.SeedIds, catC.Select(x => x.Id));
             await _cache.SaveAsync(CacheKeyCategory.SeedCreatedIds, true);
+            return Categories;
         }
     }
 }

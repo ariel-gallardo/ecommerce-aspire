@@ -1,6 +1,10 @@
-﻿using Common.Infrastructure;
+﻿using Common.Domain.Enums;
+using Common.Domain.ValueObjects;
+using Common.Infrastructure;
 using Inventory.Domain;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Inventory.Infrastructure.Persistence.Configurations
 {
@@ -10,23 +14,18 @@ namespace Inventory.Infrastructure.Persistence.Configurations
         {
             ConfigureAuditable(builder);
             builder.Property(x => x.ProductId).IsRequired();
-            builder.Property(x => x.Unit).IsRequired();
-            builder.Navigation(x => x.Quantity).IsRequired(false);
-            builder.Navigation(x => x.QuantityAlert).IsRequired(false);
-            builder.OwnsOne(x => x.Quantity, x =>
+            builder.Property(x => x.Unit).IsRequired().HasConversion(new EnumToStringConverter<Unit>()).HasMaxLength(30);
+            builder.ComplexProperty(x => x.Quantity, x =>
             {
-                x.Property(x => x.Unit).IsRequired(true);
-                x.Property(x => x.Value).HasPrecision(18, 2).IsRequired(true);
-                x.HasIndex(x => x.Unit);
-                x.HasIndex(x => x.Value);
+                x.Property(x => x.Unit).HasConversion(new EnumToStringConverter<Unit>()).HasMaxLength(30);
+                x.Property(x => x.Value).HasPrecision(18, 2);
             });
-            builder.OwnsOne(x => x.QuantityAlert, x =>
+            builder.ComplexProperty(x => x.QuantityAlert, x =>
             {
-                x.Property(x => x.Unit).IsRequired(true);
-                x.Property(x => x.Value).HasPrecision(18, 2).IsRequired(true);
-                x.HasIndex(x => x.Unit);
-                x.HasIndex(x => x.Value);
+                x.Property(x => x.Unit).HasConversion(new EnumToStringConverter<Unit>()).HasMaxLength(30);
+                x.Property(x => x.Value).HasPrecision(18, 2);
             });
+            builder.HasIndex(x => x.Unit);
         }
     }
 }

@@ -7,6 +7,6 @@ namespace Security.Domain.Entities
     {
         public string Name { get; set; }
         public string Lastname { get; set; }
-        public virtual Address Address { get; set; }
+        public virtual Address? Address { get; set; }
     }
 }

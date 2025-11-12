@@ -4,6 +4,6 @@ namespace Common.Infrastructure.Persistence.Seeds.Base
 {
     public interface ISeeder : IScoped
     {
-        Task SeedAsync(CancellationToken cancellationToken = default);
+        Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default);
     }
 }

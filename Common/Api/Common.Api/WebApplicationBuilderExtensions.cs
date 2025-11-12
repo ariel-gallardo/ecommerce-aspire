@@ -2,7 +2,6 @@
 using Common.Application;
 using Common.Infrastructure;
 using Common.Infrastructure.Seeder;
-using Common.Infrastructure.Seeder.Contracts;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -79,11 +78,6 @@ namespace Common.Api
             {
                 app.UseDeveloperExceptionPage();
                 app.MapOpenApi("/openapi/{documentName}/openapi.json");
-                using (var scope = app.Services.CreateAsyncScope())
-                {
-                    var seeder = scope.ServiceProvider.GetRequiredService<ISeederRunner>();
-                    seeder.RunAsync();
-                }
             }
 
             app.UseHttpsRedirection();

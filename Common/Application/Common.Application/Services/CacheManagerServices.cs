@@ -28,8 +28,12 @@ namespace Common.Application.Services
         public async Task<T> GetAsync<T>(string key, CancellationToken cancellationToken = default)
         {
             var data = await _cache.GetStringAsync($"{key}", _cancellationToken ?? cancellationToken);
-            if(!string.IsNullOrEmpty(data)) data = Regex.Unescape(data);
-            return JsonSerializer.Deserialize<T>(data);
+            if (!string.IsNullOrWhiteSpace(data))
+            {
+                data = Regex.Unescape(data);
+                return JsonSerializer.Deserialize<T>(data);
+            }
+            else return default(T);
         }
 
         public async Task SaveAsync(string key, object data, CancellationToken cancellationToken = default)
@@ -48,7 +52,7 @@ namespace Common.Application.Services
                 var allReady = (await Task.WhenAll(dependencies.Select(async d =>
                 {
                     var value = await _cache.GetStringAsync($"{d}", _cancellationToken ?? cancellationToken);
-                    if (!string.IsNullOrEmpty(value)) value = Regex.Unescape(value);
+                    if (!string.IsNullOrWhiteSpace(value)) value = Regex.Unescape(value);
                     if (!string.IsNullOrWhiteSpace(value)) lock(foundKeys) foundKeys.Add(d);
                     return !string.IsNullOrWhiteSpace(value) && JsonSerializer.Deserialize<bool>(value);
                 }))).All(v => v);
@@ -70,7 +74,7 @@ namespace Common.Application.Services
                     var allReady = (await Task.WhenAll(dependencies.Select(async d =>
                     {
                         var value = await _cache.GetStringAsync($"{d}", _cancellationToken ?? cancellationToken);
-                        if (!string.IsNullOrEmpty(value)) value = Regex.Unescape(value);
+                        if (!string.IsNullOrWhiteSpace(value)) value = Regex.Unescape(value);
                         if (!string.IsNullOrWhiteSpace(value)) lock (foundKeys) foundKeys.Add(d);
                         return !string.IsNullOrWhiteSpace(value) && JsonSerializer.Deserialize<bool>(value);
                     }))).All(v => v);
@@ -89,7 +93,7 @@ namespace Common.Application.Services
             while (true)
             {
                 var value = await _cache.GetStringAsync($"{dependency}", _cancellationToken ?? cancellationToken);
-                if (!string.IsNullOrEmpty(value)) value = Regex.Unescape(value);
+                if (!string.IsNullOrWhiteSpace(value)) value = Regex.Unescape(value);
                 if (!string.IsNullOrWhiteSpace(value) && JsonSerializer.Deserialize<bool>(value)) 
                         break;
                 times++; if (times == _retryTimes) throw new CacheNotFoundException(dependency, times + 1);
@@ -104,7 +108,7 @@ namespace Common.Application.Services
                 while (true)
                 {
                     var value = await _cache.GetStringAsync($"{dependency}", _cancellationToken ?? cancellationToken);
-                    if (!string.IsNullOrEmpty(value)) value = Regex.Unescape(value);
+                    if (!string.IsNullOrWhiteSpace(value)) value = Regex.Unescape(value);
                     if (!string.IsNullOrWhiteSpace(value) && JsonSerializer.Deserialize<bool>(value)) 
                         break;
                     times++; if (times == retryTimes) throw new CacheNotFoundException(dependency, times + 1);
@@ -115,6 +119,7 @@ namespace Common.Application.Services
         public void SetCancellationToken(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
+            _cancellationToken.Value.ThrowIfCancellationRequested();
         }
 
         public async Task RemoveAsync(params string[] keys)
@@ -125,7 +130,7 @@ namespace Common.Application.Services
                 {
                     await _cache.RemoveAsync(keys[i], _cancellationToken.Value);
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
 
                 }

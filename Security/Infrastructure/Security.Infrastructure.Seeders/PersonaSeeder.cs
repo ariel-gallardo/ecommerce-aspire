@@ -1,4 +1,5 @@
-﻿using Common.Domain.Contracts.Repositories;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
@@ -8,7 +9,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Security.Domain.Entities;
 using Security.Infrastructure.Cache.Key;
-using System.Text.Json;
 
 namespace Security.Infrastructure.Seeders
 {
@@ -16,20 +16,28 @@ namespace Security.Infrastructure.Seeders
     {
         private IEnumerable<Persona> People { get; set; }
 
-        public PersonaSeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IUnitOfWork unitOfWork) : base(options, cache, unitOfWork)
+        public PersonaSeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IMapper mapper, IServiceProvider sp) : base(options, cache, mapper, sp)
         {
             People = Array.Empty<Persona>();
             _dependencies.Add(CacheKeyUser.SeedCreatedIdsAdmin);
         }
 
-        public async Task SeedAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
             _cache.SetCancellationToken(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await _cache.RemoveAsync(
                 CacheKeyPersona.SeedIds,
                 CacheKeyPersona.SeedCreatedIds
             );
             await _cache.WaitAsync(_dependencies, cancellationToken);
+            if (await Set<Persona>().AnyAsync(cancellationToken))
+            {
+                await _cache.SaveAsync(CacheKeyPersona.SeedIds, await Set<Persona>().OrderByDescending(x => x.CreatedAt).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken));
+                await _cache.SaveAsync(CacheKeyPersona.SeedCreatedIds, true);
+                return Array.Empty<object>();
+            }
+            
             var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin);
 
             People = Enumerable.Range(1, _quantity).Select(x =>
@@ -56,13 +64,9 @@ namespace Security.Infrastructure.Seeders
                 AddAuditableProperties(entity, userAdminIds);
                 return entity;
             }).ToList();
-
-            await Task.WhenAll(
-                 _unitOfWork.Context.AddRangeAsync(People),
-                 _cache.SaveAsync(CacheKeyPersona.SeedIds, People.Select(x => x.Id))
-            );
-
+            await _cache.SaveAsync(CacheKeyPersona.SeedIds, People.Select(x => x.Id));
             await _cache.SaveAsync(CacheKeyPersona.SeedCreatedIds, true);
+            return People;
         }
     }
 }

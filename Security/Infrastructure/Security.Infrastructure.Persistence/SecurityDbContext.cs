@@ -4,9 +4,9 @@ using System.Reflection;
 
 namespace Security.Infrastructure.Persistence
 {
-    public class UsersDbContext : DbContext
+    public class SecurityDbContext : DbContext
     {
-        public UsersDbContext(DbContextOptions<UsersDbContext> options) : base(options)
+        public SecurityDbContext(DbContextOptions<SecurityDbContext> options) : base(options)
         {
         }
 

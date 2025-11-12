@@ -156,6 +156,10 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{1E0E8ACA-0C2E-403D-B84F-47D34BE8221B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Elementos de la solución", "Elementos de la solución", "{D107F4C8-89CC-BEA8-D3D7-CA6B7733353D}"
+	ProjectSection(SolutionItems) = preProject
+		Migraciones.ps1 = Migraciones.ps1
+		README.md = README.md
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Security.Infrastructure.Messaging", "Security\Infrastructure\Security.Infrastructure.Messaging\Security.Infrastructure.Messaging.csproj", "{43D3B2C9-E3E2-4E2E-A4B9-FD7BC4C28C36}"
 EndProject

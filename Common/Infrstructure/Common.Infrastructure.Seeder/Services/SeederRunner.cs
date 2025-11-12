@@ -2,33 +2,45 @@
 using Common.Infrastructure.Seeder.Contracts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace Common.Infrastructure.Seeder.Services
 {
     public class SeedersRunner : ISeederRunner
     {
-        private readonly IServiceProvider _serviceProvider;
+        private readonly IEnumerable<IDevelopmentSeeder> _seeders;
         private readonly DbContext _context;
-        private readonly IEnumerable<Type> _seederTypes;
+        private readonly ILogger<SeedersRunner> _logger;
 
-        public SeedersRunner(IServiceProvider serviceProvider, DbContext context, IEnumerable<Type> seederTypes)
+
+        public SeedersRunner(DbContext context, [FromKeyedServices("Seeders")] IEnumerable<IDevelopmentSeeder> seeders, ILogger<SeedersRunner> logger)
         {
-            _serviceProvider = serviceProvider;
+            _seeders = seeders;
             _context = context;
-            _seederTypes = seederTypes;
+            _logger = logger;
         }
 
         public async Task RunAsync(CancellationToken cancellationToken = default)
         {
 
-            var seedTasks = _seederTypes
-                .Select(async seederType =>
+            var seedTasks = _seeders
+                .Select(async seeder =>
                 {
-                    var seeder = (IDevelopmentSeeder)_serviceProvider.GetRequiredService(seederType);
-                    await seeder.SeedAsync(cancellationToken);
-                });
-            await Task.WhenAll(seedTasks);
-            await _context.SaveChangesAsync();
+                    try
+                    {
+                        return await seeder.SeedAsync(cancellationToken);
+                    }
+                    catch(Exception e)
+                    {
+                        _logger.LogError(e, $"Seeder Runner - {_context.Database.ProviderName}");
+                        return null;
+                    }
+                }).ToList();
+            var data = (await Task.WhenAll(seedTasks)).Where(x => x != null).SelectMany(x => x).ToList();
+            if(data.Count() > 0)
+                await _context.AddRangeAsync(data);
+            var res = await _context.SaveChangesAsync();
+            if (res > 0) _logger.LogInformation($"Seeder Runner - {_context.Database.ProviderName} - New entities from seeds - {res}");
         }
     }
 

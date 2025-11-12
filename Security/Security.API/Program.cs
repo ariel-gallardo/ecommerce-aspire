@@ -12,6 +12,6 @@ var app = WebApplication.CreateBuilder(args)
     .AddValidatorAssemblies(typeof(UserLoginDTOValidator).Assembly)
     .AddServiceAssemblies(typeof(UserServices).Assembly)
     .AddSeederAssemblies(typeof(UserSeeder).Assembly)
-    .BuildApi<UsersDbContext>();
+    .BuildApi<SecurityDbContext>();
 
 app.Run();

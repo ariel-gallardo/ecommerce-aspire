@@ -24,23 +24,38 @@ namespace Common.Infrastructure
         }
         public static IServiceCollection AddInfrastructure<IDBContext>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) where IDBContext : DbContext
         {
+            var name = typeof(IDBContext).Name.Replace("Context", string.Empty);
+            
             services.Configure<AppSettings>(options =>
             {
                 var currentCfg = configuration.GetSection("Parameters:AppSettings") ?? configuration.GetSection("AppSettings");
                 currentCfg.Bind(options);
                 options.RabbitMQ.Host = configuration.GetConnectionString("rabbit") ?? $"amqp://{options.RabbitMQ.Username}:{options.RabbitMQ.Password}@localhost:5672";
-                options.Redis.Configuration = configuration.GetConnectionString("cache") ?? options.Redis.Configuration;
+                options.Redis.Configuration = configuration.GetConnectionString("cache") ?? $"localhost:6379,password={options.Redis.Password}";
+
             });
 
+
             services.AddRabbitMq(env);
-            services.AddDbContext<IDBContext>(options =>
+            services.AddDbContext<DbContext,IDBContext>(options =>
             {
                 if (env.IsDevelopment())
                 {
-                    options.UseSqlite(configuration.GetConnectionString($"{typeof(IDBContext).Name.Replace("Context", string.Empty)}"));
+                    var sp = services.BuildServiceProvider();
+                    var settings = sp.GetRequiredService<IOptions<AppSettings>>().Value;
+                    var file = Path.Join(settings.DatabaseDevPath, $"{name.Replace("Db", string.Empty)}.sqlite");
+                    options.UseSqlite(configuration.GetConnectionString(name) ?? $@"Data Source={file}");
+                    options.ConfigureWarnings(warnings =>
+                    warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
                 }
             });
-            services.AddScoped<DbContext, IDBContext>();
+            
+            if (env.IsDevelopment())
+            {
+                var sp = services.BuildServiceProvider();
+                var ctx = sp.GetService<DbContext>();
+                ctx.Database.Migrate();
+            }
             return services;
         }
     }

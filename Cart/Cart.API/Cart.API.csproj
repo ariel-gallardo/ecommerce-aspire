@@ -6,7 +6,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
   </PropertyGroup>
-
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="..\Cart.Application\Cart.Application.csproj" />

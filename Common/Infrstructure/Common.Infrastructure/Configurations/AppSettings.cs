@@ -2,6 +2,7 @@
 {
     public class AppSettings
     {
+        public string DatabaseDevPath { get; set; }
         public RabbitMQ RabbitMQ { get; set; }
         public Redis Redis { get; set; }
         public JWT Jwt { get; set; }

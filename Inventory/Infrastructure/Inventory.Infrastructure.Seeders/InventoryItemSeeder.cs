@@ -1,18 +1,15 @@
-﻿using Common.Domain.Contracts.Repositories;
+﻿using AutoMapper;
 using Common.Domain.Enums;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
-using Common.Infrastructure.Seeder.Contracts;
 using Common.Infrastructure.Seeder.Entities;
 using Inventory.Domain;
 using Inventory.Infrastructure.Cache.Key;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using Product.Infrastructure.Messaging.Key;
 using Security.Infrastructure.Cache.Key;
-using System.Text.Json;
 
 namespace Inventory.Infrastructure.Seeders
 {
@@ -20,19 +17,32 @@ namespace Inventory.Infrastructure.Seeders
     {
         
         private IEnumerable<InventoryItem> Items { get; set; }
-        public InventoryItemSeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IUnitOfWork unitOfWork) : base(options, cache, unitOfWork)
+        public InventoryItemSeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IMapper mapper, IServiceProvider sp) : base(options, cache, mapper, sp)
         {
             _dependencies.Add(CacheKeyUser.SeedCreatedIdAdmin);
             _dependencies.Add(CacheKeyProduct.SeedCreatedIds);
         }
 
-        public async Task SeedAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
             _cache.SetCancellationToken(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await _cache.RemoveAsync(
                 CacheKeyInventory.SeedUnitProducts,
                 CacheKeyInventory.SeedCreatedUnitProducts
             );
+            if (await Set<InventoryItem>().AnyAsync(cancellationToken))
+            {
+                await _cache.SaveAsync(
+                    CacheKeyInventory.SeedUnitProducts, 
+                    await Set<InventoryItem>()
+                    .OrderByDescending(x => x.CreatedAt)
+                    .Take(_quantity)
+                    .Select(x => new Tuple<Guid, Unit>(x.ProductId, x.Unit)).ToListAsync()
+                );
+                await _cache.SaveAsync(CacheKeyInventory.SeedCreatedUnitProducts, true);
+                return Array.Empty<object>();
+            }
             await _cache.WaitAsync(_dependencies, cancellationToken);
             var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);
             var prodIds = await _cache.GetAsync<List<Guid>>(CacheKeyProduct.SeedIds);
@@ -42,8 +52,7 @@ namespace Inventory.Infrastructure.Seeders
                 if (i % 3 == 0) return null;
                 var baseUnit = RandomUnitBase();
                 var quantity = RandomQuantityByUnitBase(baseUnit);
-                var quantityAlert = quantity;
-                quantityAlert.Value = quantityAlert.Value * 0.15m;
+                var quantityAlert = new Common.Domain.ValueObjects.Quantity { Unit = i%2 == 0 || i % 5 == 0 ? quantity.Unit : baseUnit, Value = quantity.Value * i % 2 == 0 ? 0.15m : i % 5 == 0 ? 1.25m : 5 };
                 var entity = new InventoryItem
                 {
                     Id = Guid.NewGuid(),
@@ -55,12 +64,9 @@ namespace Inventory.Infrastructure.Seeders
                 AddAuditableProperties(entity, adminId, adminId);
                 return entity;
             }).Where(x => x != null);
-
-            await Task.WhenAll(
-                _unitOfWork.Context.AddRangeAsync(Items),
-                _cache.SaveAsync(CacheKeyInventory.SeedUnitProducts, Items.Select(x => new Tuple<Guid, Unit>(x.ProductId, x.Unit)))
-            );
+            await _cache.SaveAsync(CacheKeyInventory.SeedUnitProducts, Items.Select(x => new Tuple<Guid, Unit>(x.ProductId, x.Unit)));
             await _cache.SaveAsync(CacheKeyInventory.SeedCreatedUnitProducts, true);
+            return Items;
         }
     }
 }

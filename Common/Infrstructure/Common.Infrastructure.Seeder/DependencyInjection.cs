@@ -24,12 +24,11 @@ namespace Common.Infrastructure.Seeder
                 var types = assemblies.SelectMany(a => a.GetTypes())
                     .Where(t => typeof(IDevelopmentSeeder).IsAssignableFrom(t) && !t.IsAbstract);
                 foreach (var type in types) services.AddScoped(type);
-
-                services.AddScoped(typeof(ISeederRunner),sp =>
-                {
-                    var context = sp.GetRequiredService<DbContext>();
-                    return new SeedersRunner(sp, context, types);
-                });
+                var prov = services.BuildServiceProvider();
+                services.AddKeyedSingleton(typeof(IEnumerable<IDevelopmentSeeder>), "Seeders", types.Select(t => (IDevelopmentSeeder)prov.GetService(t)).ToArray());
+                services.AddScoped<ISeederRunner, SeedersRunner>();
+                var seeder = services.BuildServiceProvider().GetRequiredService<ISeederRunner>();
+                seeder.RunAsync();
             }
             return services;
         }

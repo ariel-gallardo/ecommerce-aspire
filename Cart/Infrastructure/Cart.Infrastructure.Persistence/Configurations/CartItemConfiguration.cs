@@ -12,10 +12,9 @@ namespace Cart.Infrastructure.Persistence.Configurations
         {
             ConfigureAuditable(builder);
             builder.Property(x => x.ProductId).IsRequired();
-            builder.Navigation(x => x.Quantity).IsRequired();
             builder.OwnsOne(x => x.Quantity, x =>
             {
-                x.Property(x => x.Unit).HasConversion(new EnumToStringConverter<Unit>()).IsRequired(true);
+                x.Property(x => x.Unit).HasConversion(new EnumToStringConverter<Unit>());
                 x.Property(x => x.Value).IsRequired(true).HasPrecision(18, 2);
                 x.HasIndex(x => x.Unit);
                 x.HasIndex(x => x.Value);

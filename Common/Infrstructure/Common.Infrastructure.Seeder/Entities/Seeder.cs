@@ -1,11 +1,17 @@
 ﻿
+using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using Common.Domain.Contracts.Entities;
 using Common.Domain.Contracts.Repositories;
+using Common.Domain.Entities.Base;
 using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
+using MassTransit;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 namespace Common.Infrastructure.Seeder.Entities
@@ -18,9 +24,10 @@ namespace Common.Infrastructure.Seeder.Entities
         protected readonly DistributedCacheEntryOptions _cacheOptions;
         protected readonly int _quantity;
         protected readonly List<string> _dependencies;
-        protected readonly IUnitOfWork _unitOfWork;
+        private DbContext _context;
+        protected readonly IMapper _mapper;
 
-        protected Seeder(IOptions<AppSettings> options, ICacheManagerServices cache, IUnitOfWork unitOfWork)
+        protected Seeder(IOptions<AppSettings> options, ICacheManagerServices cache, IMapper mapper, IServiceProvider sp)
         {
             _random = new Random();
             _appSettings = options.Value;
@@ -28,8 +35,13 @@ namespace Common.Infrastructure.Seeder.Entities
             _cacheOptions = _appSettings.Redis.DistributedCacheEntryOptions;
             _quantity = _appSettings.QuantityToGenerate;
             _dependencies = new List<string>();
-            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+            var scope = sp.CreateAsyncScope();
+            _context = scope.ServiceProvider.GetService<DbContext>();
         }
+
+        protected DbSet<T> Set<T>() where T : class => _context.Set<T>();
+
         protected decimal RandomDecimalByBase(Unit unit)
         {
             var num = _random.Next(1, 10);

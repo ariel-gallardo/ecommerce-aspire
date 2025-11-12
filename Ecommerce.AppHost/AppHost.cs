@@ -61,16 +61,11 @@ var securityApi = builder.AddProject<Projects.Security_API>("security")
 
 if (builder.Environment.IsDevelopment())
 {
-    var basePath = @"D:\Db\Dev";
-    var cartDbFile = "Cart.db";
-    var inventoryDbFile = "Inventory.db";
-    var productDbFile = "Product.db";
-    var securityDbFile = "Security.db";
-
-    if (File.Exists(Path.Join(basePath, cartDbFile))) File.Delete(Path.Join(basePath, cartDbFile));
-    if (File.Exists(Path.Join(basePath, inventoryDbFile))) File.Delete(Path.Join(basePath, inventoryDbFile));
-    if (File.Exists(Path.Join(basePath, productDbFile))) File.Delete(Path.Join(basePath, productDbFile));
-    if (File.Exists(Path.Join(basePath, securityDbFile))) File.Delete(Path.Join(basePath, securityDbFile));
+    var basePath = cfg["Parameters:AppSettings:DatabaseDevPath"];
+    var cartDbFile = "Cart.sqlite";
+    var inventoryDbFile = "Inventory.sqlite";
+    var productDbFile = "Product.sqlite";
+    var securityDbFile = "Security.sqlite";
 
     var cartDb = builder.AddSqlite("CartDb",basePath, cartDbFile)
         .WithSqliteWeb();

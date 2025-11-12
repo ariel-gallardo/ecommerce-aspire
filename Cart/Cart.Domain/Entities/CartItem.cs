@@ -8,6 +8,6 @@ namespace Cart.Domain.Entities
         public Guid ProductId { get; set; }
         public Quantity Quantity { get; set; }
         public virtual Cart Cart {get;set;}
-        public virtual Guid CartId {get;set; }
+        public Guid CartId {get;set; }
     }
 }
