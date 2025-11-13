@@ -35,6 +35,7 @@ namespace Common.Api.Filters.OpenApi
         }
         public async Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
         {
+            
             var split = context.Description.RelativePath.Split('/');
             var subPath = split.Last();
             var httpMethod = context.Description.HttpMethod;

@@ -32,7 +32,7 @@ namespace Common.Infrastructure.Seeder.Services
                     }
                     catch(Exception e)
                     {
-                        _logger.LogError(e, $"Seeder Runner - {_context.Database.ProviderName}");
+                        _logger.LogInformation(e, $"Seeder Runner - {_context.Database.ProviderName}");
                         return null;
                     }
                 }).ToList();

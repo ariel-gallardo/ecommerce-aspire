@@ -8,6 +8,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\Common.Api.Controllers\Common.Api.Controllers.csproj" />
+    <ProjectReference Include="..\Inventory.Application\Inventory.Application.csproj" />
+    <ProjectReference Include="..\Inventory.Domain\Inventory.Domain.csproj" />
   </ItemGroup>
 
 </Project>

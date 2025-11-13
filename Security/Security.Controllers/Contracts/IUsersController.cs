@@ -4,7 +4,7 @@ using Security.Application.DTO;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
 
-namespace Security.Presentation.Contracts
+namespace Security.Controllers.Contracts
 {
     public interface IUsersController : ICommonController<User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>
     {

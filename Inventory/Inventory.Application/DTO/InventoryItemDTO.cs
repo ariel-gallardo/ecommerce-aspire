@@ -4,11 +4,11 @@ using Common.Contracts.DTO.ABM;
 
 namespace Inventory.Application.DTO
 {
-    public class InventoryItemDTO : AuditableDTO, IAddDTO, IUpdateDTO
+    public class InventoryItemDTO : AuditableDTO, IAddDTO, IUpdateDTO, IResultDTO
     {
-        public Guid ProductId { get; set; }
-        public QuantityDTO Quantity { get; set; }
-        public QuantityDTO QuantityAlert { get; set; }
+        public string ProductId { get; set; }
+        public virtual QuantityDTO Quantity { get; set; }
+        public virtual QuantityDTO QuantityAlert { get; set; }
         public string Unit { get; set; }
 
         public override bool Equals(object? obj)

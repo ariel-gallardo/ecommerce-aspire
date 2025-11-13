@@ -1,7 +1,7 @@
 ﻿using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure;
-using Inventory.Domain;
+using Inventory.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;

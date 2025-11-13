@@ -1,6 +1,7 @@
 ﻿using Common.Api.Controllers;
 using Common.Application.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -20,23 +21,22 @@ namespace Common.Api
                             t.BaseType.GetGenericTypeDefinition() == typeof(CommonController<,,,,>)))
             .Select(t => new { Type = t, GenericType = t.GetInterfaces().Last() })
             .ToArray();
-
+            
             foreach (var c in controllerTypes)
                 builder.Services.AddScoped(c.GenericType, c.Type);
 
-            ArgumentNullException.ThrowIfNull(builder);
-
-            var feature = new ControllerFeature();
-            builder.PartManager.PopulateFeature(feature);
-            
+            foreach (var cA in controllerAssemblies)
+            {
+                var assemblyPart = new AssemblyPart(cA);
+                builder.Services.AddControllers().ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
+            }
+           
             builder.Services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
 
             return builder;
         }
         public static IServiceCollection AddApi(this IServiceCollection services, Assembly[] controllerAssemblies)
         {
-
-
             services.AddMvc()
             .AddControllersAsServicesFromDI(controllerAssemblies)
             .AddJsonOptions(options =>
@@ -47,10 +47,7 @@ namespace Common.Api
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
-
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ControllerActivatorServices>());
-
-
             services.AddFluentValidationAutoValidation();
             services.AddEndpointsApiExplorer();
 

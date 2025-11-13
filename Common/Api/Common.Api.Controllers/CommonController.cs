@@ -8,8 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public abstract class CommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO, QuerieFilterEntity> : ControllerBase, 
         ICommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO,QuerieFilterEntity>
         where DomainEntity : class, IEntity

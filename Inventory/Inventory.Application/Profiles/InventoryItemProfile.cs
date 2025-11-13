@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Inventory.Application.DTO;
-using Inventory.Domain;
+using Inventory.Domain.Entities;
 
 namespace Inventory.Application.Profiles
 {

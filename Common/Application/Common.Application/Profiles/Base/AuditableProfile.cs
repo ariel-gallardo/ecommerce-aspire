@@ -9,15 +9,14 @@ namespace Common.Application.Profiles.Base
     {
         public AuditableProfile()
         {
-            CreateMap<AuditableDTO, AuditableEntity>()
+            CreateMap<AuditableEntity, AuditableDTO>()
+                .ReverseMap()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.CreatedById, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedById, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedById, opt => opt.Ignore());
-
-            CreateMap<AuditableEntity, AuditableDTO>();
             CreateMap<AuditableEntity, AuditableMessage>();
         }
     }

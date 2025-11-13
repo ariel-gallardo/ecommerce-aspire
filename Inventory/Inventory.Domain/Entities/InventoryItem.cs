@@ -2,7 +2,7 @@
 using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
 
-namespace Inventory.Domain
+namespace Inventory.Domain.Entities
 {
     public class InventoryItem : AuditableEntity
     {

@@ -1,16 +1,18 @@
-﻿using Common.Contracts;
+﻿using Common.Api.Controllers;
+using Common.Contracts;
 using Common.Infrastructure.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Security.Application.Contracts.Services;
 using Security.Application.DTO;
+using Security.Controllers.Contracts;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
-using Security.Presentation.Contracts;
 
-namespace Common.Api.Controllers
+namespace Security.Controllers
 {
-    
+    [ApiController]
+    [Route("api/[controller]")]
     public class UsersController : CommonController<User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>, IUsersController
     {
         private readonly IUserServices _userServices;

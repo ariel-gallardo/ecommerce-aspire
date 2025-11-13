@@ -2,12 +2,13 @@
 using Common.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Security.Application.DTO;
+using Security.Controllers.Contracts;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
-using Security.Presentation.Contracts;
 
-namespace Security.Presentation
+namespace Security.Controllers
 {
+    [ApiController]
     [Route("api/[controller]")]
     public class PersonasController : CommonController<Persona, PersonaDTO, PersonaDTO, PersonaDTO, PersonaQuerieFilter>, IPersonasController
     {

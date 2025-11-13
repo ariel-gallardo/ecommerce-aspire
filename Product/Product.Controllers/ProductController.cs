@@ -4,9 +4,12 @@ using Common.Api.Controllers;
 using Product.Domain.Filters.Querie;
 using Common.Contracts;
 using Product.Controllers.Contracts;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Product.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class ProductController : CommonController<Domain.Entities.Product, ProductDTO, ProductDTO, ProductDTO, ProductQuerieFilter>, IProductController
     {
         public ProductController(ICommonServices services) : base(services)
