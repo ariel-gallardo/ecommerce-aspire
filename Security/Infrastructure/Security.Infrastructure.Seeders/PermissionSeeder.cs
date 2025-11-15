@@ -30,12 +30,14 @@ namespace Security.Infrastructure.Seeders
             var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);
             var publicRoutes = new Permission[]
             {
-                new Permission{ Controller = "Users", Action = "login", CreatedById = adminId },
-                new Permission{ Controller = "Users", Action = "register", CreatedById = adminId },
+                new Permission{ Controller = "Users", Action = "Login", CreatedById = adminId },
+                new Permission{ Controller = "Users", Action = "Register", CreatedById = adminId },
+                new Permission{ Url="/users/login", CreatedById = adminId },
+                new Permission{ Url="/users/register", CreatedById = adminId },
             };
             Permissions = Enumerable.Range(1, _quantity).Select(i => new Permission
             {
-                Url = i % 2 != 0 ? $"https://website.com/path_{_random.Next(1, 100)}/sub_path_{_random.Next(1, 100)}" : string.Empty,
+                Url = i % 2 != 0 ? $"/path_{_random.Next(1, 100)}/sub_path_{_random.Next(1, 100)}" : string.Empty,
                 Action = i % 2 == 0 ? $"Action {_random.Next(1, 30)}" : string.Empty,
                 Controller = i % 2 == 0 ? $"Controller {_random.Next(1, 30)}" : string.Empty,
                 Policy = i % 3 == 0 ? (i % 7 == 0 ? Polices.Administrator : (i % 4 == 0 ? Polices.Client : Polices.Public)) : Polices.Public,
