@@ -2,19 +2,21 @@
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
+using System.Reflection;
 
 
 namespace Common.Infrastructure
 {
     public static class DependencyInjection
     {
-        private static IServiceCollection AddRabbitMq(this IServiceCollection services, IHostEnvironment env)
+        private static IServiceCollection AddRabbitMq(this IServiceCollection services, IHostEnvironment env, Assembly[] messageAssemblies)
         {            
             using (var provider = services.BuildServiceProvider())
             {
                 var appSettings = provider.GetRequiredService<IOptions<AppSettings>>()?.Value;
                 return services.AddMassTransit(c =>
                 {
+                    c.AddConsumers(messageAssemblies);
                     c.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host(appSettings.RabbitMQ.Host);
@@ -22,7 +24,7 @@ namespace Common.Infrastructure
                 });
             }
         }
-        public static IServiceCollection AddInfrastructure<IDBContext>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env) where IDBContext : DbContext
+        public static IServiceCollection AddInfrastructure<IDBContext>(this IServiceCollection services, IConfiguration configuration, IHostEnvironment env, Assembly[] messageAssemblies) where IDBContext : DbContext
         {
             var name = typeof(IDBContext).Name.Replace("Context", string.Empty);
             

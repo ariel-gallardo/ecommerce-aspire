@@ -19,6 +19,7 @@ namespace Common.Api
         private static Assembly[] _serviceAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _controllerAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _seederAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _messageAssemblies = Array.Empty<Assembly>();
 
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
@@ -50,6 +51,12 @@ namespace Common.Api
             return builder;
         }
 
+        public static WebApplicationBuilder AddMessageAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _messageAssemblies = assemblies ?? Array.Empty<Assembly>();
+            return builder;
+        }
+
         public static WebApplication BuildApi<DBContext>(this WebApplicationBuilder builder)
             where DBContext : DbContext
         {
@@ -61,7 +68,7 @@ namespace Common.Api
             }
             // Registramos infraestructura y servicios
             builder.AddServiceDefaults();
-            builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env);
+            builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
