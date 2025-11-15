@@ -52,7 +52,7 @@ namespace Common.Application
                 o.AddPolicy(Polices.Administrator, policy =>
                 policy.RequireRole(nameof(RoleEnum.Administrator)));
 
-                o.AddPolicy(Polices.Operator, policy =>
+                o.AddPolicy(Polices.Support, policy =>
                 policy.RequireRole(nameof(RoleEnum.Administrator), nameof(RoleEnum.Support)));
 
                 o.AddPolicy(Polices.Client, policy =>
