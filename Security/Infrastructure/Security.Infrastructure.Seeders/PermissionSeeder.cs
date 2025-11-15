@@ -4,6 +4,7 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Security.Domain.Entities;
 using Security.Infrastructure.Cache.Key;
@@ -20,6 +21,10 @@ namespace Security.Infrastructure.Seeders
 
         public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
+            if (await Set<Permission>().AnyAsync(cancellationToken))
+            {
+                return Array.Empty<Permission>();
+            }
             _cache.SetCancellationToken(cancellationToken);
             await _cache.WaitAsync(_dependencies);
             var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);

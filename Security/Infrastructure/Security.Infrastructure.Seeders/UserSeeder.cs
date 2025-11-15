@@ -26,10 +26,6 @@ namespace Security.Infrastructure.Seeders
 
         public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
-            if (await Set<Permission>().AnyAsync(cancellationToken))
-            {
-                return Array.Empty<Permission>();
-            }
             _cache.SetCancellationToken(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             await _cache.RemoveAsync(
