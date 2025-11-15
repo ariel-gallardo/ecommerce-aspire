@@ -38,7 +38,7 @@ namespace Common.Infrastructure
             });
 
 
-            services.AddRabbitMq(env);
+            services.AddRabbitMq(env, messageAssemblies);
             services.AddDbContext<DbContext,IDBContext>(options =>
             {
                 if (env.IsDevelopment())
