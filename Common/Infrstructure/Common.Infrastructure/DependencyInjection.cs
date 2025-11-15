@@ -20,6 +20,8 @@ namespace Common.Infrastructure
                     c.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host(appSettings.RabbitMQ.Host);
+                        cfg.UseConcurrencyLimit(appSettings.RabbitMQ.ConcurrenctMessageLimit);
+                        cfg.ConcurrentMessageLimit = appSettings.RabbitMQ.ConcurrenctMessageLimit;
                     });
                 });
             }
