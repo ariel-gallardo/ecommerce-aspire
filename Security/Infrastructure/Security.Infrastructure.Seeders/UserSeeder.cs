@@ -46,6 +46,12 @@ namespace Security.Infrastructure.Seeders
                     _cache.SaveAsync(CacheKeyUser.SeedIdsClient, await Set<User>().Where(x => x.Rol == RoleEnum.Client).ProjectTo<Guid>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync()),
                     _cache.SaveAsync(CacheKeyUser.SeedIds, await Set<User>().ProjectTo<Guid>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync())
                 );
+                await Task.WhenAll(
+                    _cache.SaveAsync(CacheKeyUser.SeedCreatedIdAdmin,true),
+                    _cache.SaveAsync(CacheKeyUser.SeedCreatedIdsAdmin,true),
+                    _cache.SaveAsync(CacheKeyUser.SeedCreatedIdsClient,true),
+                    _cache.SaveAsync(CacheKeyUser.SeedCreatedIds,true)
+                );
                 return Array.Empty<object>();
             }
             
