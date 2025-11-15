@@ -11,7 +11,16 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Domain\Common.Domain\Common.Domain.csproj" />
+    <ProjectReference Include="..\..\..\Common\Infrstructure\Common.Infrastructure.Cache.Key\Common.Infrastructure.Cache.Key.csproj" />
+    <ProjectReference Include="..\..\..\Common\Infrstructure\Common.Infrastructure.Cache\Common.Infrastructure.Cache.csproj" />
+    <ProjectReference Include="..\..\..\Common\Infrstructure\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Common\Infrstructure\Common.Infrastructure.Messages\Common.Infrastructure.Messages.csproj" />
+    <ProjectReference Include="..\..\Security.Domain\Security.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Messages\Response\" />
   </ItemGroup>
 
 </Project>

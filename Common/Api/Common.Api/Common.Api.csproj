@@ -11,6 +11,7 @@
     <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\..\Contracts\Common.Contracts\Common.Contracts.csproj" />
     <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Cache.Key\Common.Infrastructure.Cache.Key.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Seeder\Common.Infrastructure.Seeder.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure\Common.Infrastructure.csproj" />
     <ProjectReference Include="..\Common.Api.Controllers\Common.Api.Controllers.csproj" />
@@ -23,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.10" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="9.0.6" />
   </ItemGroup>

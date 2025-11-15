@@ -1,9 +1,9 @@
-﻿namespace Security.Domain.Enums
+﻿namespace Security.Infrastructure.Entities
 {
     public enum RoleEnum
     {
         Client,
-        Operator,
+        Support,
         Administrator
     }
 }

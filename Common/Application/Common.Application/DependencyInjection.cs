@@ -3,14 +3,18 @@ using Common.Application.Services;
 using Common.Contracts;
 using Common.Infrastructure;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
+using Microsoft.IdentityModel.Tokens;
 using Security.Infrastructure;
-using System;
+using Security.Infrastructure.Entities;
 using System.Reflection;
+using System.Security.Claims;
+using System.Text;
 
 namespace Common.Application
 {
@@ -43,8 +47,33 @@ namespace Common.Application
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
         {
-            services.AddAuthorization();
-            services.AddAuthentication();
+            services.AddAuthorization(o =>
+            {
+                o.AddPolicy(Polices.Administrator, policy =>
+                policy.RequireRole(nameof(RoleEnum.Administrator)));
+
+                o.AddPolicy(Polices.Operator, policy =>
+                policy.RequireRole(nameof(RoleEnum.Administrator), nameof(RoleEnum.Support)));
+
+                o.AddPolicy(Polices.Client, policy =>
+                policy.RequireRole(nameof(RoleEnum.Administrator), nameof(RoleEnum.Support), nameof(RoleEnum.Client)));
+            });
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
+            {
+                var sP = services.BuildServiceProvider();
+                var appSettings = sP.GetRequiredService<IOptions<AppSettings>>().Value;
+                o.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = appSettings.Jwt.Issuer,
+                    ValidAudience = appSettings.Jwt.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(
+                        Encoding.UTF8.GetBytes(appSettings.Jwt.Secret)
+                    )
+                };
+            });
             services.AddHttpContextAccessor();
             var allTypes = assemblies.Concat(new[] { typeof(AuthServices).Assembly, typeof(UnitOfWork).Assembly, typeof(CommonServices).Assembly }).Distinct()
             .SelectMany(a => a.GetTypes())

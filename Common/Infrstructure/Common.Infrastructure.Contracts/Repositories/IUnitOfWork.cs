@@ -3,11 +3,10 @@ using Common.Contracts.DTO.ABM;
 using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
-using Common.Domain.Entities.Base;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Common.Domain.Contracts.Repositories
+namespace Common.Infrastructure.Repositories
 {
     public interface IUnitOfWork : IScoped
     {

@@ -1,5 +1,5 @@
 ﻿using Common.Domain.Entities.Base;
-using Security.Domain.Enums;
+using Security.Infrastructure.Entities;
 namespace Security.Domain.Entities
 {
     public class User : IdentifiableEntity

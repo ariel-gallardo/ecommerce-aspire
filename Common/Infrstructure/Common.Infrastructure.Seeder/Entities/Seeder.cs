@@ -1,14 +1,10 @@
 ﻿
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Common.Domain.Contracts.Entities;
-using Common.Domain.Contracts.Repositories;
-using Common.Domain.Entities.Base;
 using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
-using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;

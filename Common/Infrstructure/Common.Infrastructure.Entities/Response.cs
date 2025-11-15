@@ -1,4 +1,6 @@
-﻿namespace Common.Infrastructure.Entities
+﻿using Common.Infrastructure.Entities.Contracts;
+
+namespace Common.Infrastructure.Entities
 {
     public class BaseResponse : IResponse
     {

@@ -3,8 +3,8 @@ using Common.Contracts.DTO.ABM;
 using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
-using Common.Domain.Contracts.Repositories;
 using Common.Infrastructure.Entities;
+using Common.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Http;
 
 namespace Common.Application.Services

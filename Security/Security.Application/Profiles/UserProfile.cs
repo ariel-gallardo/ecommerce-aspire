@@ -4,9 +4,7 @@ using Security.Application.DTO;
 using Security.Application.Profiles.Resolvers;
 using Security.Domain.Const;
 using Security.Domain.Entities;
-using Security.Domain.Enums;
 using Security.Domain.Filters.Queries;
-using Security.Infrastructure.Messaging.Messages.Development;
 
 namespace Security.Application.Profiles
 {
@@ -24,8 +22,6 @@ namespace Security.Application.Profiles
                 .ReverseMap()
                 .ForMember(dest => dest.Password, opt => opt.Ignore())
                 .ForMember(dest => dest.RePassword, opt => opt.Ignore());
-
-            CreateMap<User, UserAdminCreated>();
 
             #region Claims
             CreateMap<User, Claim[]>()

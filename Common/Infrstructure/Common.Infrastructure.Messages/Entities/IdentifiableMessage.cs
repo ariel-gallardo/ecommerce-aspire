@@ -1,7 +1,7 @@
 ﻿
 namespace Common.Infrastructure.Messages.Entities
 {
-    public class IdentifiableMessage
+    public class IdentifiableMessage : Message
     {
         public string Id { get; set; }
 

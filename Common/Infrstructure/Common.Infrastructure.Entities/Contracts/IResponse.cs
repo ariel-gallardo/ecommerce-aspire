@@ -1,4 +1,4 @@
-﻿namespace Common.Infrastructure.Entities
+﻿namespace Common.Infrastructure.Entities.Contracts
 {
     public interface IResponse<T> where T : class
     {

@@ -7,9 +7,9 @@ using Common.Infrastructure.Seeder.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Security.Domain.Entities;
-using Security.Domain.Enums;
 using Security.Infrastructure.Cache.Key;
 using Security.Infrastructure.Contracts;
+using Security.Infrastructure.Entities;
 
 namespace Security.Infrastructure.Seeders
 {
@@ -54,7 +54,7 @@ namespace Security.Infrastructure.Seeders
                 return new User
                 {
                     Id = Guid.NewGuid(),
-                    Rol = (x % 9 == 0 ? RoleEnum.Administrator : x % 3 == 0 ? RoleEnum.Operator : RoleEnum.Client),
+                    Rol = (x % 9 == 0 ? RoleEnum.Administrator : x % 3 == 0 ? RoleEnum.Support : RoleEnum.Client),
                     Email = $"user_email_{x}@mail.com",
                     Username = $"user_name_{x}",
                     Password = _authServices.HashPassword("123456aA$")

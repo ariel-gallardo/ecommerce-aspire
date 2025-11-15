@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Linq.Expressions;
 using Security.Domain.Entities;
-using Security.Domain.Enums;
+using Security.Infrastructure.Entities;
 
 namespace Security.Domain.Filters.Queries
 {

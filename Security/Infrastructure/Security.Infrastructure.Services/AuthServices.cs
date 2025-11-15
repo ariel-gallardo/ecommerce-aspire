@@ -1,5 +1,7 @@
 ﻿using Common.Domain.Exceptions;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Entities.Const;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -14,14 +16,24 @@ namespace Security.Infrastructure
     {
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppSettings _appSettings;
+        private readonly IAuthorizationService _authorizationService;
 
         private ClaimsPrincipal User => _httpContextAccessor.HttpContext.User;
 
 
-        public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings)
+        public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IAuthorizationService authorizationService)
         {
             _httpContextAccessor = httpContext;
             _appSettings = appSettings.Value;
+            _authorizationService = authorizationService;
+        }
+
+        public async Task<bool?> CanAccess(string policyName)
+        {
+            var user = _httpContextAccessor?.HttpContext?.User;
+            if (user == null) return null;
+            var result = await _authorizationService.AuthorizeAsync(user, policyName);
+            return result.Succeeded;
         }
 
         public string? ClaimValue(string claimType)
