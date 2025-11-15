@@ -28,10 +28,15 @@ namespace Security.Infrastructure
             _authorizationService = authorizationService;
         }
 
+        public bool IsAuthenticated
+        {
+            get => _httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+        }
+
         public async Task<bool?> CanAccess(string policyName)
         {
             var user = _httpContextAccessor?.HttpContext?.User;
-            if (user == null) return null;
+            if (!user.Identity.IsAuthenticated) return null;
             var result = await _authorizationService.AuthorizeAsync(user, policyName);
             return result.Succeeded;
         }

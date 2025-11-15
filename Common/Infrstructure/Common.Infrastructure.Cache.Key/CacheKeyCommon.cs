@@ -4,12 +4,12 @@
     {
         public static string PolicyActionNameCreated(string controllerName, string actionName)
         {
-            var actionCache = $"Policy:Created:Action:{controllerName}:{actionName}";
+            var actionCache = $"Created:Policy:{controllerName}:{actionName}";
             return actionCache;
         }
         public static string PolicyActionName(string controllerName, string actionName)
         {
-            var actionCache = $"Policy:Action:{controllerName}:{actionName}";
+            var actionCache = $"Policy:{controllerName}:{actionName}";
             return actionCache;
         }
     }

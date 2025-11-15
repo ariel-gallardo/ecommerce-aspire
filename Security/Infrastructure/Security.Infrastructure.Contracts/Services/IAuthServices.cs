@@ -6,6 +6,7 @@ namespace Security.Infrastructure.Contracts
     public interface IAuthServices : IScoped
     {
         Guid Id { get; }
+        bool IsAuthenticated { get; }
         Task<bool?> CanAccess(string policyName);
         string? ClaimValue(string claimType);
         string GenerateToken(Claim[] claims);

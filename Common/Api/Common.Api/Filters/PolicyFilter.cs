@@ -2,6 +2,7 @@
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
+using Common.Infrastructure.Entities.Const;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -26,47 +27,61 @@ namespace Common.Api.Filters
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-            var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-            var controller = actionDescriptor?.ControllerName;
-            var action = actionDescriptor?.ActionName;
-            if(!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
-            {
-                var actionName = CacheKeyCommon.PolicyActionName(controller, action);
-                var actionNameCreated = CacheKeyCommon.PolicyActionNameCreated(controller, action);
-                var policy = await _cache.GetAsync<string>(actionName);
-                if (string.IsNullOrEmpty(policy))
+                var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+                var controller = actionDescriptor?.ControllerName;
+                var action = actionDescriptor?.ActionName;
+                if (!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
                 {
-                    try
+                    var actionName = CacheKeyCommon.PolicyActionName(controller, action);
+                    var actionNameCreated = CacheKeyCommon.PolicyActionNameCreated(controller, action);
+                    var policy = await _cache.GetAsync<string>(actionName);
+                    if (string.IsNullOrEmpty(policy))
                     {
-                        _policyClient.Create(new LoadPermissionRequest { Controller = controller, Action = action });
-                        await _cache.WaitAsync(actionNameCreated);
-                        actionName = await _cache.GetAsync<string>(actionName);
-                    }
-                    catch (CacheNotFoundException e)
-                    {
-                        var result = new ObjectResult(new BaseResponse
+                        try
                         {
-                            Message = e.Message,
-                            StatusCode = StatusCodes.Status403Forbidden
+                            _policyClient.Create(new LoadPermissionRequest { Controller = controller, Action = action });
+                            await _cache.WaitAsync(actionNameCreated);
+                            policy = await _cache.GetAsync<string>(actionName);
+                            if (policy == Polices.Public) return;
+                        }
+                        catch (Exception e)
+                        {
+                            if (!_authServices.IsAuthenticated)
+                            {
+                                var response = new ObjectResult(new BaseResponse
+                                {
+                                    StatusCode = StatusCodes.Status401Unauthorized,
+                                    Message = "Unauthorized."
+                                });
+                                response.StatusCode = StatusCodes.Status401Unauthorized;
+                                context.Result = response;
+                                return;
+                            }
+                            var result = new ObjectResult(new BaseResponse
+                            {
+                                Message = e.Message,
+                                StatusCode = StatusCodes.Status403Forbidden
+                            });
+                            result.StatusCode = StatusCodes.Status403Forbidden;
+                            context.Result = result;
+                            return;
+                        }
+                    }
+                    var canAccess = await _authServices.CanAccess(policy);
+                    if (!canAccess.HasValue || !canAccess.Value)
+                    {
+                        var response = new ObjectResult(new BaseResponse
+                        {
+                            StatusCode = canAccess == null
+                            ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
+                            Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
                         });
-                        result.StatusCode = StatusCodes.Status403Forbidden;
-                        context.Result = result;
+                        response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Result = response;
+                        return;
                     }
                 }
-                var canAccess = await _authServices.CanAccess(policy);
-                if (!canAccess.HasValue || !canAccess.Value)
-                {
-                    var response = new ObjectResult(new BaseResponse
-                    {
-                        StatusCode = canAccess == null
-                        ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
-                        Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
-                    });
-                    response.StatusCode = StatusCodes.Status401Unauthorized;
-                    context.Result = response;
-                }
-            }
-
+            
         }
     }
 }
