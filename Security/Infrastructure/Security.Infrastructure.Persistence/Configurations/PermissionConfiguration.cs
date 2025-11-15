@@ -16,6 +16,7 @@ namespace Security.Infrastructure.Persistence.Configurations
             builder.HasIndex(x => x.Controller);
             builder.HasIndex(x => x.Action);
             builder.HasIndex(x => x.Url);
+            builder.HasIndex(x => x.Policy);
         }
     }
 }
