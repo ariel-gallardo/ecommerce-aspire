@@ -11,8 +11,6 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")]
     public class UsersController : CommonController<User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>, IUsersController
     {
         private readonly IUserServices _userServices;

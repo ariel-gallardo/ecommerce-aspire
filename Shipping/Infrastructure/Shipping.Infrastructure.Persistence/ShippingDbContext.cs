@@ -1,11 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
-namespace Security.Infrastructure.Persistence
+namespace Shipping.Infrastructure.Persistence
 {
-    public class SecurityDbContext : DbContext
+    public class ShippingDbContext : DbContext
     {
-        public SecurityDbContext(DbContextOptions<SecurityDbContext> options) : base(options)
+        public ShippingDbContext(DbContextOptions<ShippingDbContext> options) : base(options)
         {
         }
 

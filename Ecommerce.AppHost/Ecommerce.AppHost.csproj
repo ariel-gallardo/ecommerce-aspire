@@ -17,6 +17,7 @@
   	<ProjectReference Include="..\Product\Product.API\Product.API.csproj" />
   	<ProjectReference Include="..\Inventory\Inventory.API\Inventory.API.csproj" />
   	<ProjectReference Include="..\Cart\Cart.API\Cart.API.csproj" />
+  	<ProjectReference Include="..\Shipping\Shipping.API\Shipping.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>

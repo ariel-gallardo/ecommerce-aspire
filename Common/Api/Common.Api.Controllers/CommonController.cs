@@ -3,11 +3,14 @@ using Common.Contracts.DTO.ABM;
 using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
-using Common.Infrastructure.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers
 {
+    [ApiController]
+    [Authorize]
+    [Route("api/[controller]")]
     public abstract class CommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO, QuerieFilterEntity> : ControllerBase, 
         ICommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO,QuerieFilterEntity>
         where DomainEntity : class, IEntity

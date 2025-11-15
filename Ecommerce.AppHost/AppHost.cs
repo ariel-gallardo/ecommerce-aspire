@@ -61,6 +61,15 @@ var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache);
+var shippingApi = builder.AddProject<Projects.Shipping_API>("shipping")
+    .WithOpenApi()
+    .WithAppSettingsEnvironments(cfg)
+    .WithExternalHttpEndpoints()
+    .WithHttpHealthCheck("/health")
+    .WithReference(rabbitMQ)
+    .WithReference(cache)
+    .WaitFor(rabbitMQ)
+    .WaitFor(cache);
 
 var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
     .WithExternalHttpEndpoints()

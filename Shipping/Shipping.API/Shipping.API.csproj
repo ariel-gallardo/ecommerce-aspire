@@ -9,7 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\Common.Api\Common.Api.csproj" />
-    <ProjectReference Include="..\Infrastructure\Shipping.Infrastructure\Shipping.Infrastructure.csproj" />
+    <ProjectReference Include="..\Infrastructure\Shipping.Infrastructure.Persistence\Shipping.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\Infrastructure\Shipping.Infrastructure.Seeders\Shipping.Infrastructure.Seeders.csproj" />
     <ProjectReference Include="..\Shipping.Application\Shipping.Application.csproj" />
     <ProjectReference Include="..\Shipping.Controllers\Shipping.Controllers.csproj" />
   </ItemGroup>
