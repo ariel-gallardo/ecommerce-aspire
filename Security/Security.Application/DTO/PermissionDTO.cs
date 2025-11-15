@@ -8,6 +8,7 @@ namespace Security.Application.DTO
         public string Url { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
+        public string Policy { get; set; }
 
         public override bool Equals(object? obj)
         {
@@ -15,12 +16,13 @@ namespace Security.Application.DTO
                    base.Equals(obj) &&
                    Url == dTO.Url &&
                    Controller == dTO.Controller &&
-                   Action == dTO.Action;
+                   Action == dTO.Action &&
+                   Policy == dTO.Policy;
         }
 
         public override int GetHashCode()
         {
-            return HashCode.Combine(base.GetHashCode(), Url, Controller, Action);
+            return HashCode.Combine(base.GetHashCode(), Url, Controller, Action, Policy);
         }
     }
 }
