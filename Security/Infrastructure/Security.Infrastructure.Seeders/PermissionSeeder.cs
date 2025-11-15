@@ -26,14 +26,15 @@ namespace Security.Infrastructure.Seeders
                 return Array.Empty<Permission>();
             }
             _cache.SetCancellationToken(cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
             await _cache.WaitAsync(_dependencies);
             var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);
             var publicRoutes = new Permission[]
             {
-                new Permission{ Controller = "Users", Action = "Login", CreatedById = adminId, Policy = Polices.Public },
-                new Permission{ Controller = "Users", Action = "Register", CreatedById = adminId, Policy = Polices.Public },
-                new Permission{ Url="/users/login", CreatedById = adminId, Policy = Polices.Public },
-                new Permission{ Url="/users/register", CreatedById = adminId, Policy = Polices.Public },
+                new Permission{ Controller = "Users", Action = "Login", CreatedById = adminId, Policy = Polices.Public, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "Register", CreatedById = adminId, Policy = Polices.Public, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/login", CreatedById = adminId, Policy = Polices.Public, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/register", CreatedById = adminId, Policy = Polices.Public, CreatedAt = DateTime.UtcNow },
             };
             Permissions = Enumerable.Range(1, _quantity).Select(i => new Permission
             {
@@ -41,7 +42,8 @@ namespace Security.Infrastructure.Seeders
                 Action = i % 2 == 0 ? $"Action {_random.Next(1, 30)}" : string.Empty,
                 Controller = i % 2 == 0 ? $"Controller {_random.Next(1, 30)}" : string.Empty,
                 Policy = i % 3 == 0 ? (i % 7 == 0 ? Polices.Administrator : (i % 4 == 0 ? Polices.Client : Polices.Public)) : Polices.Public,
-                CreatedById = adminId
+                CreatedById = adminId,
+                CreatedAt = DateTime.UtcNow
             }).Concat(publicRoutes);
             return Permissions;
         }
