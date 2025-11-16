@@ -37,7 +37,8 @@ namespace Common.Contracts
         #region Search
         
         Task<IActionResult> SearchAsync(Guid entityId, CancellationToken cancellationToken);
-        
+
+        Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
         Task<IActionResult> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
         Task<IActionResult> SearchAsync(IList<Guid> entityIds, int page, int pageSize, CancellationToken cancellationToken);

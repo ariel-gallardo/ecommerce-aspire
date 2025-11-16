@@ -365,6 +365,22 @@ namespace Common.Infrastructure
             return await querie.PaginateAsync<DomainEntity,DomainEntity>(_map, filters);
         }
 
+        public async Task<ResultDTO> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO
+        {
+            var querie = _ctx.Set<DomainEntity>().AsQueryable();
+            if (filters != null)
+            {
+                var expressions = _builder.Build<DomainEntity>(filters);
+                if (expressions != null)
+                    querie = querie.Where(expressions);
+                if (!string.IsNullOrWhiteSpace(filters.OrderBy))
+                    querie = querie.ApplyOrderBy(filters.OrderBy);
+            }
+            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+        }
+
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO

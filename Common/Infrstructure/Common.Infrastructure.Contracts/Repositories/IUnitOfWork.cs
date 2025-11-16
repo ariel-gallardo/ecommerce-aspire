@@ -86,6 +86,9 @@ namespace Common.Infrastructure.Repositories
 
         Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
+        Task<ResultDTO> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
         Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO;

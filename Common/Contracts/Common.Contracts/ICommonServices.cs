@@ -43,6 +43,10 @@ namespace Common.Contracts
         Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>([FromQuery] Guid entityId, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;
+
+        Task<BaseResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO;
         Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>([FromBody] IQuerieFilter filters, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;

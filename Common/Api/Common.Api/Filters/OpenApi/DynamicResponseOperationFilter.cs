@@ -26,8 +26,8 @@ namespace Common.Api.Filters.OpenApi
 {
     public class DynamicResponseOperationTransformer : IOpenApiOperationTransformer
     {
-        private static string[] commonMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "UpdateAsync", "DeleteAsync" };
-        private static string[] responseMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync" };
+        private static string[] commonMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "SearchFirstAsync", "UpdateAsync", "DeleteAsync" };
+        private static string[] responseMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "SearchFirstAsync" };
         private static string[] validationMethods = new string[] { "AddAsync", "UpdateAsync" };
 
         private static string status200String = StatusCodes.Status200OK.ToString();

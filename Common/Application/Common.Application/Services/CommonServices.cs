@@ -145,6 +145,27 @@ namespace Common.Application.Services
             return response;
         }
 
+        public async Task<BaseResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        where DomainEntity : class, IEntity
+        where ResultDTO : class, IEntityDTO, IResultDTO
+        {
+            BaseResponse response;
+            var result = await _unitOfWork.SearchFirstAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
+            if (result != null)
+            {
+                response = new Response<ResultDTO> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
+            }
+            else
+            {
+                response = new BaseResponse
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"{typeof(DomainEntity).Name} not found."
+                };
+            }
+            return response;
+        }
+
         public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(IList<Guid> entityIds, int page, int pageSize, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO

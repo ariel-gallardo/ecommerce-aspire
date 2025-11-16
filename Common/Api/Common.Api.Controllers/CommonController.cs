@@ -87,6 +87,13 @@ namespace Common.Api.Controllers
             return StatusCode(response.StatusCode, response);
         }
 
+        [HttpGet("filters-first")]
+        public async Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken)
+        {
+            var response = await _services.SearchFirstAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
+            return StatusCode(response.StatusCode, response);
+        }
+
         [HttpGet("ids")]
         public async Task<IActionResult> SearchAsync([FromQuery] IList<Guid> entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
