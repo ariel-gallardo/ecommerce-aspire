@@ -1,9 +1,9 @@
 ﻿using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Messages.Entities;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using System.Reflection;
-
 
 namespace Common.Infrastructure
 {
@@ -16,13 +16,19 @@ namespace Common.Infrastructure
                 var appSettings = provider.GetRequiredService<IOptions<AppSettings>>()?.Value;
                 return services.AddMassTransit(c =>
                 {
-                    c.AddConsumers(messageAssemblies);
+                    var types = messageAssemblies
+                    .SelectMany(a => a.GetTypes())
+                    .Where(t => t.BaseType != null
+                                && t.BaseType.IsGenericType
+                                && t.BaseType.GetGenericTypeDefinition() == typeof(Consumer<>))
+                    .ToArray();
+                    c.AddConsumers(types);
                     c.UsingRabbitMq((ctx, cfg) =>
                     {
                         cfg.Host(appSettings.RabbitMQ.Host);
-                        cfg.UseConcurrencyLimit(appSettings.RabbitMQ.ConcurrenctMessageLimit);
-                        cfg.ConcurrentMessageLimit = appSettings.RabbitMQ.ConcurrenctMessageLimit;
+                        cfg.ConfigureEndpoints(ctx);
                     });
+
                 });
             }
         }

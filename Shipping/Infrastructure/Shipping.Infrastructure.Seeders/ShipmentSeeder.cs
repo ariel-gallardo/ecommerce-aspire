@@ -13,9 +13,9 @@ namespace Shipping.Infrastructure.Seeders
         {
         }
 
-        public Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            return Array.Empty<object>();
         }
     }
 }
