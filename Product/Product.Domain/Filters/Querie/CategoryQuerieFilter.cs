@@ -14,13 +14,13 @@ namespace Product.Domain.Filters.Querie
         public string Description { get; set; }
 
         #region Expressions
-        private Expression<Func<Entities.Category, bool>> FindByName
+        private Expression<Func<Entities.Category, bool>>? FindByName
         {
-            get => x => !string.IsNullOrEmpty(Name) && EF.Functions.Like(x.Name,$"%{Name}%");
+            get => !string.IsNullOrEmpty(Name) ? x => EF.Functions.Like(x.Name,$"%{Name}%") : null;
         }
-        private Expression<Func<Entities.Category, bool>> FindByDescription
+        private Expression<Func<Entities.Category, bool>>? FindByDescription
         {
-            get => x => !string.IsNullOrEmpty(Description) && EF.Functions.Like(x.Description,$"%{Description}%");
+            get =>!string.IsNullOrEmpty(Description) ? x => EF.Functions.Like(x.Description,$"%{Description}%") : null;
         }
         #endregion
     }

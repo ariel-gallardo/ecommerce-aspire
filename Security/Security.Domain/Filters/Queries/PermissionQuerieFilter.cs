@@ -11,17 +11,17 @@ namespace Security.Domain.Filters.Queries
         public string Url { get; set; }
 
         #region Expressions
-        private Expression<Func<Permission,bool>> FindByControllerName
+        private Expression<Func<Permission,bool>>? FindByControllerName
         {
-            get => x => !string.IsNullOrWhiteSpace(Controller) ? x.Controller == Controller : false;
+            get => !string.IsNullOrWhiteSpace(Controller) ? x => x.Controller == Controller : null;
         }
-        private Expression<Func<Permission, bool>> FindByAction
+        private Expression<Func<Permission, bool>>? FindByAction
         {
-            get => x => !string.IsNullOrWhiteSpace(Action) ? x.Action == Action : false;
+            get => !string.IsNullOrWhiteSpace(Action) ? x => x.Action == Action : null;
         }
-        private Expression<Func<Permission, bool>> FindByUrl
+        private Expression<Func<Permission, bool>>? FindByUrl
         {
-            get => x => !string.IsNullOrWhiteSpace(Url) ? x.Url == Url : false;
+            get => !string.IsNullOrWhiteSpace(Url) ? x => x.Url == Url : null;
         }
         #endregion
     }

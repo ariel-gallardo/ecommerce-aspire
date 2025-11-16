@@ -16,21 +16,21 @@ namespace Cart.Domain.Filters.Queries
         public string CartId { get; set; }
 
         #region Expressions
-        private Expression<Func<CartItem, bool>> FindById
+        private Expression<Func<CartItem, bool>>? FindById
         {
-            get => x => !string.IsNullOrWhiteSpace(Id) ? x.Id.Equals(Guid.Parse(ProductId)) : true;
+            get => !string.IsNullOrWhiteSpace(Id) ? x => x.Id.Equals(Guid.Parse(ProductId)) : null;
         }
-        private Expression<Func<CartItem, bool>> FindByProductId
+        private Expression<Func<CartItem, bool>>? FindByProductId
         {
-            get => x => !string.IsNullOrWhiteSpace(ProductId) ?  x.ProductId.Equals(Guid.Parse(ProductId)) : true;
+            get => !string.IsNullOrWhiteSpace(ProductId) ? x =>  x.ProductId.Equals(Guid.Parse(ProductId)) : null;
         }
-        private Expression<Func<CartItem, bool>> FindByProductIds
+        private Expression<Func<CartItem, bool>>? FindByProductIds
         {
-            get => x => ProductIds.Any() ? ProductIds.Any(y => x.ProductId.Equals(Guid.Parse(y))) : true;
+            get => ProductIds.Any() ? x => ProductIds.Any(y => x.ProductId.Equals(Guid.Parse(y))) : null;
         }
-        private Expression<Func<CartItem, bool>> FindByCartId
+        private Expression<Func<CartItem, bool>>? FindByCartId
         {
-            get => x => !string.IsNullOrWhiteSpace(CartId) ? x.CartId.Equals(Guid.Parse(CartId)) : true;
+            get => !string.IsNullOrWhiteSpace(CartId) ? x => x.CartId.Equals(Guid.Parse(CartId)) : null;
         }
         #endregion
     }

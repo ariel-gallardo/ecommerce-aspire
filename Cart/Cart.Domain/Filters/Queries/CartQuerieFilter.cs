@@ -14,17 +14,17 @@ namespace Cart.Domain.Filters.Queries
         public string ProductId { get; set; }
         public IEnumerable<string> ProductIds { get; set; }
         #region Expressions
-        private Expression<Func<CartEntity, bool>> FindById
+        private Expression<Func<CartEntity, bool>>? FindById
         {
-            get => x => !string.IsNullOrWhiteSpace(Id) ? x.Id.Equals(Guid.Parse(ProductId)) : true;
+            get => !string.IsNullOrWhiteSpace(Id) ? x=> x.Id.Equals(Guid.Parse(ProductId)) : null;
         }
-        private Expression<Func<CartEntity,bool>> FindByProductId
+        private Expression<Func<CartEntity,bool>>? FindByProductId
         {
-            get => x => !string.IsNullOrWhiteSpace(ProductId) ? x.Items.Any(x => x.ProductId.Equals(Guid.Parse(ProductId))) : true;
+            get =>  !string.IsNullOrWhiteSpace(ProductId) ? x=> x.Items.Any(x => x.ProductId.Equals(Guid.Parse(ProductId))) : null;
         }
-        private Expression<Func<CartEntity, bool>> FindByProductIds
+        private Expression<Func<CartEntity, bool>>? FindByProductIds
         {
-            get => x => ProductIds.Any() ? ProductIds.Any(y => x.Items.Any(z => z.ProductId.Equals(Guid.Parse(y)))) : true;
+            get => ProductIds.Any() ? x => ProductIds.Any(y => x.Items.Any(z => z.ProductId.Equals(Guid.Parse(y)))) : null;
         }
         #endregion
     }

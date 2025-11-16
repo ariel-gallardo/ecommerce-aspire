@@ -57,7 +57,7 @@ namespace Cart.Infrastructure.Seeders
                     {
                         Id = Guid.NewGuid()
                     };
-                    AddAuditableProperties(entity, userIds.ElementAt(i), adminId);
+                    AddAuditableProperties(entity, userIds.ElementAt(i-1), adminId);
                     return entity;
                 }
                 return null;

@@ -2,7 +2,13 @@
 using Common.Contracts;
 using Common.Domain.Entities.Base;
 using Common.Extensions;
+using Common.Infrastructure.Cache;
+using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
+using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Messages.Entities;
+using FluentValidation;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -10,7 +16,9 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
+using Security.Infrastructure.Messaging.Messages.Request;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Metadata;
 
@@ -27,11 +35,62 @@ namespace Common.Api.Filters.OpenApi
         private static string status400String = StatusCodes.Status400BadRequest.ToString();
         private readonly ISchemaGenerator _schemaGenerator;
         private readonly ICommonScopedDataServices _commonData;
+        private readonly IRequestClient<LoadPermissionRequest> _loadPermissionClient;
+        private readonly IRequestClient<CreatePermissionRequest> _createPermissionClient;
+        private readonly ICacheManagerServices _cache;
 
-        public DynamicResponseOperationTransformer(ISchemaGenerator schemaGenerator, ICommonScopedDataServices commonData)
+        private async Task<IList<OpenApiSecurityRequirement>> AssignSecuritySchema(string controller, string action)
+        {
+            if(!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
+            {
+                var cacheKey = CacheKeyCommon.PolicyActionName(controller, action);
+                string policy = await _cache.GetAsync<string>(cacheKey);
+                if (string.IsNullOrEmpty(policy))
+                {
+                    MassTransit.Response<Message<string>> message = null;
+                    message = await _loadPermissionClient.GetResponse<Message<string>>(new LoadPermissionRequest { Action = action, Controller = controller });
+                    policy = message.Message.Data;
+                    await _cache.SaveAsync(cacheKey, policy);
+                    if (string.IsNullOrEmpty(policy))
+                    {
+                        message = await _createPermissionClient.GetResponse<Message<string>>(new CreatePermissionRequest { Action = action, Controller = controller });
+                        policy = message.Message.Data;
+                        await _cache.SaveAsync(cacheKey, policy);
+                    }
+                }
+                if (policy != Polices.Public)
+                {
+                    var security = new OpenApiSecurityScheme
+                    {
+                        Type = SecuritySchemeType.Http,
+                        Scheme = "bearer",
+                        BearerFormat = "JWT",
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "Bearer"
+                        }
+                    };
+                    var requirement = new OpenApiSecurityRequirement
+                    {
+                        [security] = new string[] { }
+                    };
+                    return new OpenApiSecurityRequirement[] { requirement };
+                };
+            }
+            return Array.Empty<OpenApiSecurityRequirement>();
+        }
+
+        public DynamicResponseOperationTransformer(ISchemaGenerator schemaGenerator, ICommonScopedDataServices commonData, 
+            IRequestClient<LoadPermissionRequest> loadPermissionClient, 
+            IRequestClient<CreatePermissionRequest> createPermissionClient,
+            ICacheManagerServices cache)
         {
             _schemaGenerator = schemaGenerator;
             _commonData = commonData;
+            _loadPermissionClient = loadPermissionClient;
+            _createPermissionClient = createPermissionClient;
+            _cache = cache;
         }
         public async Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
         {
@@ -40,13 +99,19 @@ namespace Common.Api.Filters.OpenApi
             var subPath = split.Last();
             var httpMethod = context.Description.HttpMethod;
 
+            if(context.Description.ActionDescriptor is ControllerActionDescriptor cAA)
+            {
+                if (!operation.Security.Any())
+                    operation.Security = await AssignSecuritySchema(cAA.ControllerName, cAA.ActionName);
+            }
+
             if (context.Description.ActionDescriptor is ControllerActionDescriptor cA
                 && commonMethods.Contains(cA.MethodInfo.Name) 
                 && cA.ControllerTypeInfo.BaseType != null
                 && cA.ControllerTypeInfo.BaseType is TypeInfo tI
                 && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,>)))
             {
-                    var method = tI.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
+                var method = tI.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                     .FirstOrDefault(m =>
                     {
                         if (_commonData.ProcessedMethods.Contains(m)) return false;
@@ -73,6 +138,7 @@ namespace Common.Api.Filters.OpenApi
                         || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
                        
                         var schema = _schemaGenerator.GenerateSchema(returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO, schemaRepository);
+
                         operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
                         {
                             Description = "Success",
@@ -89,6 +155,7 @@ namespace Common.Api.Filters.OpenApi
                     {
                         var schemaRepository = new SchemaRepository();
                         var schema = _schemaGenerator.GenerateSchema(typeof(BaseResponse), schemaRepository);
+
                         operation.Responses[status200String] = new OpenApiResponse
                         {
                             Description = "Success",

@@ -1,8 +1,8 @@
-﻿using Common.Domain.Exceptions;
-using Common.Infrastructure.Cache;
+﻿using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
 using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Messages.Entities;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -39,11 +39,14 @@ namespace Common.Api.Filters
                     {
                         try
                         {
-                            var response = await _policyClient.GetResponse<string>(new LoadPermissionRequest { Controller = controller, Action = action });
-                            action = response.Message;
-                            await _cache.SaveUnlimitedAsync(actionName, action);
-                            await _cache.SaveAsync(actionNameCreated, true);
-                            if (policy == Polices.Public) return;
+                            var response = await _policyClient.GetResponse<Message<string>>(new LoadPermissionRequest { Controller = controller, Action = action });
+                            action = response.Message.Data;
+                            if(!string.IsNullOrWhiteSpace(action))
+                            {
+                                await _cache.SaveUnlimitedAsync(actionName, action);
+                                await _cache.SaveAsync(actionNameCreated, true);
+                                if (policy == Polices.Public) return;
+                            }
                         }
                         catch (Exception e)
                         {

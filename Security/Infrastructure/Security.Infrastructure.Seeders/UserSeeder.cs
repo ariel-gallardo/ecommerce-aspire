@@ -2,6 +2,7 @@
 using AutoMapper.QueryableExtensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
 using Microsoft.EntityFrameworkCore;
@@ -59,8 +60,8 @@ namespace Security.Infrastructure.Seeders
             {
                 return new User
                 {
-                    Id = Guid.NewGuid(),
-                    Rol = (x % 9 == 0 ? RoleEnum.Administrator : x % 3 == 0 ? RoleEnum.Support : RoleEnum.Client),
+                    Id = x == 1 ? SecurityConst.InternalAdminId : Guid.NewGuid(),
+                    Rol = x == 1 ? RoleEnum.Administrator : (x % 9 == 0 ? RoleEnum.Administrator : x % 3 == 0 ? RoleEnum.Support : RoleEnum.Client),
                     Email = $"user_email_{x}@mail.com",
                     Username = $"user_name_{x}",
                     Password = _authServices.HashPassword("123456aA$")

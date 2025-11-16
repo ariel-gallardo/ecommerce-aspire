@@ -29,6 +29,7 @@ namespace Security.Application.Profiles
                 {
                     var claims = new List<Claim>
                     {
+                        new Claim(Claims.NameIdentifier, user.Id.ToString()),
                         new Claim(Claims.Role, user.Rol.ToString()),
                         new Claim(Claims.Name, user.Username),
                         new Claim(Claims.Email, user.Email)

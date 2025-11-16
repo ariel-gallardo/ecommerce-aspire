@@ -20,22 +20,22 @@ namespace Security.Domain.Filters.Queries
         public Guid? PersonaId { get; set; }
 
         #region Expressions
-        private Expression<Func<User, bool>> FindByUserName
+        private Expression<Func<User, bool>>? FindByUserName
         {
-            get => x => !string.IsNullOrEmpty(Username) && x.Username == Username;
+            get => !string.IsNullOrEmpty(Username) ? x => x.Username == Username : null;
         }
 
-        private Expression<Func<User, bool>> FindByEmail
+        private Expression<Func<User, bool>>? FindByEmail
         {
-            get => x => !string.IsNullOrEmpty(Email) && x.Email == Email;
+            get => !string.IsNullOrEmpty(Email) ? x => x.Email == Email : null;
         }
-        private Expression<Func<User, bool>> FindByPersonaId
+        private Expression<Func<User, bool>>? FindByPersonaId
         {
-            get => x => PersonaId.HasValue && PersonaId == x.PersonaId;
+            get => PersonaId.HasValue ? x => PersonaId == x.PersonaId : null;
         }
-        private Expression<Func<User,bool>> FindByRole
+        private Expression<Func<User,bool>>? FindByRole
         {
-            get => x => Role.HasValue && x.Rol == Role;
+            get => Role.HasValue ? x => x.Rol == Role : null;
         }
         #endregion
     }

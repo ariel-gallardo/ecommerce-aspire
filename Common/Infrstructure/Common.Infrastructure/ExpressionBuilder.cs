@@ -44,7 +44,7 @@ namespace Common.Infrastructure
                 var replaced = new ParameterReplacer(parameter).Visit(expr.Body);
                 combined = combined == null
                     ? replaced
-                    : Expression.OrElse(combined, replaced);
+                    : Expression.AndAlso(combined, replaced);
             }
 
             return Expression.Lambda<Func<T, bool>>(combined!, parameter);

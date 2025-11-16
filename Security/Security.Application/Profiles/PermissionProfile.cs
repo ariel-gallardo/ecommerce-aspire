@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Infrastructure.Entities.Const;
 using Security.Application.DTO;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
@@ -13,6 +14,9 @@ namespace Security.Application.Profiles
             CreateMap<PermissionDTO, Permission>().ReverseMap();
             CreateMap<PermissionDTO, PermissionQuerieFilter>();
             CreateMap<LoadPermissionRequest, PermissionQuerieFilter>();
+            CreateMap<CreatePermissionRequest, PermissionQuerieFilter>();
+            CreateMap<CreatePermissionRequest, Permission>()
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(x => Polices.Administrator));
         }
     }
 }

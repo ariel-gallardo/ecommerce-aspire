@@ -37,7 +37,7 @@ namespace Common.Application.Services
         }
 
         public async Task SaveUnlimitedAsync(string key, object data, CancellationToken cancellationToken = default)
-        => await _cache.SetStringAsync($"{key}", JsonSerializer.Serialize(data), new DistributedCacheEntryOptions { }, _cancellationToken ?? cancellationToken);
+        => await _cache.SetStringAsync($"{key}", JsonSerializer.Serialize(data), new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = TimeSpan.FromHours(1) }, _cancellationToken ?? cancellationToken);
         public async Task SaveAsync(string key, object data, CancellationToken cancellationToken = default)
         => await _cache.SetStringAsync($"{key}", JsonSerializer.Serialize(data), _cacheOptions, _cancellationToken ?? cancellationToken);
 

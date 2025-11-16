@@ -2,10 +2,10 @@
 
 namespace Security.Infrastructure.Messaging.Messages.Request
 {
-    public class LoadPermissionRequest : Message
+    public class CreatePermissionRequest : Message
     {
-        public string Url { get; set; }
-        public string Action { get; set; }
         public string Controller { get; set; }
+        public string Action { get; set; }
+        public string Url { get; set; }
     }
 }

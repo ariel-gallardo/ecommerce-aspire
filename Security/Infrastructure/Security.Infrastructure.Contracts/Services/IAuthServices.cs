@@ -7,6 +7,7 @@ namespace Security.Infrastructure.Contracts
     {
         Guid Id { get; }
         bool IsAuthenticated { get; }
+        Task AuthAsAdmin();
         Task<bool?> CanAccess(string policyName);
         string? ClaimValue(string claimType);
         string GenerateToken(Claim[] claims);

@@ -17,23 +17,23 @@ namespace Product.Domain.Filters.Querie
         public Guid? CategoryId { get; set; }
 
         #region Expressions
-        private Expression<Func<Entities.Product, bool>> FindByName
+        private Expression<Func<Entities.Product, bool>>? FindByName
         {
-            get => x => !string.IsNullOrEmpty(Name) && EF.Functions.Like(x.Name, $"%{Name}%");
+            get => !string.IsNullOrEmpty(Name) ? x => EF.Functions.Like(x.Name, $"%{Name}%") : null;
         }
 
-        private Expression<Func<Entities.Product, bool>> FindByDescription
+        private Expression<Func<Entities.Product, bool>>? FindByDescription
         {
-            get => x => !string.IsNullOrEmpty(Description) && EF.Functions.Like(x.Description, $"%{Description}%");
+            get => !string.IsNullOrEmpty(Description) ? x => EF.Functions.Like(x.Description, $"%{Description}%") : null;
         }
 
-        private Expression<Func<Entities.Product, bool>> FindByCategory
+        private Expression<Func<Entities.Product, bool>>? FindByCategory
         {
-            get => x => !string.IsNullOrEmpty(Category) && EF.Functions.Like(x.Category.Name, $"%{Category}%");
+            get => !string.IsNullOrEmpty(Category) ? x => EF.Functions.Like(x.Category.Name, $"%{Category}%") : null;
         }
-        private Expression<Func<Entities.Product, bool>> FindByCategoryId
+        private Expression<Func<Entities.Product, bool>>? FindByCategoryId
         {
-            get => x => CategoryId.HasValue && x.CategoryId == CategoryId;
+            get => CategoryId.HasValue ? x => x.CategoryId == CategoryId : null;
         }
         #endregion
     }

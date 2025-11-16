@@ -2,11 +2,14 @@
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Const;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Security.Infrastructure.Contracts;
+using Security.Infrastructure.Entities;
 using System.IdentityModel.Tokens.Jwt;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Text;
 
@@ -17,9 +20,8 @@ namespace Security.Infrastructure
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly AppSettings _appSettings;
         private readonly IAuthorizationService _authorizationService;
-
-        private ClaimsPrincipal User => _httpContextAccessor.HttpContext.User;
-
+        private ClaimsPrincipal _user;
+        public ClaimsPrincipal User { get => _httpContextAccessor?.HttpContext?.User ?? _user; private set { _user = value; } }
 
         public AuthServices(IHttpContextAccessor httpContext, IOptions<AppSettings> appSettings, IAuthorizationService authorizationService)
         {
@@ -30,7 +32,24 @@ namespace Security.Infrastructure
 
         public bool IsAuthenticated
         {
-            get => _httpContextAccessor?.HttpContext?.User?.Identity?.IsAuthenticated ?? false;
+            get => User?.Identity?.IsAuthenticated ?? false;
+        }
+
+        public async Task AuthAsAdmin()
+        {
+            if (!IsAuthenticated)
+            {
+                var claims = new Claim[]
+                {
+                    new Claim(ClaimTypes.Role, nameof(RoleEnum.Administrator)),
+                    new Claim(ClaimTypes.NameIdentifier, SecurityConst.InternalAdminId.ToString())
+                };
+                var identity = new ClaimsIdentity(claims, SecurityConst.AuthenticationInternal);
+                var principal = new ClaimsPrincipal(identity);
+                if(_httpContextAccessor?.HttpContext != null) _httpContextAccessor.HttpContext.User = principal;
+                else User = principal;
+            }
+
         }
 
         public async Task<bool?> CanAccess(string policyName)

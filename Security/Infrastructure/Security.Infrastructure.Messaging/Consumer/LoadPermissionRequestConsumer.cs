@@ -7,6 +7,7 @@ using MassTransit;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
 using Security.Infrastructure.Messaging.Messages.Request;
+using System.Security;
 
 namespace Security.Infrastructure.Messaging.Consumer
 {
@@ -25,10 +26,15 @@ namespace Security.Infrastructure.Messaging.Consumer
             var policy = await _cache.GetAsync<string>(actionName);
             if (string.IsNullOrEmpty(policy))
             {
-                if(await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
+                var res = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
+                if (await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
                 {
                     var permission = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
-                    await context.RespondAsync<string>(permission.Policy);
+                    await context.RespondAsync<Message<string>>(new Message<string> { Data = permission.Policy });
+                }
+                else
+                {
+                    await context.RespondAsync<Message<string>>(new Message<string> { Data = null});
                 }
             }
         }
