@@ -64,7 +64,10 @@ namespace Common.Infrastructure
             {
                 var sp = services.BuildServiceProvider();
                 var ctx = sp.GetService<DbContext>();
-                ctx.Database.Migrate();
+                if (ctx.Database.GetPendingMigrations().Any())
+                {
+                    ctx.Database.MigrateAsync();
+                }
             }
             return services;
         }

@@ -36,11 +36,14 @@ namespace Common.Infrastructure.Seeder.Services
                         return null;
                     }
                 }).ToList();
-            var data = (await Task.WhenAll(seedTasks)).Where(x => x != null).SelectMany(x => x).ToList();
-            if(data.Count() > 0)
-                await _context.AddRangeAsync(data);
-            var res = await _context.SaveChangesAsync();
-            if (res > 0) _logger.LogInformation($"Seeder Runner - {_context.Database.ProviderName} - New entities from seeds - {res}");
+            if(seedTasks.Count > 0)
+            {
+                var data = (await Task.WhenAll(seedTasks)).Where(x => x != null).SelectMany(x => x).ToList();
+                if (data.Count() > 0)
+                    await _context.AddRangeAsync(data);
+                var res = await _context.SaveChangesAsync();
+                if (res > 0) _logger.LogInformation($"Seeder Runner - {_context.Database.ProviderName} - New entities from seeds - {res}");
+            }
         }
     }
 
