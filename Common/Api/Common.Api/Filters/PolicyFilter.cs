@@ -43,7 +43,7 @@ namespace Common.Api.Filters
                             action = response.Message.Data;
                             if(!string.IsNullOrWhiteSpace(action))
                             {
-                                await _cache.SaveUnlimitedAsync(actionName, action);
+                                await _cache.SaveAsync(actionName, action);
                                 await _cache.SaveAsync(actionNameCreated, true);
                                 if (policy == Polices.Public) return;
                             }
