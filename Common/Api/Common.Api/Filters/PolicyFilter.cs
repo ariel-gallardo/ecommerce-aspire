@@ -39,9 +39,10 @@ namespace Common.Api.Filters
                     {
                         try
                         {
-                            _policyClient.Create(new LoadPermissionRequest { Controller = controller, Action = action });
-                            await _cache.WaitAsync(actionNameCreated);
-                            policy = await _cache.GetAsync<string>(actionName);
+                            var response = await _policyClient.GetResponse<string>(new LoadPermissionRequest { Controller = controller, Action = action });
+                            action = response.Message;
+                            await _cache.SaveUnlimitedAsync(actionName, action);
+                            await _cache.SaveAsync(actionNameCreated, true);
                             if (policy == Polices.Public) return;
                         }
                         catch (Exception e)

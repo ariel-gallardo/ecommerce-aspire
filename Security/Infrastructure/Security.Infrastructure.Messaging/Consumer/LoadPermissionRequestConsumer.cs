@@ -28,8 +28,7 @@ namespace Security.Infrastructure.Messaging.Consumer
                 if(await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
                 {
                     var permission = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
-                    await _cache.SaveAsync(actionName, permission.Policy);
-                    await _cache.SaveAsync(actionNameCreated, true);
+                    await context.RespondAsync<string>(permission.Policy);
                 }
             }
         }
