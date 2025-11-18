@@ -1,9 +1,10 @@
 ﻿using Common.Application.Profiles.Base;
 using Common.Application.Services;
 using Common.Contracts;
+using Common.Extensions;
 using Common.Infrastructure;
 using Common.Infrastructure.Configurations;
-using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,7 +14,6 @@ using Microsoft.IdentityModel.Tokens;
 using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
-using System.Security.Claims;
 using System.Text;
 
 namespace Common.Application
@@ -49,14 +49,14 @@ namespace Common.Application
         {
             services.AddAuthorization(o =>
             {
-                o.AddPolicy(Polices.Administrator, policy =>
-                policy.RequireRole(nameof(RoleEnum.Administrator)));
+                o.AddPolicy(Policy.Administrator.AsStringUsingMemberValue(), policy =>
+                policy.RequireRole(nameof(Role.Administrator)));
 
-                o.AddPolicy(Polices.Support, policy =>
-                policy.RequireRole(nameof(RoleEnum.Administrator), nameof(RoleEnum.Support)));
+                o.AddPolicy(Policy.Support.AsStringUsingMemberValue(), policy =>
+                policy.RequireRole(nameof(Role.Administrator), nameof(Role.Support)));
 
-                o.AddPolicy(Polices.Client, policy =>
-                policy.RequireRole(nameof(RoleEnum.Administrator), nameof(RoleEnum.Support), nameof(RoleEnum.Client)));
+                o.AddPolicy(Policy.Client.AsStringUsingMemberValue(), policy =>
+                policy.RequireRole(nameof(Role.Administrator), nameof(Role.Support), nameof(Role.Client)));
             });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(o =>
             {

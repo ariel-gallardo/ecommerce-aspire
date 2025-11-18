@@ -32,6 +32,7 @@
     <ProjectReference Include="..\..\..\Security\Infrastructure\Security.Infrastructure.Messaging\Security.Infrastructure.Messaging.csproj" />
     <ProjectReference Include="..\..\Contracts\Common.Contracts\Common.Contracts.csproj" />
     <ProjectReference Include="..\..\Domain\Common.Domain\Common.Domain.csproj" />
+    <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
   </ItemGroup>
 
 </Project>

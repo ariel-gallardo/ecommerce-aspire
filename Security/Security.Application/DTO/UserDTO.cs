@@ -1,5 +1,6 @@
 ﻿using Common.Application.DTO.Base.Entities;
 using Common.Contracts.DTO.ABM;
+using Security.Infrastructure.Entities;
 using System.Text.Json.Serialization;
 
 namespace Security.Application.DTO
@@ -11,6 +12,6 @@ namespace Security.Application.DTO
         [JsonIgnore]
         public string Password { get; set; }
         public Guid? PersonaId { get; set; }
-        public string Rol { get; internal set; }
+        public Role Rol { get; internal set; }
     }
 }

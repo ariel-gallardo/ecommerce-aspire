@@ -15,7 +15,7 @@ namespace Security.Domain.Filters.Queries
         [FromQuery]
         public string Email { get; set; }
         [FromQuery]
-        public RoleEnum? Role { get; set; }
+        public Role? Role { get; set; }
         [FromQuery]
         public Guid? PersonaId { get; set; }
 

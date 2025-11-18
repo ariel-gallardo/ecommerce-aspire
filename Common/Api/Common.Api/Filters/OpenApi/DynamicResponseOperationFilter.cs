@@ -6,6 +6,7 @@ using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
 using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using FluentValidation;
 using MassTransit;
@@ -60,7 +61,8 @@ namespace Common.Api.Filters.OpenApi
                         await _cache.SaveAsync(cacheKey, policy);
                     }
                 }
-                if (policy != Polices.Public)
+                var policyEnum = policy.AsEnumUsingMemberValue<Policy>();
+                if (policyEnum != Policy.Public && policyEnum != Policy.Unknown)
                 {
                     var security = new OpenApiSecurityScheme
                     {

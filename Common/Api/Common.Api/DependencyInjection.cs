@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using System.Reflection;
+using System.Text.Json.Serialization;
 
 namespace Common.Api
 {
@@ -42,6 +43,7 @@ namespace Common.Api
             .AddControllersAsServicesFromDI(controllerAssemblies)
             .AddJsonOptions(options =>
             {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 options.JsonSerializerOptions.DefaultIgnoreCondition =
                     System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
             }).ConfigureApiBehaviorOptions(options =>

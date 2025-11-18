@@ -75,29 +75,7 @@ namespace Common.Api
             builder.Services.AddApplicationRedis();
             builder.Services.AddSeeders(env, _seederAssemblies);
             builder.Services.AddApi(_controllerAssemblies);
-            builder.Services.AddSwaggerGen(c =>
-            {
-                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                {
-                    Type = SecuritySchemeType.Http,
-                    Scheme = "bearer",
-                    BearerFormat = "JWT"
-                });
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement
-                {
-                    {
-                        new OpenApiSecurityScheme
-                        {
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.SecurityScheme,
-                                Id = "Bearer"
-                            }
-                        },
-                        Array.Empty<string>()
-                    }
-                });
-            });
+            builder.Services.AddSwaggerGen();
             builder.Services.AddOpenApi(c =>
             {
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();

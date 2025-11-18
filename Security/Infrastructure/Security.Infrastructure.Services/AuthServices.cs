@@ -41,7 +41,7 @@ namespace Security.Infrastructure
             {
                 var claims = new Claim[]
                 {
-                    new Claim(ClaimTypes.Role, nameof(RoleEnum.Administrator)),
+                    new Claim(ClaimTypes.Role, nameof(Role.Administrator)),
                     new Claim(ClaimTypes.NameIdentifier, SecurityConst.InternalAdminId.ToString())
                 };
                 var identity = new ClaimsIdentity(claims, SecurityConst.AuthenticationInternal);

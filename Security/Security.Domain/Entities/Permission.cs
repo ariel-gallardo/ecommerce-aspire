@@ -1,4 +1,5 @@
 ﻿using Common.Domain.Entities.Base;
+using Common.Infrastructure.Entities.Enums;
 
 namespace Security.Domain.Entities
 {
@@ -7,6 +8,6 @@ namespace Security.Domain.Entities
         public string Url { get; set; }
         public string Controller { get; set; }
         public string Action { get; set; }
-        public string Policy { get; set; }
+        public Policy Policy { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Security.Infrastructure.Persistence.Configurations
         {
             ConfigureIdentifiable(builder);
             builder.Property(x => x.Rol)
-                .HasConversion(new EnumToStringConverter<RoleEnum>())
+                .HasConversion(new EnumToStringConverter<Role>())
                 .HasMaxLength(30)
                 .IsRequired(true);
             builder.Property(x => x.Username).IsRequired(true);

@@ -18,6 +18,7 @@
     <ProjectReference Include="..\..\..\Security\Infrastructure\Security.Infrastructure.Services\Security.Infrastructure.Services.csproj" />
     <ProjectReference Include="..\..\Api\Common.Api.CustomAttributes\Common.Api.CustomAttributes.csproj" />
     <ProjectReference Include="..\..\Domain\Common.Domain\Common.Domain.csproj" />
+    <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Cache\Common.Infrastructure.Cache.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Entities\Common.Infrastructure.Entities.csproj" />
     <ProjectReference Include="..\..\Infrstructure\Common.Infrastructure.Messages\Common.Infrastructure.Messages.csproj" />

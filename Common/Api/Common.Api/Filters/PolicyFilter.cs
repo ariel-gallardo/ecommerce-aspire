@@ -1,7 +1,9 @@
-﻿using Common.Infrastructure.Cache;
+﻿using Common.Extensions;
+using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
 using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
@@ -45,7 +47,7 @@ namespace Common.Api.Filters
                             {
                                 await _cache.SaveAsync(actionName, action);
                                 await _cache.SaveAsync(actionNameCreated, true);
-                                if (policy == Polices.Public) return;
+                                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public) return;
                             }
                         }
                         catch (Exception e)
@@ -71,18 +73,32 @@ namespace Common.Api.Filters
                             return;
                         }
                     }
-                    var canAccess = await _authServices.CanAccess(policy);
-                    if (!canAccess.HasValue || !canAccess.Value)
+                    if(policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
                     {
                         var response = new ObjectResult(new BaseResponse
                         {
-                            StatusCode = canAccess == null
-                            ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
-                            Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
+                            StatusCode = StatusCodes.Status404NotFound,
+                            Message = "Pardon our dust! This page is currently under development."
                         });
-                        response.StatusCode = StatusCodes.Status401Unauthorized;
+                        response.StatusCode = StatusCodes.Status404NotFound;
                         context.Result = response;
                         return;
+                    }
+                    else
+                    {
+                        var canAccess = await _authServices.CanAccess(policy);
+                        if (!canAccess.HasValue || !canAccess.Value)
+                        {
+                            var response = new ObjectResult(new BaseResponse
+                            {
+                                StatusCode = canAccess == null
+                                ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
+                                Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
+                            });
+                            response.StatusCode = StatusCodes.Status401Unauthorized;
+                            context.Result = response;
+                            return;
+                        }
                     }
                 }
             

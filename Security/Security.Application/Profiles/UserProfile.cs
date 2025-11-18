@@ -12,9 +12,7 @@ namespace Security.Application.Profiles
     {
         public UserProfile()
         {
-            CreateMap<User, UserDTO>()
-                .ForMember(dest => dest.Rol, opt => opt.MapFrom(src => src.Rol.ToString()))
-                .ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
             CreateMap<UserLoginDTO, UserQuerieFilter>();
             CreateMap<UserRegisterDTO, UserQuerieFilter>();
             CreateMap<UserRegisterDTO, User>()

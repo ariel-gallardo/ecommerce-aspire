@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Common.Extensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Messages.Entities;
 using Common.Infrastructure.Repositories;
@@ -29,7 +30,7 @@ namespace Security.Infrastructure.Messaging.Consumer
             {
                 var permission = _mapper.Map<Permission>(message);
                 await _unitOfWork.AddAsync(permission,default);
-                response.Data = permission.Policy;
+                response.Data = permission.Policy.AsStringUsingMemberValue();
             }
            await context.RespondAsync(response);
         }
