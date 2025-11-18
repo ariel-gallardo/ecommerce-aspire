@@ -11,7 +11,7 @@ namespace Security.Application.DTO
         public string Email { get; set; }
         [JsonIgnore]
         public string Password { get; set; }
-        public Guid? PersonaId { get; set; }
+        public long? PersonaId { get; set; }
         public Role Rol { get; internal set; }
     }
 }

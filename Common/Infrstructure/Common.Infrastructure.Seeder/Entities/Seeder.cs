@@ -123,30 +123,20 @@ namespace Common.Infrastructure.Seeder.Entities
             return null;
         }
 
-        protected void AddAuditableProperties(IAuditable entity, IList<Guid> userIds)
+        protected void AddAuditableProperties(IAuditable entity, IList<long> userIds)
         {
             var createdByIdNumber = _random.Next(0, userIds.Count() - 1);
             var updatedByIdNumber = _random.Next(0, userIds.Count() - 1);
             var deletedByIdNumber = _random.Next(0, userIds.Count() - 1);
-            entity.CreatedById = userIds.ElementAt(createdByIdNumber);
-            entity.UpdatedById = updatedByIdNumber % 2 == 0 ? userIds.ElementAt(updatedByIdNumber) : null;
-            entity.DeletedById = deletedByIdNumber % 7 == 0 ? userIds.ElementAt(deletedByIdNumber) : null;
             entity.CreatedAt = DateTime.UtcNow;
-            if(entity.UpdatedById.HasValue) entity.UpdatedAt = DateTime.UtcNow.AddMinutes(_random.Next(1,30));
-            if(entity.DeletedById.HasValue) entity.DeletedAt = DateTime.UtcNow.AddMinutes(_random.Next(30,100));
         }
 
-        protected void AddAuditableProperties(IAuditable entity, Guid userId, Guid adminId)
+        protected void AddAuditableProperties(IAuditable entity, long userId, long adminId)
         {
  
             var updatedByIdNumber = _random.Next(1, 100);
             var deletedByIdNumber = _random.Next(1, 100);
-            entity.CreatedById = userId;
-            entity.UpdatedById = updatedByIdNumber % 2 == 0 ? userId : null;
-            entity.DeletedById = deletedByIdNumber % 7 == 0 ? adminId : null;
             entity.CreatedAt = DateTime.UtcNow;
-            if (entity.UpdatedById.HasValue) entity.UpdatedAt = DateTime.UtcNow.AddMinutes(_random.Next(1, 30));
-            if (entity.DeletedById.HasValue) entity.DeletedAt = DateTime.UtcNow.AddMinutes(_random.Next(30, 100));
         }
     }
 }

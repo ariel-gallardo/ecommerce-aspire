@@ -63,11 +63,11 @@ namespace Security.Infrastructure
         public string? ClaimValue(string claimType)
         => User?.FindFirst(claimType)?.Value;
 
-        public Guid Id
+        public long Id
         {
             get
             {
-                if (Guid.TryParse(ClaimValue(ClaimTypes.NameIdentifier), out Guid result))
+                if (long.TryParse(ClaimValue(ClaimTypes.NameIdentifier), out long result))
                     return result;
                 throw new PermissionDeniedException();
             }

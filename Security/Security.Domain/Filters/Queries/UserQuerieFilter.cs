@@ -17,7 +17,7 @@ namespace Security.Domain.Filters.Queries
         [FromQuery]
         public Role? Role { get; set; }
         [FromQuery]
-        public Guid? PersonaId { get; set; }
+        public long? PersonaId { get; set; }
 
         #region Expressions
         private Expression<Func<User, bool>>? FindByUserName

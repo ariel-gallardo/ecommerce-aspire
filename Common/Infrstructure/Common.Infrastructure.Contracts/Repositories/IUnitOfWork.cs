@@ -43,16 +43,16 @@ namespace Common.Infrastructure.Repositories
 
 
         #region Delete
-        Task DeleteAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        Task DeleteAsync<DomainEntity>(long id, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity;
-        Task DeleteAsync<DomainEntity>(IList<Guid> id, CancellationToken cancellationToken)
+        Task DeleteAsync<DomainEntity>(IList<long> id, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity;
         #endregion
 
         #region Exists
-        Task<bool> ExistsAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        Task<bool> ExistsAsync<DomainEntity>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
-        Task<(bool, IList<Guid>)> ExistsAsync<DomainEntity>(IList<Guid> ids, CancellationToken cancellationToken)
+        Task<(bool, IList<long>)> ExistsAsync<DomainEntity>(IList<long> ids, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
         Task<bool> ExistsAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
@@ -67,15 +67,15 @@ namespace Common.Infrastructure.Repositories
         #endregion
 
         #region Search
-        Task<DomainEntity> SearchAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        Task<DomainEntity> SearchAsync<DomainEntity>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
-        Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(Guid id, CancellationToken cancellationToken)
+        Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO;
 
-        Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
-        Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO;
         Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
