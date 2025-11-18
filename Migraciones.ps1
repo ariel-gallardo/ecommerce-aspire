@@ -1,15 +1,6 @@
 # Lista de proyectos disponibles
 $projects = @(
-    "Cart",
-    "Inventory",
-    "Invoice",
-    "Logs",
-    "Notification",
-    "Order",
-    "Payment",
-    "Product",
-    "Security",
-    "Shipping"
+    "Security"
 )
 
 # Mostrar lista de proyectos y permitir seleccionar
