@@ -4,6 +4,6 @@ namespace Common.Application.DTO.Base.Entities
 {
     public class IdentifiableDTO : DTO, IIdentifiableDTO
     {
-        public long Id { get; set; }
+        public ulong Id { get; set; }
     }
 }

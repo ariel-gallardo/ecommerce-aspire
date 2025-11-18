@@ -123,7 +123,7 @@ namespace Common.Infrastructure
         {
             if (entity is IList<IEntity> iE)
             {
-                var ids = _map.Map<IList<long>>(iE);
+                var ids = _map.Map<IList<ulong>>(iE);
                 var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
                 if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, notFoundIds);
             }
@@ -155,7 +155,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Delete
-        public async Task DeleteAsync<DomainEntity>(long id, CancellationToken cancellationToken)
+        public async Task DeleteAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             try
@@ -179,7 +179,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task DeleteAsync<DomainEntity>(IList<long> ids, CancellationToken cancellationToken)
+        public async Task DeleteAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
@@ -204,7 +204,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Exists
-        public async Task<bool> ExistsAsync<DomainEntity>(long id, CancellationToken cancellationToken)
+        public async Task<bool> ExistsAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -216,7 +216,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task<(bool, IList<long>)> ExistsAsync<DomainEntity>(IList<long> ids, CancellationToken cancellationToken)
+        public async Task<(bool, IList<ulong>)> ExistsAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -224,12 +224,12 @@ namespace Common.Infrastructure
                 case IIdentifiable:
                     {
                         var foundAll = await _ctx.Set<DomainEntity>().AsNoTracking().AllAsync(x => ids.Contains(((IIdentifiable)x).Id), cancellationToken);
-                        if (foundAll) return (foundAll, Array.Empty<long>());
-                        var foundIds = await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).ProjectTo<long>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
+                        if (foundAll) return (foundAll, Array.Empty<ulong>());
+                        var foundIds = await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).ProjectTo<ulong>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
                         return (foundAll, ids.Where(x => !foundIds.Contains(x)).ToList());
                     }
                 default:
-                    return (false, Array.Empty<long>());
+                    return (false, Array.Empty<ulong>());
             }
         }
 
@@ -283,7 +283,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Search
-        public async Task<DomainEntity> SearchAsync<DomainEntity>(long id, CancellationToken cancellationToken)
+        public async Task<DomainEntity> SearchAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -293,12 +293,12 @@ namespace Common.Infrastructure
                 default: return null;
             }
         }
-        public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(long id, CancellationToken cancellationToken)
+        public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<ulong> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -309,7 +309,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<ulong> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).PaginateAsync<DomainEntity,ResultDTO>(_map, page, pageSize);

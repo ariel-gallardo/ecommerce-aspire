@@ -4,6 +4,6 @@ namespace Common.Domain.Entities.Base
 {
     public class IdentifiableEntity : EntityBase, IIdentifiable
     {
-        public long Id { get; set; }
+        public ulong Id { get; set; }
     }
 }

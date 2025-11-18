@@ -10,9 +10,9 @@ namespace Common.Application.Profiles.Base
         public IdentifiableProfile()
         {
             CreateMap<IdentifiableDTO, IdentifiableEntity>().ReverseMap();
-            CreateMap<IdentifiableDTO, long>();
-            CreateMap<IdentifiableEntity, long>();
-            CreateMap<long, IdentifiableEntity>()
+            CreateMap<IdentifiableDTO, ulong>();
+            CreateMap<IdentifiableEntity, ulong>();
+            CreateMap<ulong, IdentifiableEntity>()
                 .ConvertUsing(id => new IdentifiableEntity { Id = id });
 
             CreateMap<IdentifiableEntity, IdentifiableMessage>()

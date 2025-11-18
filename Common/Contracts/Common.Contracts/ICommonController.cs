@@ -29,19 +29,19 @@ namespace Common.Contracts
 
         #region Delete
         
-        Task<IActionResult> DeleteAsync(long entityId, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync(ulong entityId, CancellationToken cancellationToken);
         
-        Task<IActionResult> DeleteAsync(IList<long> entityIds, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync(IList<ulong> entityIds, CancellationToken cancellationToken);
         #endregion
 
         #region Search
         
-        Task<IActionResult> SearchAsync(long entityId, CancellationToken cancellationToken);
+        Task<IActionResult> SearchAsync(ulong entityId, CancellationToken cancellationToken);
 
         Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
         Task<IActionResult> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
-        Task<IActionResult> SearchAsync(IList<long> entityIds, int page, int pageSize, CancellationToken cancellationToken);
+        Task<IActionResult> SearchAsync(IList<ulong> entityIds, int page, int pageSize, CancellationToken cancellationToken);
         #endregion
     }
 }

@@ -49,21 +49,16 @@ namespace Common.Infrastructure
             services.AddRabbitMq(env, messageAssemblies);
             services.AddDbContext<DbContext,IDBContext>(options =>
             {
-                if (env.IsDevelopment())
-                {
-                    var sp = services.BuildServiceProvider();
-                    var settings = sp.GetRequiredService<IOptions<AppSettings>>().Value;
-                    var file = Path.Join(settings.DatabaseDevPath, $"{name.Replace("Db", string.Empty)}.sqlite");
-                    options.UseSqlite(configuration.GetConnectionString(name) ?? $@"Data Source={file}");
-                    options.ConfigureWarnings(warnings =>
-                    warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
-                }
+                var conString = $"{configuration.GetConnectionString(name)};Database={name.ToLower()}";
+                options.UseMySql(conString, ServerVersion.AutoDetect(conString));
+                options.UseSnakeCaseNamingConvention();
             });
             
             if (env.IsDevelopment())
             {
                 var sp = services.BuildServiceProvider();
                 var ctx = sp.GetService<DbContext>();
+                ctx.Database.EnsureCreated();
                 if (ctx.Database.GetPendingMigrations().Any())
                 {
                     ctx.Database.MigrateAsync();

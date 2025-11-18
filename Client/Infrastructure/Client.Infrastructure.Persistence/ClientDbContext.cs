@@ -9,11 +9,6 @@ namespace Client.Infrastructure.Persistence
         {
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            optionsBuilder.UseSnakeCaseNamingConvention();
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var assembly = Assembly.GetExecutingAssembly();

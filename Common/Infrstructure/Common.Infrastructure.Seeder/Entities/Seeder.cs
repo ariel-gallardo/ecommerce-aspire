@@ -123,7 +123,7 @@ namespace Common.Infrastructure.Seeder.Entities
             return null;
         }
 
-        protected void AddAuditableProperties(IAuditable entity, IList<long> userIds)
+        protected void AddAuditableProperties(IAuditable entity, IList<ulong> userIds)
         {
             var createdByIdNumber = _random.Next(0, userIds.Count() - 1);
             var updatedByIdNumber = _random.Next(0, userIds.Count() - 1);

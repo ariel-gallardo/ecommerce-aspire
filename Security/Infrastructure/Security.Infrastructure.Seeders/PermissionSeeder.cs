@@ -29,7 +29,7 @@ namespace Security.Infrastructure.Seeders
             _cache.SetCancellationToken(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
             await _cache.WaitAsync(_dependencies);
-            var adminId = await _cache.GetAsync<long>(CacheKeyUser.SeedIdAdmin);
+            var adminId = await _cache.GetAsync<ulong>(CacheKeyUser.SeedIdAdmin);
             var publicRoutes = new Permission[]
             {
                 new Permission{ Controller = "Users", Action = "Login", Policy = Policy.Public, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
