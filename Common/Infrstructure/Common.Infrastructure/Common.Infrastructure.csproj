@@ -35,4 +35,8 @@
     <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Factory\" />
+  </ItemGroup>
+
 </Project>

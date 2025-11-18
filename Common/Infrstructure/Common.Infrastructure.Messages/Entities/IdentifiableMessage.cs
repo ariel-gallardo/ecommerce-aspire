@@ -3,7 +3,7 @@ namespace Common.Infrastructure.Messages.Entities
 {
     public class IdentifiableMessage : Message
     {
-        public string Id { get; set; }
+        public long Id { get; set; }
 
         public override bool Equals(object? obj)
         {

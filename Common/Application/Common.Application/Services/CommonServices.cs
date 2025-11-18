@@ -79,7 +79,7 @@ namespace Common.Application.Services
         #endregion
 
         #region Delete
-        public async Task<BaseResponse> DeleteAsync<DomainEntity>(Guid entityId, CancellationToken cancellationToken)
+        public async Task<BaseResponse> DeleteAsync<DomainEntity>(long entityId, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             await _unitOfWork.DeleteAsync<DomainEntity>(entityId, cancellationToken);
@@ -90,7 +90,7 @@ namespace Common.Application.Services
             };
         }
 
-        public async Task<BaseResponse> DeleteAsync<DomainEntity>(IList<Guid> entityIds, CancellationToken cancellationToken)
+        public async Task<BaseResponse> DeleteAsync<DomainEntity>(IList<long> entityIds, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             await _unitOfWork.DeleteAsync<DomainEntity>(entityIds, cancellationToken);
@@ -103,7 +103,7 @@ namespace Common.Application.Services
         #endregion
 
         #region Search
-        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(Guid entityId, CancellationToken cancellationToken)
+        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(long entityId, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
@@ -166,7 +166,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(IList<Guid> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(IList<long> entityIds, int page, int pageSize, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
