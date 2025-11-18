@@ -57,14 +57,14 @@ namespace Common.Api.Controllers
 
         #region Delete
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync([FromQuery] Guid entityId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromQuery] long entityId, CancellationToken cancellationToken)
         {
             var response = await _services.DeleteAsync<DomainEntity>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteAsync([FromBody] IList<Guid> entityIds, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromBody] IList<long> entityIds, CancellationToken cancellationToken)
         {
             var response = await _services.DeleteAsync<DomainEntity>(entityIds, cancellationToken);
             return StatusCode(response.StatusCode, response);
@@ -74,7 +74,7 @@ namespace Common.Api.Controllers
         #region Search
 
         [HttpGet]
-        public async Task<IActionResult> SearchAsync([FromQuery] Guid entityId, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchAsync([FromQuery] long entityId, CancellationToken cancellationToken)
         {
             var response = await _services.SearchAsync<DomainEntity,ResultDTO>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
@@ -95,7 +95,7 @@ namespace Common.Api.Controllers
         }
 
         [HttpGet("ids")]
-        public async Task<IActionResult> SearchAsync([FromQuery] IList<Guid> entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchAsync([FromQuery] IList<long> entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
             var response = await _services.SearchAsync<DomainEntity, ResultDTO>(entityIds,page, pageSize, cancellationToken);
             return StatusCode(response.StatusCode, response);

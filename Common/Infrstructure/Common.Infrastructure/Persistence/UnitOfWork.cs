@@ -42,11 +42,8 @@ namespace Common.Infrastructure
             if (entity is IAuditable a)
             {
                 a.CreatedAt = DateTime.UtcNow;
-                a.CreatedById = _usrServices.Id;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 await _ctx.AddAsync(a, cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
@@ -70,14 +67,8 @@ namespace Common.Infrastructure
                 if (e is IAuditable a)
                 {
                     a.CreatedAt = DateTime.UtcNow;
-                    a.CreatedById = _usrServices.Id;
-                    
                     _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-
-                    _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
                     _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-
-                    _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                     return a;
                 }
                 return e;
@@ -110,15 +101,9 @@ namespace Common.Infrastructure
             }
             if (entity is IAuditable a)
             {
-                a.UpdatedById = _usrServices.Id;
                 a.UpdatedAt = DateTime.UtcNow;
                 _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                
-                _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
-
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-
-                _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                 _ctx.Update(a);
                 await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
@@ -138,7 +123,7 @@ namespace Common.Infrastructure
         {
             if (entity is IList<IEntity> iE)
             {
-                var ids = _map.Map<IList<Guid>>(iE);
+                var ids = _map.Map<IList<long>>(iE);
                 var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
                 if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, notFoundIds);
             }
@@ -147,15 +132,9 @@ namespace Common.Infrastructure
             {
                 if (e is IAuditable a)
                 {
-                    a.UpdatedById = _usrServices.Id;
                     a.UpdatedAt = DateTime.UtcNow;
                     _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                    
-                    _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
-
                     _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-
-                    _ctx.Entry(a).Property(x => x.DeletedById).IsModified = false;
                     return a;
                 }
                 return e;
@@ -176,7 +155,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Delete
-        public async Task DeleteAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        public async Task DeleteAsync<DomainEntity>(long id, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             try
@@ -184,14 +163,10 @@ namespace Common.Infrastructure
                 var entity = await _ctx.Set<DomainEntity>().FirstAsync(x => ((IIdentifiable)x).Id.Equals(id), cancellationToken);
                 if (entity is IAuditable a)
                 {
-                    a.DeletedById = _usrServices.Id;
                     a.DeletedAt = DateTime.UtcNow;
                     
-                    _ctx.Entry(a).Property(x => x.CreatedById).IsModified = false;
                     _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
                     _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
-
-                    _ctx.Entry(a).Property(x => x.UpdatedById).IsModified = false;
 
                     _ctx.Update(entity);
                     await _ctx.SaveChangesAsync(cancellationToken);
@@ -204,7 +179,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task DeleteAsync<DomainEntity>(IList<Guid> ids, CancellationToken cancellationToken)
+        public async Task DeleteAsync<DomainEntity>(IList<long> ids, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
             var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
@@ -218,7 +193,6 @@ namespace Common.Infrastructure
                         .Where(x => ids.Contains(((IIdentifiable)x).Id))
                         .ExecuteUpdateAsync(u => u
                             .SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
-                            .SetProperty(x => ((IAuditable)x).DeletedById, x => _usrServices.Id)
                             , cancellationToken
                         );
                     break;
@@ -230,7 +204,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Exists
-        public async Task<bool> ExistsAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        public async Task<bool> ExistsAsync<DomainEntity>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -242,7 +216,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task<(bool, IList<Guid>)> ExistsAsync<DomainEntity>(IList<Guid> ids, CancellationToken cancellationToken)
+        public async Task<(bool, IList<long>)> ExistsAsync<DomainEntity>(IList<long> ids, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -250,12 +224,12 @@ namespace Common.Infrastructure
                 case IIdentifiable:
                     {
                         var foundAll = await _ctx.Set<DomainEntity>().AsNoTracking().AllAsync(x => ids.Contains(((IIdentifiable)x).Id), cancellationToken);
-                        if (foundAll) return (foundAll, Array.Empty<Guid>());
-                        var foundIds = await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).ProjectTo<Guid>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
+                        if (foundAll) return (foundAll, Array.Empty<long>());
+                        var foundIds = await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).ProjectTo<long>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
                         return (foundAll, ids.Where(x => !foundIds.Contains(x)).ToList());
                     }
                 default:
-                    return (false, Array.Empty<Guid>());
+                    return (false, Array.Empty<long>());
             }
         }
 
@@ -309,7 +283,7 @@ namespace Common.Infrastructure
         #endregion
 
         #region Search
-        public async Task<DomainEntity> SearchAsync<DomainEntity>(Guid id, CancellationToken cancellationToken)
+        public async Task<DomainEntity> SearchAsync<DomainEntity>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -319,12 +293,12 @@ namespace Common.Infrastructure
                 default: return null;
             }
         }
-        public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(Guid id, CancellationToken cancellationToken)
+        public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(long id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             switch (typeof(DomainEntity))
@@ -335,7 +309,7 @@ namespace Common.Infrastructure
             }
         }
 
-        public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<Guid> ids, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IList<long> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).PaginateAsync<DomainEntity,ResultDTO>(_map, page, pageSize);

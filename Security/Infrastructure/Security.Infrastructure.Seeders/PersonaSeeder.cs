@@ -33,18 +33,18 @@ namespace Security.Infrastructure.Seeders
             await _cache.WaitAsync(_dependencies, cancellationToken);
             if (await Set<Persona>().AnyAsync(cancellationToken))
             {
-                await _cache.SaveAsync(CacheKeyPersona.SeedIds, await Set<Persona>().OrderByDescending(x => x.CreatedAt).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken));
+                await _cache.SaveAsync(CacheKeyPersona.SeedIds, await Set<Persona>().OrderByDescending(x => x.CreatedAt).ProjectTo<long>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken));
                 await _cache.SaveAsync(CacheKeyPersona.SeedCreatedIds, true);
                 return Array.Empty<object>();
             }
             
-            var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin);
+            var userAdminIds = await _cache.GetAsync<List<long>>(CacheKeyUser.SeedIdsAdmin);
 
             People = Enumerable.Range(1, _quantity).Select(x =>
             {
                 var entity = new Persona
                 {
-                    Id = Guid.NewGuid(),
+                    Id = x,
                     CreatedAt = DateTime.SpecifyKind(DateTime.UtcNow, DateTimeKind.Unspecified),
                     Name = $"Persona Name {x}",
                     Lastname = $"Persona LastName {x}",

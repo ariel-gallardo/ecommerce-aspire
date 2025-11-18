@@ -9,22 +9,14 @@ namespace Common.Application.Profiles.Base
     {
         public IdentifiableProfile()
         {
-            CreateMap<IdentifiableDTO, IdentifiableEntity>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)))
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
-
-            CreateMap<IdentifiableDTO, Guid>()
-                .ConvertUsing(src => Guid.Parse(src.Id));
-
-            CreateMap<IdentifiableEntity, Guid>()
-                .ConvertUsing(src => src.Id);
-            CreateMap<Guid, IdentifiableEntity>()
-                .ConvertUsing(guid => new IdentifiableEntity { Id = guid });
+            CreateMap<IdentifiableDTO, IdentifiableEntity>().ReverseMap();
+            CreateMap<IdentifiableDTO, long>();
+            CreateMap<IdentifiableEntity, long>();
+            CreateMap<long, IdentifiableEntity>()
+                .ConvertUsing(id => new IdentifiableEntity { Id = id });
 
             CreateMap<IdentifiableEntity, IdentifiableMessage>()
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+                .ReverseMap();
         }
     }
 }

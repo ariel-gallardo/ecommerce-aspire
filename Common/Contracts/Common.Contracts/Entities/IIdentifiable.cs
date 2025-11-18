@@ -2,6 +2,6 @@
 {
     public interface IIdentifiable : IEntity
     {
-        Guid Id { get; set; }
+        long Id { get; set; }
     }
 }
