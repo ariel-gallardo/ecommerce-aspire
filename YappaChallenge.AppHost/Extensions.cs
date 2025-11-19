@@ -37,7 +37,6 @@ namespace Ecommerce.AppHost
             {
                 AddEnvironmentRecursive(builder, child, $"AppSettings__{child.Key}");
             }
-
             return builder;
         }
 
