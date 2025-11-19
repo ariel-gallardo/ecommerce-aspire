@@ -108,10 +108,10 @@ namespace Common.Application.Services
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
             BaseResponse response;
-            var result = await _unitOfWork.SearchAsync<DomainEntity>(entityId, cancellationToken);
+            var result = await _unitOfWork.SearchAsync<DomainEntity,ResultDTO>(entityId, cancellationToken);
             if(result != null)
             {
-                response = new Response<DomainEntity> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
+                response = new Response<ResultDTO> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
             }
             else
             {
@@ -171,10 +171,10 @@ namespace Common.Application.Services
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
             BaseResponse response;
-            var result = await _unitOfWork.SearchAsync<DomainEntity>(entityIds, page, pageSize, cancellationToken);
+            var result = await _unitOfWork.SearchAsync<DomainEntity,ResultDTO>(entityIds, page, pageSize, cancellationToken);
             if (result.Any())
             {
-                response = new Response<IList<DomainEntity>> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
+                response = new Response<IList<ResultDTO>> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
             }
             else
             {
