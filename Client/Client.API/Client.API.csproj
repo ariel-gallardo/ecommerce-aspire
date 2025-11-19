@@ -9,6 +9,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Common\Api\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="..\Client.Application\Client.Application.csproj" />
+    <ProjectReference Include="..\Client.Controllers\Client.Controllers.csproj" />
     <ProjectReference Include="..\Infrastructure\Client.Infrastructure.Persistence\Client.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 

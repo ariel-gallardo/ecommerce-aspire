@@ -1,4 +1,5 @@
 ﻿using Common.Domain.Entities.Base;
+using Microsoft.AspNetCore.Mvc;
 using Security.Domain.Entities;
 using System.Linq.Expressions;
 
@@ -6,8 +7,11 @@ namespace Security.Domain.Filters.Queries
 {
     public class PermissionQuerieFilter : QuerieFilter
     {
+        [FromQuery]
         public string Controller { get; set; }
+        [FromQuery]
         public string Action { get; set; }
+        [FromQuery]
         public string Url { get; set; }
 
         #region Expressions
