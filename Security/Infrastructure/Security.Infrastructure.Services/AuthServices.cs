@@ -1,6 +1,8 @@
 ﻿using Common.Domain.Exceptions;
+using Common.Extensions;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Const;
+using Common.Infrastructure.Entities.Enums;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Http;
@@ -54,6 +56,7 @@ namespace Security.Infrastructure
 
         public async Task<bool?> CanAccess(string policyName)
         {
+            if (policyName.AsEnumUsingMemberValue<Policy>() == Policy.Public) return true;
             var user = _httpContextAccessor?.HttpContext?.User;
             if (!user.Identity.IsAuthenticated) return null;
             var result = await _authorizationService.AuthorizeAsync(user, policyName);
@@ -63,11 +66,11 @@ namespace Security.Infrastructure
         public string? ClaimValue(string claimType)
         => User?.FindFirst(claimType)?.Value;
 
-        public long Id
+        public ulong Id
         {
             get
             {
-                if (long.TryParse(ClaimValue(ClaimTypes.NameIdentifier), out long result))
+                if (ulong.TryParse(ClaimValue(ClaimTypes.NameIdentifier), out ulong result))
                     return result;
                 throw new PermissionDeniedException();
             }

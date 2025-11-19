@@ -5,7 +5,7 @@ namespace Security.Infrastructure.Contracts
 {
     public interface IAuthServices : IScoped
     {
-        long Id { get; }
+        ulong Id { get; }
         bool IsAuthenticated { get; }
         Task AuthAsAdmin();
         Task<bool?> CanAccess(string policyName);

@@ -1,6 +1,7 @@
 # Lista de proyectos disponibles
 $projects = @(
-    "Security"
+    "Security",
+    "Client"
 )
 
 # Mostrar lista de proyectos y permitir seleccionar

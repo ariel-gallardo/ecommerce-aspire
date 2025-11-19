@@ -2,7 +2,7 @@
 {
     public class SecurityConst
     {
-        public static long InternalAdminId => 1L;
+        public static ulong InternalAdminId => 1L;
         public const string AuthenticationBearer = "Bearer";
         public const string AuthenticationInternal = "Internal";
     }

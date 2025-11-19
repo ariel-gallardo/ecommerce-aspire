@@ -42,10 +42,10 @@ namespace Security.Infrastructure.Seeders
             if (await Set<User>().AnyAsync(cancellationToken))
             {
                 await Task.WhenAll(
-                    _cache.SaveAsync(CacheKeyUser.SeedIdAdmin,await Set<User>().Where(x => x.Rol == Role.Administrator).ProjectTo<long>(_mapper.ConfigurationProvider).FirstAsync()),
-                    _cache.SaveAsync(CacheKeyUser.SeedIdsAdmin, await Set<User>().Where(x => x.Rol == Role.Administrator).ProjectTo<long>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync()),
-                    _cache.SaveAsync(CacheKeyUser.SeedIdsClient, await Set<User>().Where(x => x.Rol == Role.Client).ProjectTo<long>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync()),
-                    _cache.SaveAsync(CacheKeyUser.SeedIds, await Set<User>().ProjectTo<long>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync())
+                    _cache.SaveAsync(CacheKeyUser.SeedIdAdmin,await Set<User>().Where(x => x.Rol == Role.Administrator).ProjectTo<ulong>(_mapper.ConfigurationProvider).FirstAsync()),
+                    _cache.SaveAsync(CacheKeyUser.SeedIdsAdmin, await Set<User>().Where(x => x.Rol == Role.Administrator).ProjectTo<ulong>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync()),
+                    _cache.SaveAsync(CacheKeyUser.SeedIdsClient, await Set<User>().Where(x => x.Rol == Role.Client).ProjectTo<ulong>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync()),
+                    _cache.SaveAsync(CacheKeyUser.SeedIds, await Set<User>().ProjectTo<ulong>(_mapper.ConfigurationProvider).Take(_quantity).ToListAsync())
                 );
                 await Task.WhenAll(
                     _cache.SaveAsync(CacheKeyUser.SeedCreatedIdAdmin,true),
@@ -60,7 +60,7 @@ namespace Security.Infrastructure.Seeders
             {
                 return new User
                 {
-                    Id = x == 1 ? SecurityConst.InternalAdminId : x,
+                    Id = x == 1 ? SecurityConst.InternalAdminId : ulong.Parse(x.ToString()),
                     Rol = x == 1 ? Role.Administrator : (x % 9 == 0 ? Role.Administrator : x % 3 == 0 ? Role.Support : Role.Client),
                     Email = $"user_email_{x}@mail.com",
                     Username = $"user_name_{x}",
@@ -84,7 +84,7 @@ namespace Security.Infrastructure.Seeders
 
             await _cache.WaitAsync(CacheKeyPersona.SeedCreatedIds, cancellationToken);
 
-            var people = await _cache.GetAsync<List<long>>(CacheKeyPersona.SeedIds);
+            var people = await _cache.GetAsync<List<ulong>>(CacheKeyPersona.SeedIds);
 
             for (int i = 0; i < _quantity-1; i++)
                 Users.Where(x => x != userAdmin).ElementAt(i).PersonaId = i % 4 == 0 ? people.ElementAt(i) : null;

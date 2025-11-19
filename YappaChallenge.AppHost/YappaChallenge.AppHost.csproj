@@ -13,11 +13,13 @@
   <ItemGroup>
   	<ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
   	<ProjectReference Include="..\Common\Infrstructure\Common.Infrastructure\Common.Infrastructure.csproj" ReferenceOutputAssembly="false" />
-  	<ProjectReference Include="..\Security\Security.API\Security.API.csproj" />
+	  <ProjectReference Include="..\Security\Security.API\Security.API.csproj" />
+	  <ProjectReference Include="..\Client\Client.API\Client.API.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.0" />
+    <PackageReference Include="Aspire.Hosting.AppHost" Version="13.0.0" />
+    <PackageReference Include="Aspire.Hosting.MySql" Version="13.0.0" />
     <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.5.2" />
     <PackageReference Include="Aspire.Hosting.Redis" Version="9.5.0" />
     <PackageReference Include="CommunityToolkit.Aspire.Hosting.Sqlite" Version="9.9.0" />
