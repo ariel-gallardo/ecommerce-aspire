@@ -158,46 +158,55 @@ namespace Common.Infrastructure
         public async Task DeleteAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
-            try
-            {
-                var entity = await _ctx.Set<DomainEntity>().FirstAsync(x => ((IIdentifiable)x).Id.Equals(id), cancellationToken);
-                if (entity is IAuditable a)
-                {
-                    a.DeletedAt = DateTime.UtcNow;
-                    
-                    _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
+            if (!typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
+                throw new NotImplementedException($"{typeof(DomainEntity)} does not implement IIdentifiable");
 
-                    _ctx.Update(entity);
-                    await _ctx.SaveChangesAsync(cancellationToken);
-                    return;
-                }
-            }
-            catch (Exception ex)
+            var entity = await _ctx.Set<DomainEntity>()
+                                   .FirstOrDefaultAsync(x => ((IIdentifiable)x).Id == id, cancellationToken);
+
+            if (entity == null)
+                throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Delete, id);
+
+            if (entity is IAuditable a)
             {
-                throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Delete, id, ex);
+                a.DeletedAt = DateTime.UtcNow;
+                _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
+                _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
+                _ctx.Update(a);
             }
+            else
+            {
+                _ctx.Remove(entity);
+            }
+
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
+            if (!typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
+                throw new NotImplementedException($"{typeof(DomainEntity)} does not implement IIdentifiable");
+
             var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
-            if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, notFoundIds);
+            if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Delete, notFoundIds);
+
+            var set = _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>();
             var currentTime = DateTime.UtcNow;
-            switch (typeof(DomainEntity))
+
+            if (typeof(IAuditable).IsAssignableFrom(typeof(DomainEntity)))
             {
-                case IAuditable:
-                    await _ctx.Set<DomainEntity>()
-                        .AsNoTracking()
-                        .Where(x => ids.Contains(((IIdentifiable)x).Id))
-                        .ExecuteUpdateAsync(u => u
-                            .SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
-                            , cancellationToken
-                        );
-                    break;
-                default:
-                    throw new NotImplementedException($"{typeof(DomainEntity)} not implemented delete action.");
+                await _ctx.Set<DomainEntity>()
+                          .Where(x => ids.Contains(((IIdentifiable)x).Id))
+                          .ExecuteUpdateAsync(u => u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime), cancellationToken);
+            }
+            else
+            {
+                var entities = await _ctx.Set<DomainEntity>()
+                                         .Where(x => ids.Contains(((IIdentifiable)x).Id))
+                                         .ToListAsync(cancellationToken);
+                _ctx.RemoveRange(entities);
+                await _ctx.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -205,32 +214,35 @@ namespace Common.Infrastructure
 
         #region Exists
         public async Task<bool> ExistsAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
-        where DomainEntity : class, IEntity
+            where DomainEntity : class, IEntity
         {
-            switch (typeof(DomainEntity))
+            if (typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
             {
-                case IIdentifiable:
-                    return
-                        await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).AnyAsync(cancellationToken);
-                default: return false;
+                return await _ctx.Set<DomainEntity>()
+                                 .AsNoTracking()
+                                 .Cast<IIdentifiable>()
+                                 .AnyAsync(x => x.Id == id, cancellationToken);
             }
+            return false;
         }
 
         public async Task<(bool, IList<ulong>)> ExistsAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
-        where DomainEntity : class, IEntity
+            where DomainEntity : class, IEntity
         {
-            switch (typeof(DomainEntity))
+            if (typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
             {
-                case IIdentifiable:
-                    {
-                        var foundAll = await _ctx.Set<DomainEntity>().AsNoTracking().AllAsync(x => ids.Contains(((IIdentifiable)x).Id), cancellationToken);
-                        if (foundAll) return (foundAll, Array.Empty<ulong>());
-                        var foundIds = await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Contains(((IIdentifiable)x).Id)).ProjectTo<ulong>(_map.ConfigurationProvider).ToListAsync(cancellationToken);
-                        return (foundAll, ids.Where(x => !foundIds.Contains(x)).ToList());
-                    }
-                default:
-                    return (false, Array.Empty<ulong>());
+                var set = _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>();
+                var foundAll = await set.AllAsync(x => ids.Contains(x.Id), cancellationToken);
+
+                if (foundAll) return (true, Array.Empty<ulong>());
+
+                var foundIds = await set.Where(x => ids.Contains(x.Id))
+                                        .Select(x => x.Id)
+                                        .ToListAsync(cancellationToken);
+
+                return (false, ids.Where(x => !foundIds.Contains(x)).ToList());
             }
+            return (false, Array.Empty<ulong>());
         }
 
         public async Task<bool> ExistsAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
@@ -284,14 +296,18 @@ namespace Common.Infrastructure
 
         #region Search
         public async Task<DomainEntity> SearchAsync<DomainEntity>(ulong id, CancellationToken cancellationToken)
-        where DomainEntity : class, IEntity
+            where DomainEntity : class, IEntity
         {
-            switch (typeof(DomainEntity))
+            if (typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
             {
-                case IIdentifiable:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).FirstOrDefaultAsync(cancellationToken);
-                default: return null;
+                return await _ctx.Set<DomainEntity>()
+                                 .AsNoTracking()
+                                 .Cast<IIdentifiable>()
+                                 .Where(x => x.Id == id)
+                                 .Cast<DomainEntity>()
+                                 .FirstOrDefaultAsync(cancellationToken);
             }
+            return null;
         }
         public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
