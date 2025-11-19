@@ -9,7 +9,9 @@ namespace Client.Application.Profiles
         public ClientProfile()
         {
             CreateMap<ClientDTO, Cliente>()
-                .ForMember(dest => dest.FechaNacimiento, opt => opt.MapFrom(orig => DateTime.ParseExact(orig.FechaNacimiento,"dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)))
+                .ForMember(dest => dest.FechaNacimiento, opt => opt.MapFrom(orig => 
+                    DateTime.ParseExact(orig.FechaNacimiento,"dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)
+                ))
                 .ReverseMap()
                 .ForMember(dest => dest.FechaNacimiento, opt => opt.MapFrom(orig => orig.FechaNacimiento.ToString("dd/MM/yyyy")));
         }
