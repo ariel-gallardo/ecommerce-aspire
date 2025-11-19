@@ -21,6 +21,7 @@ namespace Common.Infrastructure
             builder.Property(x => x.CreatedAt).HasColumnName("fecha_creacion").IsRequired(true).HasColumnType("TIMESTAMP").HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.UpdatedAt).HasColumnName("fecha_modificacion").IsRequired(true).HasColumnType("TIMESTAMP").HasDefaultValueSql("CURRENT_TIMESTAMP");
             builder.Property(x => x.DeletedAt).HasColumnName("fecha_eliminacion").IsRequired(false);
+            builder.HasQueryFilter(x => x.DeletedAt == null);
         }
     }
 }
