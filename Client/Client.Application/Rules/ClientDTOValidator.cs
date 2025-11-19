@@ -32,7 +32,6 @@ namespace Client.Application.Rules
                 .NotNull().WithMessage("Fecha de nacimiento social es requerida.")
                 .NotEmpty().WithMessage("Fecha de nacimiento social es requerida.")
                 .Matches(@"^\d{2}/\d{2}/\d{4}").WithMessage("La fecha no tiene formato correcto");
-                
         }
     }
 }
