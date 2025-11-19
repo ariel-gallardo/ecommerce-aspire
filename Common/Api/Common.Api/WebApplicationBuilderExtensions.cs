@@ -81,6 +81,7 @@ namespace Common.Api
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
             });
             var app = builder.Build();
+            app.UseCors("AllowMySite");
             app.MapDefaultEndpoints();
             if (app.Environment.IsDevelopment())
             {

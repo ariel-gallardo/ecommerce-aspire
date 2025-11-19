@@ -7,6 +7,7 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
+using MassTransit.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -47,6 +48,16 @@ namespace Common.Application
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
         {
+            services.AddCors(o =>
+            {
+                o.AddPolicy("AllowMySite",
+                policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                });
+            });
             services.AddAuthorization(o =>
             {
                 o.AddPolicy(Policy.Administrator.AsStringUsingMemberValue(), policy =>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using System.Diagnostics;
 
-namespace Ecommerce.AppHost
+namespace YapaChallenge.AppHost
 {
     public static class Extensions
     {

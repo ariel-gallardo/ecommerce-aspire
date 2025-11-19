@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Common.Infrastructure.Entities.Enums;
 using Security.Application.DTO;
+using Security.Application.Profiles.Resolvers;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
 using Security.Infrastructure.Messaging.Messages.Request;
@@ -16,7 +16,7 @@ namespace Security.Application.Profiles
             CreateMap<LoadPermissionRequest, PermissionQuerieFilter>();
             CreateMap<CreatePermissionRequest, PermissionQuerieFilter>();
             CreateMap<CreatePermissionRequest, Permission>()
-                .ForMember(dest => dest.Policy, opt => opt.MapFrom(x => Policy.Unknown));
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom<PolicyResolver>());
         }
     }
 }

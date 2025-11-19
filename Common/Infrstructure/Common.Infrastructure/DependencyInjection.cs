@@ -49,9 +49,23 @@ namespace Common.Infrastructure
             services.AddRabbitMq(env, messageAssemblies);
             services.AddDbContext<DbContext,IDBContext>(options =>
             {
-                var conString = $"{configuration.GetConnectionString(name)};Database={name.ToLower()}";
-                options.UseMySql(conString, ServerVersion.AutoDetect(conString));
-                options.UseSnakeCaseNamingConvention();
+                if (env.IsEnvironment("Testing"))
+                {
+                    var sp = services.BuildServiceProvider();
+                    var settings = sp.GetRequiredService<IOptions<AppSettings>>().Value;
+                    var file = Path.Join(settings.DatabaseTestingPath, $"{name.Replace("Db", string.Empty)}.sqlite");
+                    if(File.Exists(file)) File.Delete(file);
+                    options.UseSqlite(configuration.GetConnectionString(name) ?? $@"Data Source={file}");
+                    options.ConfigureWarnings(warnings =>
+                    warnings.Ignore(Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId.PendingModelChangesWarning));
+                    options.UseSnakeCaseNamingConvention();
+                }
+                else
+                {
+                    var conString = $"{configuration.GetConnectionString(name)};Database={name.ToLower()}";
+                    options.UseMySql(conString, ServerVersion.AutoDetect(conString));
+                    options.UseSnakeCaseNamingConvention();
+                }
             });
             
             if (env.IsDevelopment())
