@@ -47,10 +47,10 @@ namespace Common.Api.Filters.Controllers
 
                     var headers = context.HttpContext.Response.Headers;
 
-                    headers["CurrentPage"] = currentPage.ToString();
-                    headers["TotalPages"] = totalPages.ToString();
-                    headers["PageSize"] = pageSize.ToString();
-                    headers["TotalCount"] = totalCount.ToString();
+                    headers["X-Current-Page"] = currentPage.ToString();
+                    headers["X-Total-Pages"] = totalPages.ToString();
+                    headers["X-Page-Size"] = pageSize.ToString();
+                    headers["X-Total-Count"] = totalCount.ToString();
                 }
             }
 

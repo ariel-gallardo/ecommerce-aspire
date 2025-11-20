@@ -55,7 +55,8 @@ namespace Common.Application
                 {
                     policy.AllowAnyOrigin()
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count");
                 });
             });
             services.AddAuthorization(o =>
