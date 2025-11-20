@@ -1,5 +1,6 @@
 ﻿using Common.Api.Controllers;
 using Common.Api.Filters;
+using Common.Api.Filters.Controllers;
 using Common.Api.Filters.FluentValidation;
 using Common.Application.Services;
 using FluentValidation.AspNetCore;
@@ -35,6 +36,7 @@ namespace Common.Api
                 {
                     o.Filters.Add<PolicyFilter>();
                     o.Filters.Add<FluentValidationFilter>();
+                    o.Filters.Add<ControllerPaginationFilter>();
                 }).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
             }
            
