@@ -1,5 +1,6 @@
-using YapaChallenge.AppHost;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using YapaChallenge.AppHost;
 
 namespace YapaChallenge
 {
@@ -90,12 +91,24 @@ namespace YapaChallenge
                                        .WaitFor(rabbitMQ)
                                        .WaitFor(cache)
                                        .WaitFor(dbClient);
-
+                
                 var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
                                         .WithExternalHttpEndpoints()
                                         .WithReference(securityApi)
                                         .WithReference(clientApi);
-            
+
+            builder.Services.AddCors(o =>
+            {
+                o.AddPolicy("AllowMySite", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count");
+                });
+            });
+
         }
     }
 }

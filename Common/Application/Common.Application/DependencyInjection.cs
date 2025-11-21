@@ -50,15 +50,16 @@ namespace Common.Application
         {
             services.AddCors(o =>
             {
-                o.AddPolicy("AllowMySite",
-                policy =>
+                o.AddPolicy("AllowMySite", builder =>
                 {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyHeader()
-                          .AllowAnyMethod()
-                          .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count");
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count");
                 });
             });
+
             services.AddAuthorization(o =>
             {
                 o.AddPolicy(Policy.Administrator.AsStringUsingMemberValue(), policy =>
