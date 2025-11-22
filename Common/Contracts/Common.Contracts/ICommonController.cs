@@ -15,14 +15,14 @@ namespace Common.Contracts
     {
         #region Add
         
-        Task<IActionResult> AddAsync(AddDTO entity, CancellationToken cancellationToken);
+        Task<IActionResult> AddAsync(AddDTO? entity, CancellationToken cancellationToken);
         
         Task<IActionResult> AddAsync(IList<AddDTO>? entities, CancellationToken cancellationToken);
         #endregion
 
         #region Update
         
-        Task<IActionResult> UpdateAsync(UpdateDTO entity, CancellationToken cancellationToken);
+        Task<IActionResult> UpdateAsync(UpdateDTO? entity, CancellationToken cancellationToken);
         
         Task<IActionResult> UpdateAsync(IList<UpdateDTO>? entities, CancellationToken cancellationToken);
         #endregion

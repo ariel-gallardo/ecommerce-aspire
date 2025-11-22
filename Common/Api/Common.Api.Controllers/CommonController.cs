@@ -27,7 +27,7 @@ namespace Common.Api.Controllers
 
         #region Add
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddAsync([FromBody] AddDTO? entity, CancellationToken cancellationToken)
         {
             var response = await _services.AddAsync<AddDTO,DomainEntity,ResultDTO>(entity, cancellationToken);
             return StatusCode(response.StatusCode, response);
@@ -43,7 +43,7 @@ namespace Common.Api.Controllers
 
         #region Update
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateDTO entity, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateDTO? entity, CancellationToken cancellationToken)
         {
             var response = await _services.UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(entity, cancellationToken);
             return StatusCode(response.StatusCode, response);
