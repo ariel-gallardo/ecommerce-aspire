@@ -110,12 +110,6 @@ namespace Common.Api.Filters.OpenApi
                     operation.Security = await AssignSecuritySchema(cAA.ControllerName, cAA.ActionName);
             }
 
-            if(operation.RequestBody != null && operation.RequestBody != null && operation.RequestBody.Content != null)
-            foreach (var item in operation.RequestBody.Content)
-            {
-                if (item.Value != null && item.Value.Schema.Type == "array")
-                    item.Value.Schema.Nullable = true;
-            }
             if (context.Description.ActionDescriptor is ControllerActionDescriptor cA
                 && commonMethods.Contains(cA.MethodInfo.Name) 
                 && cA.ControllerTypeInfo.BaseType != null
@@ -144,7 +138,6 @@ namespace Common.Api.Filters.OpenApi
                     if (responseMethods.Contains(method.Name))
                     {
                         var schemaRepository = new SchemaRepository();
-
                         
                         var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
                         || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
