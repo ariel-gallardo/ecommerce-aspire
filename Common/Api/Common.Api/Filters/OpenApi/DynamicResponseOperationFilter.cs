@@ -32,6 +32,7 @@ namespace Common.Api.Filters.OpenApi
         private static string[] responseMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "SearchFirstAsync" };
         private static string[] validationMethods = new string[] { "AddAsync", "UpdateAsync" };
         private static string[] excludeSingleParameters = new string[] { "Page", "PageSize" };
+        private static string[] collections = new string[] { "", "" };
 
         private static string status200String = StatusCodes.Status200OK.ToString();
         private static string status201String = StatusCodes.Status201Created.ToString();
@@ -109,6 +110,12 @@ namespace Common.Api.Filters.OpenApi
                     operation.Security = await AssignSecuritySchema(cAA.ControllerName, cAA.ActionName);
             }
 
+            if(operation.RequestBody != null && operation.RequestBody != null && operation.RequestBody.Content != null)
+            foreach (var item in operation.RequestBody.Content)
+            {
+                if (item.Value != null && item.Value.Schema.Type == "array")
+                    item.Value.Schema.Nullable = true;
+            }
             if (context.Description.ActionDescriptor is ControllerActionDescriptor cA
                 && commonMethods.Contains(cA.MethodInfo.Name) 
                 && cA.ControllerTypeInfo.BaseType != null
@@ -143,7 +150,6 @@ namespace Common.Api.Filters.OpenApi
                         || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
                        
                         var schema = _schemaGenerator.GenerateSchema(returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO, schemaRepository);
-
                         if (excludedPagination.Contains(method.Name))
                         {
                             operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();

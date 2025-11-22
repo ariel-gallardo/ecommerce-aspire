@@ -14,7 +14,6 @@ namespace Common.Api.Filters.Controllers
                 var responseValue = objectResult.Value;
                 var responseType = responseValue.GetType();
 
-                // obtener propiedad Data dentro del Response<T>
                 var dataProp = responseType.GetProperty("Data");
                 if (dataProp == null)
                 {
