@@ -3,6 +3,6 @@
     public static class DateTimeExtensions
     {
         public static DateTime ToDate(this string dateTimeString)
-         => DateTime.ParseExact(dateTimeString, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
+        => DateTime.ParseExact(dateTimeString, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture);
     }
 }

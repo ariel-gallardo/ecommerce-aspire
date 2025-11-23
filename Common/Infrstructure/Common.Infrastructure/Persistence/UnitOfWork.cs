@@ -6,6 +6,7 @@ using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
 using Common.Domain.Contracts.Entities;
+using Common.Domain.Entities.Base;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
 using Common.Infrastructure.Extensions;
@@ -94,6 +95,8 @@ namespace Common.Infrastructure
         public async Task<DomainEntity> UpdateAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
+            
+
             if (entity is IIdentifiable iE)
             {
                 if (!await ExistsAsync<DomainEntity>(iE.Id, cancellationToken))
@@ -101,12 +104,14 @@ namespace Common.Infrastructure
             }
             if (entity is IAuditable a)
             {
+                var existing = await _ctx.Set<DomainEntity>().FindAsync(a.Id, cancellationToken);
                 a.UpdatedAt = DateTime.UtcNow;
-                _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                _ctx.Update(a);
+                _ctx.Entry(existing).CurrentValues.SetValues(a);
+                _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedAt).IsModified = false;
+                _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedAt).IsModified = false;
+                _ctx.Update(existing);
                 await _ctx.SaveChangesAsync(cancellationToken);
-                return entity;
+                return existing;
             }
             _ctx.Update(entity);
             await _ctx.SaveChangesAsync(cancellationToken);
@@ -121,21 +126,24 @@ namespace Common.Infrastructure
         public async Task<IList<DomainEntity>> UpdateAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
+            IList<ulong> ids;
             if (entity is IList<IEntity> iE)
             {
-                var ids = _map.Map<IList<ulong>>(iE);
+                ids = _map.Map<IList<ulong>>(iE);
                 var (all, notFoundIds) = await ExistsAsync<DomainEntity>(ids, cancellationToken);
                 if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, notFoundIds);
             }
 
-            var entities = entity.Select<DomainEntity, IEntity>(e =>
+            var entities = entity.Select<DomainEntity, IEntity>( e =>
             {
                 if (e is IAuditable a)
                 {
+                    var existing = _ctx.Set<DomainEntity>().Find(a.Id, cancellationToken);
                     a.UpdatedAt = DateTime.UtcNow;
-                    _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
-                    _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                    return a;
+                    _ctx.Entry(existing).CurrentValues.SetValues(a);
+                    _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedAt).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedAt).IsModified = false;
+                    return existing;
                 }
                 return e;
             });
