@@ -7,7 +7,7 @@ using Common.Contracts;
 
 namespace Client.Controllers
 {
-    public class ClientesController : CommonController<Cliente, ClientDTO, ClientDTO, ClientDTO, ClientQuerieFilter>, IClientesController
+    public class ClientesController : CommonController<Cliente, ClientDTO, ClientUpdateDTO, ClientDTO, ClientQuerieFilter>, IClientesController
     {
         public ClientesController(ICommonServices services) : base(services)
         {

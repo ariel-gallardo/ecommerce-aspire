@@ -5,7 +5,7 @@ using Common.Contracts;
 
 namespace Client.Controllers.Contracts
 {
-    public interface IClientesController : ICommonController<Cliente, ClientDTO, ClientDTO, ClientDTO, ClientQuerieFilter>
+    public interface IClientesController : ICommonController<Cliente, ClientDTO, ClientUpdateDTO, ClientDTO, ClientQuerieFilter>
     {
     }
 }

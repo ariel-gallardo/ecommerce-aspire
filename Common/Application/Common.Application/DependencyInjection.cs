@@ -16,6 +16,7 @@ using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Common.Application
 {
@@ -26,6 +27,7 @@ namespace Common.Application
             services.AddAutoMapper(cfg =>
             {
                 cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
+                cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
             }, assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
 
             return services;

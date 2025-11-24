@@ -95,23 +95,13 @@ namespace Common.Infrastructure
         public async Task<DomainEntity> UpdateAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
-            
 
-            if (entity is IIdentifiable iE)
+            if (entity is IAuditable)
             {
-                if (!await ExistsAsync<DomainEntity>(iE.Id, cancellationToken))
-                    throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iE.Id);
-            }
-            if (entity is IAuditable a)
-            {
-                var existing = await _ctx.Set<DomainEntity>().FindAsync(a.Id, cancellationToken);
-                a.UpdatedAt = DateTime.UtcNow;
-                _ctx.Entry(existing).CurrentValues.SetValues(a);
-                _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedAt).IsModified = false;
-                _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedAt).IsModified = false;
-                _ctx.Update(existing);
+                (entity as IAuditable).UpdatedAt = DateTime.UtcNow;
+                _ctx.Update(entity);
                 await _ctx.SaveChangesAsync(cancellationToken);
-                return existing;
+                return entity;
             }
             _ctx.Update(entity);
             await _ctx.SaveChangesAsync(cancellationToken);
@@ -122,7 +112,20 @@ namespace Common.Infrastructure
             where UpdateDTO : class, IEntityDTO, IUpdateDTO
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
-            => _map.Map<ResultDTO>(await UpdateAsync(_map.Map<DomainEntity>(entity), cancellationToken));
+        {
+            DomainEntity dbEntity;
+            if (entity is IIdentifiableDTO iE)
+            {
+                if (!await ExistsAsync<DomainEntity>(iE.Id, cancellationToken))
+                    throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iE.Id);
+                else
+                {
+                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iE.Id, cancellationToken);
+                    return _map.Map<ResultDTO>(await UpdateAsync(_map.Map(entity, dbEntity), cancellationToken));
+                }
+            }
+            return _map.Map<ResultDTO>(null);
+        }
         public async Task<IList<DomainEntity>> UpdateAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {

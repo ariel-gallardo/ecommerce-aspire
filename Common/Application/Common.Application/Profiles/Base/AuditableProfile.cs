@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Common.Application.DTO.Base.Entities;
-using Common.Contracts.DTO.Base;
-using Common.Domain.Contracts.Entities;
 using Common.Domain.Entities.Base;
 using Common.Infrastructure.Messages.Entities;
 
@@ -11,27 +9,14 @@ namespace Common.Application.Profiles.Base
     {
         public AuditableProfile()
         {
-            CreateMap<AuditableEntity, AuditableDTO>()
-                .ForMember(dest => dest.DeletedAt, opt =>
-                {
-                    opt.PreCondition(orig => orig.DeletedAt != null);
-                    opt.MapFrom(orig => orig.DeletedAt);
-                })
+            CreateMap<AuditableDTO, AuditableEntity>()
+                .IncludeBase<IdentifiableDTO,IdentifiableEntity>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom((src, dest) => dest.CreatedAt))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom((src, dest) => dest.UpdatedAt))
+                .ForMember(dest => dest.DeletedAt, opt => opt.MapFrom((src, dest) => dest.DeletedAt))
                 .ReverseMap()
-                .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedAt, opt => opt.Ignore());
+                .IncludeBase<IdentifiableEntity,IdentifiableDTO>();
 
-            CreateMap<IAuditable, IAuditableDTO>()
-            .ForMember(dest => dest.DeletedAt, opt =>
-            {
-                opt.PreCondition(orig => orig.DeletedAt != null);
-                opt.MapFrom(orig => orig.DeletedAt);
-            })
-            .ReverseMap()
-            .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
-            .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
-            .ForMember(dest => dest.DeletedAt, opt => opt.Ignore());
             CreateMap<AuditableEntity, AuditableMessage>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())

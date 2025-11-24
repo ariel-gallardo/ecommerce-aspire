@@ -11,16 +11,14 @@ namespace Common.Application.Profiles.Base
     {
         public IdentifiableProfile()
         {
-            CreateMap<IdentifiableDTO, IdentifiableEntity>().ReverseMap();
-            CreateMap<IIdentifiableDTO, IIdentifiable>().ReverseMap();
+            CreateMap<IdentifiableDTO, IdentifiableEntity>()
+                .ReverseMap();
             CreateMap<IdentifiableDTO, ulong>();
             CreateMap<IdentifiableEntity, ulong>();
             CreateMap<IdentifiableDTO, ulong>();
             CreateMap<IIdentifiable, ulong>();
             CreateMap<ulong, IdentifiableEntity>()
                 .ConvertUsing(id => new IdentifiableEntity { Id = id });
-            CreateMap<ulong, IIdentifiable>()
-            .ConvertUsing(id => new IdentifiableEntity { Id = id });
             CreateMap<IdentifiableEntity, IdentifiableMessage>()
                 .ReverseMap();
         }
