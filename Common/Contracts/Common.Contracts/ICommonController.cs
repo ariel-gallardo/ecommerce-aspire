@@ -15,23 +15,23 @@ namespace Common.Contracts
     {
         #region Add
         
-        Task<IActionResult> AddAsync(AddDTO? entity, CancellationToken cancellationToken);
+        Task<IActionResult> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken);
         
-        Task<IActionResult> AddAsync(IList<AddDTO>? entities, CancellationToken cancellationToken);
+        Task<IActionResult> AddAsync(IList<AddDTO> entities, CancellationToken cancellationToken);
         #endregion
 
         #region Update
         
-        Task<IActionResult> UpdateAsync(UpdateDTO? entity, CancellationToken cancellationToken);
+        Task<IActionResult> UpdateAsync(UpdateDTO entity, CancellationToken cancellationToken);
         
-        Task<IActionResult> UpdateAsync(IList<UpdateDTO>? entities, CancellationToken cancellationToken);
+        Task<IActionResult> UpdateAsync(IList<UpdateDTO> entities, CancellationToken cancellationToken);
         #endregion
 
         #region Delete
         
         Task<IActionResult> DeleteAsync(ulong entityId, CancellationToken cancellationToken);
         
-        Task<IActionResult> DeleteAsync(IList<ulong>? entityIds, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync(IList<ulong> entityIds, CancellationToken cancellationToken);
         #endregion
 
         #region Search
@@ -41,7 +41,7 @@ namespace Common.Contracts
         Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
         Task<IActionResult> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
-        Task<IActionResult> SearchAsync(IList<ulong>? entityIds, int page, int pageSize, CancellationToken cancellationToken);
+        Task<IActionResult> SearchAsync(IList<ulong> entityIds, int page, int pageSize, CancellationToken cancellationToken);
         #endregion
     }
 }

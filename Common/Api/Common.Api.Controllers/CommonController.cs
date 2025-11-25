@@ -27,15 +27,14 @@ namespace Common.Api.Controllers
 
         #region Add
         [HttpPost]
-        public async Task<IActionResult> AddAsync([FromBody] AddDTO? entity, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken)
         {
             var response = await _services.AddAsync<AddDTO,DomainEntity,ResultDTO>(entity, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
         [HttpPost("range")]
-        public async Task<IActionResult> AddAsync([FromBody] IList<AddDTO>? entities, CancellationToken cancellationToken)
+        public async Task<IActionResult> AddAsync([FromBody] IList<AddDTO> entities, CancellationToken cancellationToken)
         {
-            if (entities == null) entities = Array.Empty<AddDTO>();
             var response = await _services.AddAsync<AddDTO, DomainEntity, ResultDTO>(entities, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
@@ -43,16 +42,15 @@ namespace Common.Api.Controllers
 
         #region Update
         [HttpPut]
-        public async Task<IActionResult> UpdateAsync([FromBody] UpdateDTO? entity, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync([FromBody] UpdateDTO entity, CancellationToken cancellationToken)
         {
             var response = await _services.UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(entity, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpPut("range")]
-        public async Task<IActionResult> UpdateAsync([FromBody] IList<UpdateDTO>? entities, CancellationToken cancellationToken)
+        public async Task<IActionResult> UpdateAsync([FromBody] IList<UpdateDTO> entities, CancellationToken cancellationToken)
         {
-            if (entities == null) entities = Array.Empty<UpdateDTO>();
             var response = await _services.UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(entities, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
@@ -67,9 +65,8 @@ namespace Common.Api.Controllers
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteAsync([FromBody] IList<ulong>? entityIds, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromBody] IList<ulong> entityIds, CancellationToken cancellationToken)
         {
-            if (entityIds == null) entityIds = Array.Empty<ulong>();
             var response = await _services.DeleteAsync<DomainEntity>(entityIds, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
