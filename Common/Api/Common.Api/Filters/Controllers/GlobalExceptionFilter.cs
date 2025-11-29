@@ -26,12 +26,12 @@ namespace Common.Api.Filters.Controllers
 
             _publisher.Publish(new LogErrorRequest
             {
-                CreatedAt = DateTime.UtcNow.ToString("dd/MM/yyyy HH:mm:ss"),
                 Exception = context.Exception.ToString(),
                 StackTrace = context.Exception.StackTrace,
                 ExceptionType = context.Exception.GetType().Name,
                 Log = new LogRequest
                 {
+                    CreatedAt = DateTime.UtcNow.ToString(),
                     ServiceName = entryName,
                     Message = context.Exception.Message,
                     TraceId = Activity.Current?.Id

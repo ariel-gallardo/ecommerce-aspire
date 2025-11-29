@@ -77,7 +77,6 @@ namespace Common.Api.Controllers
         [HttpGet]
         public async Task<IActionResult> SearchAsync([FromQuery] ulong entityId, CancellationToken cancellationToken)
         {
-            throw new Exception("Test Error");
             var response = await _services.SearchAsync<DomainEntity,ResultDTO>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }

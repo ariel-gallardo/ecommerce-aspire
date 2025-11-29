@@ -30,13 +30,19 @@ namespace YapaChallenge
 
             var clientDbPassword = builder.AddParameterFromConfiguration("ClientDbPassword", "Parameters:AppSettings:ClientDb:Password");
             var securityDbPassword = builder.AddParameterFromConfiguration("SecurityDbPassword", "Parameters:AppSettings:SecurityDb:Password");
+            var logsDbPassword = builder.AddParameterFromConfiguration("LogDbPassword", "Parameters:AppSettings:LogsDb:Password");
 
             var redisDataMount = cfg["Parameters:AppSettings:Redis:DataMount"];
             var rabbitDataMount = cfg["Parameters:AppSettings:RabbitMQ:DataMount"];
+
             var clientDbDataMount = cfg["Parameters:AppSettings:ClientDb:DataMount"];
             var clientDbPort = int.Parse(cfg["Parameters:AppSettings:ClientDb:Port"]);
+
             var securityDbDataMount = cfg["Parameters:AppSettings:SecurityDb:DataMount"];
             var securityDbPort = int.Parse(cfg["Parameters:AppSettings:SecurityDb:Port"]);
+
+            var logsDbDataMount = cfg["Parameters:AppSettings:LogsDb:DataMount"];
+            var logsDbPort = int.Parse(cfg["Parameters:AppSettings:LogsDb:Port"]);
 
             var cache = builder.AddRedis("cache", 1000, redisPass);
             if (!string.IsNullOrWhiteSpace(redisDataMount))
@@ -67,6 +73,15 @@ namespace YapaChallenge
                                       .WithDataBindMount(clientDbDataMount)
                                       .WithPhpMyAdmin();
 
+            var logsDbFile = "Logs.sqlite";
+            var dbLogsTesting = isTesting ? builder
+                .AddSqlite("LogsDb", basePathDbTesting, logsDbFile)
+            .WithSqliteWeb() : null;
+
+            var dbLogs = builder.AddMySql("LogsDb", logsDbPassword, logsDbPort)
+                                      .WithDataBindMount(logsDbDataMount)
+                                      .WithPhpMyAdmin();
+
 
             var securityApi = builder.AddProject<Projects.Security_API>("security")
                                          .WithOpenApi()
@@ -91,11 +106,24 @@ namespace YapaChallenge
                                        .WaitFor(rabbitMQ)
                                        .WaitFor(cache)
                                        .WaitFor(dbClient);
-                
-                var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
+
+            var logsApi = builder.AddProject<Projects.Logs_API>("logs")
+                          .WithOpenApi()
+                          .WithAppSettingsEnvironments(cfg)
+                          .WithExternalHttpEndpoints()
+                          .WithHttpHealthCheck("/health")
+                          .WithReference(rabbitMQ)
+                          .WithReference(cache)
+                          .WithReference(isTesting ? dbLogsTesting : dbLogs)
+                          .WaitFor(rabbitMQ)
+                          .WaitFor(cache)
+                          .WaitFor(dbLogs);
+
+            var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
                                         .WithExternalHttpEndpoints()
                                         .WithReference(securityApi)
-                                        .WithReference(clientApi);
+                                        .WithReference(clientApi)
+                                        .WithReference(logsApi);
 
             builder.Services.AddCors(o =>
             {

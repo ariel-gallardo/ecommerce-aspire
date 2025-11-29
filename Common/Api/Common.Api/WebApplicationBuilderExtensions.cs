@@ -67,7 +67,7 @@ namespace Common.Api
                 var apiAssembly = Assembly.GetExecutingAssembly();
                 builder.Configuration.AddUserSecrets(apiAssembly);
             }
-            // Registramos infraestructura y servicios
+
             builder.AddServiceDefaults();
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
