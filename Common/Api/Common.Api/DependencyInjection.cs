@@ -35,6 +35,7 @@ namespace Common.Api
                 builder.Services.AddControllers(o =>
                 {
                     o.Filters.Add<PolicyFilter>();
+                    o.Filters.Add<GlobalExceptionFilter>();
                     o.Filters.Add<FluentValidationFilter>();
                     o.Filters.Add<ControllerPaginationFilter>();
                 }).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));

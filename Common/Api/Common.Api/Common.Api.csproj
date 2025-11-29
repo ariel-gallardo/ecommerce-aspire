@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Logs\Infrastructure\Logs.Infrastructure.Middlewares\Logs.Infrastructure.Middlewares.csproj" />
     <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
     <ProjectReference Include="..\..\Contracts\Common.Contracts\Common.Contracts.csproj" />
     <ProjectReference Include="..\..\Extensions\Common.Extensions\Common.Extensions.csproj" />
