@@ -13,7 +13,7 @@ namespace Common.Infrastructure.Seeder
     {
         public static IServiceCollection AddSeeders(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Testing"))
             {
                 var seederTypes = assemblies
                 .SelectMany(a => a.GetTypes())

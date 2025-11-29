@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Contracts
 {
-    public interface ICommonController<DomainEntity,AddDTO,UpdateDTO,ResultDTO, QuerieFilterEntity> 
+    public interface ICommonController<DomainEntity,AddDTO,UpdateDTO,ResultDTO, QuerieFilterEntity> : IController
         where DomainEntity : class, IEntity
         where AddDTO : class, IEntityDTO, IAddDTO
         where UpdateDTO : class, IEntityDTO, IUpdateDTO

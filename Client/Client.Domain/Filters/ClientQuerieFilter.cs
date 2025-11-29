@@ -47,7 +47,7 @@ namespace Client.Domain.Filters
         {
             get => !string.IsNullOrWhiteSpace(FechaNacimientoMin) && !string.IsNullOrWhiteSpace(FechaNacimientoMax) ? x => x.FechaNacimiento >= FechaNacimientoMin.ToDate() && x.FechaNacimiento <= FechaNacimientoMax.ToDate() 
             : !string.IsNullOrWhiteSpace(FechaNacimientoMin) ? x => x.FechaNacimiento >= FechaNacimientoMin.ToDate()
-            : !string.IsNullOrWhiteSpace(FechaNacimientoMax) ? x => x.FechaNacimiento >= FechaNacimientoMax.ToDate()
+            : !string.IsNullOrWhiteSpace(FechaNacimientoMax) ? x => x.FechaNacimiento <= FechaNacimientoMax.ToDate()
             : null;
         }
         private Expression<Func<Cliente, bool>>? BuscarPorTelefonoCelular

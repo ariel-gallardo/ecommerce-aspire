@@ -12,18 +12,5 @@ namespace Common.Application.DTO.Base.Entities
         public string UpdatedAt { get; set; }
         [JsonIgnore]
         public string DeletedAt { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is AuditableDTO dTO &&
-                   CreatedAt == dTO.CreatedAt &&
-                   UpdatedAt == dTO.UpdatedAt &&
-                   DeletedAt == dTO.DeletedAt;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(base.GetHashCode(), CreatedAt, UpdatedAt, DeletedAt);
-        }
     }
 }
