@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Logs\Infrastructure\Logs.Infrastructure.Messaging\Logs.Infrastructure.Messaging.csproj" />
     <ProjectReference Include="..\..\..\Security\Infrastructure\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="..\..\..\Security\Infrastructure\Security.Infrastructure.Messaging\Security.Infrastructure.Messaging.csproj" />
     <ProjectReference Include="..\..\Contracts\Common.Contracts\Common.Contracts.csproj" />

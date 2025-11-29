@@ -1,5 +1,6 @@
 ﻿using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Messages.Entities;
+using Logs.Infrastructure.Messaging.Consumer;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
@@ -17,6 +18,7 @@ namespace Common.Infrastructure
                 return services.AddMassTransit(c =>
                 {
                     var types = messageAssemblies
+                    .Concat(new Assembly[] {typeof(LogErrorRequestConsumer).Assembly })
                     .SelectMany(a => a.GetTypes())
                     .Where(t => t.BaseType != null
                                 && t.BaseType.IsGenericType
