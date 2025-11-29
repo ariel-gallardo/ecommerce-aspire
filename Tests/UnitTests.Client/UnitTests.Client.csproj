@@ -15,6 +15,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Client\Client.Application\Client.Application.csproj" />
+    <ProjectReference Include="..\..\Client\Client.Controllers\Client.Controllers.csproj" />
+    <ProjectReference Include="..\..\Client\Infrastructure\Client.Infrastructure.Persistence\Client.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="..\..\Client\Infrastructure\Client.Infrastructure.Seeders\Client.Infrastructure.Seeders.csproj" />
+    <ProjectReference Include="..\Common.UnitTest\Common.UnitTest.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
 

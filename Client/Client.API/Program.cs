@@ -14,3 +14,4 @@ var app = WebApplication.CreateBuilder(args)
     .BuildApi<ClientDbContext>();
 
 app.Run();
+public partial class Program { }

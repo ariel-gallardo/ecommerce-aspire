@@ -61,7 +61,7 @@ namespace Common.Api
             where DBContext : DbContext
         {
             var env = builder.Environment;
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Testing"))
             {
                 var apiAssembly = Assembly.GetExecutingAssembly();
                 builder.Configuration.AddUserSecrets(apiAssembly);
