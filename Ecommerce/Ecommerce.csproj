@@ -11,12 +11,17 @@
   </PropertyGroup>
 	
   <ItemGroup>
-  	<ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
-  	<ProjectReference Include="..\Services\Security\Security.API\Security.API.csproj" />
-  	<ProjectReference Include="..\Services\Product\Product.API\Product.API.csproj" />
-  	<ProjectReference Include="..\Services\Inventory\Inventory.API\Inventory.API.csproj" />
-  	<ProjectReference Include="..\Services\Cart\Cart.API\Cart.API.csproj" />
+	<ProjectReference Include="..\Services\Cart\Cart.API\Cart.API.csproj" />
+	<ProjectReference Include="..\Services\Inventory\Inventory.API\Inventory.API.csproj" />
+	<ProjectReference Include="..\Services\Invoice\Invoice.API\Invoice.API.csproj" />
+	<ProjectReference Include="..\Services\Logs\Logs.API\Logs.API.csproj" />
+	<ProjectReference Include="..\Services\Notification\Notification.API\Notification.API.csproj" />
+	<ProjectReference Include="..\Services\Order\Order.API\Order.API.csproj" />
+	<ProjectReference Include="..\Services\Payment\Payment.API\Payment.API.csproj" />
+	<ProjectReference Include="..\Services\Product\Product.API\Product.API.csproj" />
+	<ProjectReference Include="..\Services\Security\Security.API\Security.API.csproj" />
   	<ProjectReference Include="..\Services\Shipping\Shipping.API\Shipping.API.csproj" />
+	<ProjectReference Include="..\ApiGateway\ApiGateway.csproj" />
   </ItemGroup>
 
   <ItemGroup>
