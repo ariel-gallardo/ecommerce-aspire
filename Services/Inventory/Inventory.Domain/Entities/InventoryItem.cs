@@ -4,7 +4,7 @@ using Common.Domain.ValueObjects;
 
 namespace Inventory.Domain.Entities
 {
-    public class InventoryItem : AuditableEntity
+    public class InventoryItem : AuditableGuidEntity
     {
         public Guid ProductId { get; set; }
         public Quantity Quantity { get; set; }

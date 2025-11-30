@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Common.Domain.Entities;
 using Security.Application.DTO;
-using Security.Domain.Entities;
 
 namespace Security.Application.Profiles
 {

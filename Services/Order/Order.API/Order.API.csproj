@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -10,7 +10,8 @@
   <ItemGroup>
     <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
     <ProjectReference Include="$(Order)\Order.Application\Order.Application.csproj" />
-    <ProjectReference Include="$(Order)\Order.Controllers\Order.Controllers.csproj" />
+	<ProjectReference Include="$(Order)\Order.Controllers\Order.Controllers.csproj" />
+	<ProjectReference Include="$(OrderInfra)\Order.Infrastructure.Persistence\Order.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

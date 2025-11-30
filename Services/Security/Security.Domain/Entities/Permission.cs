@@ -3,7 +3,7 @@ using Common.Infrastructure.Entities.Enums;
 
 namespace Security.Domain.Entities
 {
-    public class Permission : AuditableEntity
+    public class Permission : AuditableGuidEntity
     {
         public string Url { get; set; }
         public string Controller { get; set; }

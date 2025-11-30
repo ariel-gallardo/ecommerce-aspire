@@ -3,7 +3,7 @@ using Common.Domain.ValueObjects;
 
 namespace Product.Domain.Entities
 {
-    public class Product : AuditableEntity
+    public class Product : AuditableGuidEntity
     {
         public virtual Price Price { get; set; }
         public string Name { get; set; }

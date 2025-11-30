@@ -10,7 +10,7 @@ namespace Cart.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<CartItem> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.Property(x => x.ProductId).IsRequired();
             builder.OwnsOne(x => x.Quantity, x =>
             {

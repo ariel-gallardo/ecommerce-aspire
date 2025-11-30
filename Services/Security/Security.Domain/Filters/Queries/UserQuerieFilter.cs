@@ -1,10 +1,8 @@
-﻿using Common.Domain.Entities.Base;
+﻿using Common.Domain.Entities;
+using Common.Domain.Entities.Base;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Security.Domain.Entities;
 using Security.Infrastructure.Entities;
 using System.Linq.Expressions;
-using System.Linq;
 
 namespace Security.Domain.Filters.Queries
 {

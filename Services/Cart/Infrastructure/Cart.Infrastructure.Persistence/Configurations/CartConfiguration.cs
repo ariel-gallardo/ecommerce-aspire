@@ -7,7 +7,7 @@ namespace Cart.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<CartEntity> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.HasMany(x => x.Items).WithOne(x => x.Cart).HasForeignKey(x => x.CartId);
         }
     }

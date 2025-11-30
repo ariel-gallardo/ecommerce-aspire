@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Domain.Entities;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
@@ -7,7 +8,6 @@ using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Security.Domain.Entities;
 using Security.Infrastructure.Cache.Key;
 
 namespace Security.Infrastructure.Seeders

@@ -12,7 +12,7 @@ namespace Inventory.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<InventoryItem> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.Property(x => x.ProductId).IsRequired();
             builder.Property(x => x.Unit).IsRequired().HasConversion(new EnumToStringConverter<Unit>()).HasMaxLength(30);
             builder.ComplexProperty(x => x.Quantity, x =>

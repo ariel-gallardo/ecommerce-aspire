@@ -5,6 +5,7 @@ using Security.Application.Profiles.Resolvers;
 using Security.Domain.Const;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
+using Common.Domain.Entities;
 
 namespace Security.Application.Profiles
 {

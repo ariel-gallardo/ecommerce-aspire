@@ -112,6 +112,7 @@
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Cache.Key/Logs.Infrastructure.Cache.Key.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Contracts/Logs.Infrastructure.Contracts.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Messaging/Logs.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Middlewares/Logs.Infrastructure.Middlewares.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Persistence/Logs.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Seeders/Logs.Infrastructure.Seeders.csproj" />
   </Folder>

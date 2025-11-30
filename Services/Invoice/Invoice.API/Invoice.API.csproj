@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
-    <ProjectReference Include="$(InvoiceInfra)\Invoice.Infrastructure\Invoice.Infrastructure.csproj" />
     <ProjectReference Include="$(Invoice)\Invoice.Application\Invoice.Application.csproj" />
     <ProjectReference Include="$(Invoice)\Invoice.Controllers\Invoice.Controllers.csproj" />
+	<ProjectReference Include="$(InvoiceInfra)\Invoice.Infrastructure.Persistence\Invoice.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

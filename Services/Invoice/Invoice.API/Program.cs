@@ -1,3 +1,6 @@
+using Common.Api;
+using Invoice.Infrastructure.Persistence;
+
 namespace Invoice.API
 {
     public class Program
@@ -7,10 +10,10 @@ namespace Invoice.API
             var app = WebApplication.CreateBuilder(args)
             .AddAutoMapperAssemblies()
             .AddControllerAssemblies()
-            .AddSeederDevelopmentAssemblies()
+            .AddSeederAssemblies()
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
-            .BuildApi<>();
+            .BuildApi<InvoiceDbContext>();
             app.Run();
         }
     }

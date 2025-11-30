@@ -1,3 +1,6 @@
+using Common.Api;
+using Order.Infrastructure.Persistence;
+
 namespace Order.API
 {
     public class Program
@@ -7,10 +10,10 @@ namespace Order.API
             var app = WebApplication.CreateBuilder(args)
             .AddAutoMapperAssemblies()
             .AddControllerAssemblies()
-            .AddSeederDevelopmentAssemblies()
+            .AddSeederAssemblies()
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
-            .BuildApi<>();
+            .BuildApi<OrderDbContext>();
             app.Run();
         }
     }

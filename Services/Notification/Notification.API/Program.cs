@@ -1,3 +1,6 @@
+using Common.Api;
+using Notification.Infrastructure.Persistence;
+
 namespace Notification.API
 {
     public class Program
@@ -7,10 +10,10 @@ namespace Notification.API
             var app = WebApplication.CreateBuilder(args)
             .AddAutoMapperAssemblies()
             .AddControllerAssemblies()
-            .AddSeederDevelopmentAssemblies()
+            .AddSeederAssemblies()
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
-            .BuildApi<>();
+            .BuildApi<NotificationDbContext>();
             app.Run();
         }
     }

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
-    <ProjectReference Include="$(PaymentInfra)\Payment.Infrastructure\Payment.Infrastructure.csproj" />
     <ProjectReference Include="$(Payment)\Payment.Application\Payment.Application.csproj" />
     <ProjectReference Include="$(Payment)\Payment.Controllers\Payment.Controllers.csproj" />
+	  <ProjectReference Include="$(PaymentInfra)\Payment.Infrastructure.Persistence\Payment.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

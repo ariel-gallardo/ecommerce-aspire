@@ -1,6 +1,6 @@
-﻿using Common.Infrastructure;
+﻿using Common.Domain.Entities;
+using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Security.Domain.Entities;
 
 namespace Security.Infrastructure.Persistence.Configurations
 {
@@ -8,7 +8,7 @@ namespace Security.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<Persona> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.Navigation(x => x.Address).IsRequired(false);
             builder.OwnsOne(x => x.Address, x =>
             {

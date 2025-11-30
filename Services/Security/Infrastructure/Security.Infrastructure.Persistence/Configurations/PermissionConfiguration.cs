@@ -10,7 +10,7 @@ namespace Security.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<Permission> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.Property(x => x.Controller).IsRequired(false).HasMaxLength(30);
             builder.Property(x => x.Action).IsRequired(false).HasMaxLength(30);
             builder.Property(x => x.Url).IsRequired(false).HasMaxLength(75);

@@ -1,7 +1,7 @@
-﻿using Common.Infrastructure;
+﻿using Common.Domain.Entities;
+using Common.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Security.Domain.Entities;
 using Security.Infrastructure.Entities;
 
 namespace Security.Infrastructure.Persistence.Configurations

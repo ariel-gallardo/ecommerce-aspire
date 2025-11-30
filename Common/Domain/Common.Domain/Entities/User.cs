@@ -1,6 +1,7 @@
 ﻿using Common.Domain.Entities.Base;
 using Security.Infrastructure.Entities;
-namespace Security.Domain.Entities
+
+namespace Common.Domain.Entities
 {
     public class User : IdentifiableEntity
     {

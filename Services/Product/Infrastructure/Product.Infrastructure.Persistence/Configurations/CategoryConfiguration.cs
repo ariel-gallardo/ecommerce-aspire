@@ -10,7 +10,7 @@ namespace Product.Infrastructure.Persistence.Configurations
     {
         public override void Configure(EntityTypeBuilder<Category> builder)
         {
-            ConfigureAuditable(builder);
+            ConfigureAuditableGuid(builder);
             builder.Property(x => x.Name).IsRequired(true);
             builder.HasIndex(x => x.Name).IsUnique();
             builder.Property(x => x.Description).IsRequired(false);

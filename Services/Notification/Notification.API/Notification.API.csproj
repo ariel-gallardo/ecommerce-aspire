@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
@@ -9,9 +9,9 @@
 
   <ItemGroup>
     <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
-    <ProjectReference Include="$(NotificationInfra)\Notification.Infrastructure\Notification.Infrastructure.csproj" />
     <ProjectReference Include="$(Notification)\Notification.Application\Notification.Application.csproj" />
     <ProjectReference Include="$(Notification)\Notification.Controllers\Notification.Controllers.csproj" />
+	<ProjectReference Include="$(NotificationInfra)\Notification.Infrastructure.Persistence\Notification.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

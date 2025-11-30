@@ -1,9 +1,9 @@
 ﻿using Common.Domain.Entities.Base;
 using Common.Domain.ValueObjects;
 
-namespace Security.Domain.Entities
+namespace Common.Domain.Entities
 {
-    public class Persona : AuditableEntity
+    public class Persona : AuditableGuidEntity
     {
         public string Name { get; set; }
         public string Lastname { get; set; }

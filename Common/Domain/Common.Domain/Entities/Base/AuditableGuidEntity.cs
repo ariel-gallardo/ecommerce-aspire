@@ -2,11 +2,11 @@
 
 namespace Common.Domain.Entities.Base
 {
-    public class AuditableEntity : IdentifiableEntity, IAuditable
+    public class AuditableGuidEntity : IdentifiableGuidEntity, IAuditableGuid
     {
-        public ulong CreatedById { get; set; }
-        public ulong? UpdatedById { get; set; }
-        public ulong? DeletedById { get; set; }
+        public Guid CreatedById { get; set; }
+        public Guid? UpdatedById { get; set; }
+        public Guid? DeletedById { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }

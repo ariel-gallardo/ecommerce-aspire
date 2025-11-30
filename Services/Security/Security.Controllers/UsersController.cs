@@ -1,12 +1,12 @@
 ﻿using Common.Api.Controllers;
 using Common.Contracts;
+using Common.Domain.Entities;
 using Common.Infrastructure.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Security.Application.Contracts.Services;
 using Security.Application.DTO;
 using Security.Controllers.Contracts;
-using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers

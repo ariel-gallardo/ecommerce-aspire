@@ -1,3 +1,6 @@
+using Common.Api;
+using Payment.Infrastructure.Persistence;
+
 namespace Payment.API
 {
     public class Program
@@ -7,10 +10,10 @@ namespace Payment.API
             var app = WebApplication.CreateBuilder(args)
             .AddAutoMapperAssemblies()
             .AddControllerAssemblies()
-            .AddSeederDevelopmentAssemblies()
+            .AddSeederAssemblies()
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
-            .BuildApi<>();
+            .BuildApi<PaymentDbContext>();
             app.Run();
         }
     }

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
+using Common.Domain.Entities;
 using Security.Application.DTO;
-using Security.Domain.Entities;
 using Security.Infrastructure.Contracts;
 
 namespace Security.Application.Profiles.Resolvers

@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Common.Domain.Entities;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Const;
@@ -7,7 +8,6 @@ using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
-using Security.Domain.Entities;
 using Security.Infrastructure.Cache.Key;
 using Security.Infrastructure.Contracts;
 using Security.Infrastructure.Entities;
@@ -60,7 +60,7 @@ namespace Security.Infrastructure.Seeders
             {
                 return new User
                 {
-                    Id = x == 1 ? SecurityConst.InternalAdminId : Guid.NewGuid(),
+                    Id = x == 1 ? SecurityConst.InternalAdminId : ulong.Parse(x.ToString()),
                     Rol = x == 1 ? Role.Administrator : (x % 9 == 0 ? Role.Administrator : x % 3 == 0 ? Role.Support : Role.Client),
                     Email = $"user_email_{x}@mail.com",
                     Username = $"user_name_{x}",

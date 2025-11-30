@@ -131,9 +131,23 @@ namespace Common.Infrastructure.Seeder.Entities
             entity.CreatedAt = DateTime.UtcNow;
         }
 
+        protected void AddAuditableProperties(IAuditableGuid entity, IList<Guid> userIds)
+        {
+            var createdByIdNumber = _random.Next(0, userIds.Count() - 1);
+            var updatedByIdNumber = _random.Next(0, userIds.Count() - 1);
+            var deletedByIdNumber = _random.Next(0, userIds.Count() - 1);
+            entity.CreatedAt = DateTime.UtcNow;
+        }
+
         protected void AddAuditableProperties(IAuditable entity, long userId, long adminId)
         {
- 
+            var updatedByIdNumber = _random.Next(1, 100);
+            var deletedByIdNumber = _random.Next(1, 100);
+            entity.CreatedAt = DateTime.UtcNow;
+        }
+
+        protected void AddAuditableProperties(IAuditableGuid entity, Guid userId, Guid adminId)
+        {
             var updatedByIdNumber = _random.Next(1, 100);
             var deletedByIdNumber = _random.Next(1, 100);
             entity.CreatedAt = DateTime.UtcNow;

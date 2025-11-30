@@ -2,7 +2,7 @@
 
 namespace Cart.Domain.Entities
 {
-    public class Cart : AuditableEntity
+    public class Cart : AuditableGuidEntity
     {
         public virtual IList<CartItem> Items { get; set; }
     }
