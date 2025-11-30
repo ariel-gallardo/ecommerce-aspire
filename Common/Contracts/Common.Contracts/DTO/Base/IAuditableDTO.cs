@@ -1,12 +1,14 @@
-﻿namespace Common.Contracts.DTO.Base
+﻿using System.Text.Json.Serialization;
+
+namespace Common.Contracts.DTO.Base
 {
     public interface IAuditableDTO : IIdentifiableDTO
     {
-        string CreatedById { get; set; }
-        string UpdatedById { get; set; }
-        string DeletedById { get; set; }
+        [JsonIgnore]
         string CreatedAt { get; set; }
+        [JsonIgnore]
         string UpdatedAt { get; set; }
+        [JsonIgnore]
         string DeletedAt { get; set; }
     }
 }

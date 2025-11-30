@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="$(InventoryInfra)\Inventory.Infrastructure.Persistence\Inventory.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="$(InventoryInfra)\Inventory.Infrastructure.Seeders\Inventory.Infrastructure.Seeders.csproj" />
+    <ProjectReference Include="$(Inventory)\Inventory.Application\Inventory.Application.csproj" />
+    <ProjectReference Include="$(Inventory)\Inventory.Controllers\Inventory.Controllers.csproj" />
+  </ItemGroup>
+
+</Project>

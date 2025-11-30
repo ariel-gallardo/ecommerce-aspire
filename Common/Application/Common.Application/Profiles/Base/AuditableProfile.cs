@@ -9,25 +9,19 @@ namespace Common.Application.Profiles.Base
     {
         public AuditableProfile()
         {
-            CreateMap<AuditableEntity, AuditableDTO>()
-                .ForMember(dest => dest.UpdatedAt, opt =>
-                {
-                    opt.PreCondition(orig => orig.UpdatedAt != null);
-                    opt.MapFrom(orig => orig.UpdatedAt);
-                })
-                .ForMember(dest => dest.DeletedAt, opt =>
-                {
-                    opt.PreCondition(orig => orig.DeletedAt != null);
-                    opt.MapFrom(orig => orig.DeletedAt);
-                })
+            CreateMap<AuditableDTO, AuditableEntity>()
+                .IncludeBase<IdentifiableDTO,IdentifiableEntity>()
+                .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom((src, dest) => dest.CreatedAt))
+                .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom((src, dest) => dest.UpdatedAt))
+                .ForMember(dest => dest.DeletedAt, opt => opt.MapFrom((src, dest) => dest.DeletedAt))
                 .ReverseMap()
+                .IncludeBase<IdentifiableEntity,IdentifiableDTO>();
+
+            CreateMap<AuditableEntity, AuditableMessage>()
                 .ForMember(dest => dest.CreatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
                 .ForMember(dest => dest.DeletedAt, opt => opt.Ignore())
-                .ForMember(dest => dest.CreatedById, opt => opt.Ignore())
-                .ForMember(dest => dest.UpdatedById, opt => opt.Ignore())
-                .ForMember(dest => dest.DeletedById, opt => opt.Ignore());
-            CreateMap<AuditableEntity, AuditableMessage>();
+                .ReverseMap();
         }
     }
 }

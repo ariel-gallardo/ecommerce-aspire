@@ -11,8 +11,4 @@
     <PackageReference Include="MMLib.SwaggerForOcelot" Version="9.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Api\Common.Api.ServiceDefaults\Common.Api.ServiceDefaults.csproj" />
-  </ItemGroup>
-
 </Project>

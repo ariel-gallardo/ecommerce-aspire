@@ -7,6 +7,7 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
+using MassTransit.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -15,6 +16,7 @@ using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
 using System.Text;
+using System.Text.Json.Serialization;
 
 namespace Common.Application
 {
@@ -25,6 +27,7 @@ namespace Common.Application
             services.AddAutoMapper(cfg =>
             {
                 cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
+                cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
             }, assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
 
             return services;
@@ -47,6 +50,18 @@ namespace Common.Application
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
         {
+            services.AddCors(o =>
+            {
+                o.AddPolicy("AllowMySite", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count");
+                });
+            });
+
             services.AddAuthorization(o =>
             {
                 o.AddPolicy(Policy.Administrator.AsStringUsingMemberValue(), policy =>

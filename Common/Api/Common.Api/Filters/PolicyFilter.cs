@@ -42,10 +42,10 @@ namespace Common.Api.Filters
                         try
                         {
                             var response = await _policyClient.GetResponse<Message<string>>(new LoadPermissionRequest { Controller = controller, Action = action });
-                            action = response.Message.Data;
+                            policy = response.Message.Data;
                             if(!string.IsNullOrWhiteSpace(action))
                             {
-                                await _cache.SaveAsync(actionName, action);
+                                await _cache.SaveAsync(actionName, policy);
                                 await _cache.SaveAsync(actionNameCreated, true);
                                 if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public) return;
                             }

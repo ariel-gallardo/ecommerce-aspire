@@ -1,6 +1,0 @@
-@Security.API_HostAddress = http://localhost:5219
-
-GET {{Security.API_HostAddress}}/openapi/v1/openapi.json
-Accept: application/json
-
-###

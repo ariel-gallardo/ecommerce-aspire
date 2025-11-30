@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Application\Common.Application\Common.Application.csproj" />
+    <ProjectReference Include="$(CommonApp)\Common.Application\Common.Application.csproj" />
   </ItemGroup>
 
 </Project>

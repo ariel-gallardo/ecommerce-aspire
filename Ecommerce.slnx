@@ -1,0 +1,173 @@
+<Solution>
+  <Folder Name="/Common/">
+    <Project Path="Common/Contracts/Common.Contracts/Common.Contracts.csproj" />
+    <Project Path="Common/Domain/Common.Domain/Common.Domain.csproj" />
+    <Project Path="Common/Extensions/Common.Extensions/Common.Extensions.csproj" />
+  </Folder>
+  <Folder Name="/Common/Api/">
+    <Project Path="Common/Api/Common.Api.Controllers/Common.Api.Controllers.csproj" />
+    <Project Path="Common/Api/Common.Api.CustomAttributes/Common.Api.CustomAttributes.csproj" />
+    <Project Path="Common/Api/Common.Api.ServiceDefaults/Common.Api.ServiceDefaults.csproj" />
+    <Project Path="Common/Api/Common.Api/Common.Api.csproj" />
+  </Folder>
+  <Folder Name="/Common/Application/">
+    <Project Path="Common/Application/Common.Application.DTO/Common.Application.DTO.csproj" />
+    <Project Path="Common/Application/Common.Application/Common.Application.csproj" />
+  </Folder>
+  <Folder Name="/Common/Infrastructure/">
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Cache.Key/Common.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Cache/Common.Infrastructure.Cache.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Contracts/Common.Infrastructure.Contracts.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Entities/Common.Infrastructure.Entities.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Messages/Common.Infrastructure.Messages.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Seeder/Common.Infrastructure.Seeder.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure/Common.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/Elementos de la solución/">
+    <File Path="Directory.Build.props" />
+  </Folder>
+  <Folder Name="/Services/" />
+  <Folder Name="/Services/Cart/">
+    <Project Path="Services/Cart/Cart.API/Cart.API.csproj" />
+    <Project Path="Services/Cart/Cart.Application/Cart.Application.csproj" />
+    <Project Path="Services/Cart/Cart.Controllers/Cart.Controllers.csproj" />
+    <Project Path="Services/Cart/Cart.Domain/Cart.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Inventory/">
+    <Project Path="Services/Inventory/Inventory.API/Inventory.API.csproj" />
+    <Project Path="Services/Inventory/Inventory.Application/Inventory.Application.csproj" />
+    <Project Path="Services/Inventory/Inventory.Controllers/Inventory.Controllers.csproj" />
+    <Project Path="Services/Inventory/Inventory.Domain/Inventory.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Invoice/">
+    <Project Path="Services/Invoice/Invoice.API/Invoice.API.csproj" />
+    <Project Path="Services/Invoice/Invoice.Application/Invoice.Application.csproj" />
+    <Project Path="Services/Invoice/Invoice.Controllers/Invoice.Controllers.csproj" />
+    <Project Path="Services/Invoice/Invoice.Domain/Invoice.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Logs/">
+    <Project Path="Services/Logs/Logs.API/Logs.API.csproj" />
+    <Project Path="Services/Logs/Logs.Application/Logs.Application.csproj" />
+    <Project Path="Services/Logs/Logs.Controllers/Logs.Controllers.csproj" />
+    <Project Path="Services/Logs/Logs.Domain/Logs.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Notification/">
+    <Project Path="Services/Notification/Notification.API/Notification.API.csproj" />
+    <Project Path="Services/Notification/Notification.Application/Notification.Application.csproj" />
+    <Project Path="Services/Notification/Notification.Controllers/Notification.Controllers.csproj" />
+    <Project Path="Services/Notification/Notification.Domain/Notification.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Order/">
+    <Project Path="Services/Order/Order.API/Order.API.csproj" />
+    <Project Path="Services/Order/Order.Application/Order.Application.csproj" />
+    <Project Path="Services/Order/Order.Controllers/Order.Controllers.csproj" />
+    <Project Path="Services/Order/Order.Domain/Order.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Payment/">
+    <Project Path="Services/Payment/Payment.API/Payment.API.csproj" />
+    <Project Path="Services/Payment/Payment.Application/Payment.Application.csproj" />
+    <Project Path="Services/Payment/Payment.Controllers/Payment.Controllers.csproj" />
+    <Project Path="Services/Payment/Payment.Domain/Payment.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Product/">
+    <Project Path="Services/Product/Product.API/Product.API.csproj" />
+    <Project Path="Services/Product/Product.Application/Product.Application.csproj" />
+    <Project Path="Services/Product/Product.Controllers/Product.Controllers.csproj" />
+    <Project Path="Services/Product/Product.Domain/Product.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Security/">
+    <Project Path="Services/Security/Security.API/Security.API.csproj" />
+    <Project Path="Services/Security/Security.Application/Security.Application.csproj" />
+    <Project Path="Services/Security/Security.Controllers/Security.Controllers.csproj" />
+    <Project Path="Services/Security/Security.Domain/Security.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Shipping/">
+    <Project Path="Services/Shipping/Shipping.API/Shipping.API.csproj" />
+    <Project Path="Services/Shipping/Shipping.Application/Shipping.Application.csproj" />
+    <Project Path="Services/Shipping/Shipping.Controllers/Shipping.Controllers.csproj" />
+    <Project Path="Services/Shipping/Shipping.Domain/Shipping.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Cart/Infrastructure/">
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Cache.Key/Cart.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Contracts/Cart.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Messaging/Cart.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Persistence/Cart.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Seeders/Cart.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Services/Cart.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Inventory/Infrastructure/">
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Cache.Key/Inventory.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Contracts/Inventory.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Messaging/Inventory.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Persistence/Inventory.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Seeders/Inventory.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Services/Inventory.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Invoice/Infrastructure/">
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Cache.Key/Invoice.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Contracts/Invoice.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Messaging/Invoice.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Persistence/Invoice.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Seeders/Invoice.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Services/Invoice.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Logs/Infrastructure/">
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Cache.Key/Logs.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Contracts/Logs.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Messaging/Logs.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Persistence/Logs.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Seeders/Logs.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Services/Logs.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Notification/Infrastructure/">
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Cache.Key/Notification.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Contracts/Notification.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Messaging/Notification.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Persistence/Notification.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Seeders/Notification.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Services/Notification.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Order/Infrastructure/">
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Cache.Key/Order.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Contracts/Order.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Messaging/Order.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Persistence/Order.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Seeders/Order.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Services/Order.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Payment/Infrastructure/">
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Cache.Key/Payment.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Contracts/Payment.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Messaging/Payment.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Persistence/Payment.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Seeders/Payment.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Services/Payment.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Product/Infrastructure/">
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Cache.Key/Product.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Contracts/Product.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Messaging/Product.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Persistence/Product.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Seeders/Product.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Services/Product.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Security/Infrastructure/">
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Cache.Key/Security.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Contracts/Security.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Messaging/Security.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Persistence/Security.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Seeders/Security.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Services/Security.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Services/Shipping/Infrastructure/">
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Cache.Key/Shipping.Infrastructure.Cache.Key.csproj" />
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Contracts/Shipping.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Messaging/Shipping.Infrastructure.Messaging.csproj" />
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Persistence/Shipping.Infrastructure.Persistence.csproj" />
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Seeders/Shipping.Infrastructure.Seeders.csproj" />
+    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Services/Shipping.Infrastructure.Services.csproj" />
+  </Folder>
+  <Folder Name="/Tests/" />
+  <Project Path="ApiGateway/ApiGateway.csproj" />
+  <Project Path="Ecommerce/Ecommerce.csproj" />
+</Solution>

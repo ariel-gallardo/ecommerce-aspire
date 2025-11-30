@@ -32,6 +32,7 @@ namespace Common.Api.Filters.OpenApi
         private static string[] responseMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "SearchFirstAsync" };
         private static string[] validationMethods = new string[] { "AddAsync", "UpdateAsync" };
         private static string[] excludeSingleParameters = new string[] { "Page", "PageSize" };
+        private static string[] collections = new string[] { "", "" };
 
         private static string status200String = StatusCodes.Status200OK.ToString();
         private static string status201String = StatusCodes.Status201Created.ToString();
@@ -137,13 +138,11 @@ namespace Common.Api.Filters.OpenApi
                     if (responseMethods.Contains(method.Name))
                     {
                         var schemaRepository = new SchemaRepository();
-
                         
                         var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
                         || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
                        
                         var schema = _schemaGenerator.GenerateSchema(returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO, schemaRepository);
-
                         if (excludedPagination.Contains(method.Name))
                         {
                             operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();

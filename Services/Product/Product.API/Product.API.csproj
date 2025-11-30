@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
+  </PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="$(ProductInfra)\Product.Infrastructure.Persistence\Product.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="$(ProductInfra)\Product.Infrastructure.Seeders\Product.Infrastructure.Seeders.csproj" />
+    <ProjectReference Include="$(Product)\Product.Application\Product.Application.csproj" />
+    <ProjectReference Include="$(Product)\Product.Controllers\Product.Controllers.csproj" />
+  </ItemGroup>
+
+</Project>

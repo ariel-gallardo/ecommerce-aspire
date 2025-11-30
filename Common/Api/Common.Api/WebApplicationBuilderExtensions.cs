@@ -2,6 +2,7 @@
 using Common.Application;
 using Common.Infrastructure;
 using Common.Infrastructure.Seeder;
+using Logs.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -61,12 +62,12 @@ namespace Common.Api
             where DBContext : DbContext
         {
             var env = builder.Environment;
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Testing"))
             {
                 var apiAssembly = Assembly.GetExecutingAssembly();
                 builder.Configuration.AddUserSecrets(apiAssembly);
             }
-            // Registramos infraestructura y servicios
+
             builder.AddServiceDefaults();
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
@@ -81,6 +82,8 @@ namespace Common.Api
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
             });
             var app = builder.Build();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            app.UseCors("AllowMySite");
             app.MapDefaultEndpoints();
             if (app.Environment.IsDevelopment())
             {

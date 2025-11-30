@@ -1,5 +1,7 @@
 ﻿using Common.Api.Controllers;
 using Common.Api.Filters;
+using Common.Api.Filters.Controllers;
+using Common.Api.Filters.FluentValidation;
 using Common.Application.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
@@ -30,7 +32,13 @@ namespace Common.Api
             foreach (var cA in controllerAssemblies)
             {
                 var assemblyPart = new AssemblyPart(cA);
-                builder.Services.AddControllers(o => o.Filters.Add<PolicyFilter>()).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
+                builder.Services.AddControllers(o =>
+                {
+                    o.Filters.Add<PolicyFilter>();
+                    o.Filters.Add<GlobalExceptionFilter>();
+                    o.Filters.Add<FluentValidationFilter>();
+                    o.Filters.Add<ControllerPaginationFilter>();
+                }).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
             }
            
             builder.Services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
@@ -44,8 +52,7 @@ namespace Common.Api
             .AddJsonOptions(options =>
             {
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition =
-                    System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
             }).ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;

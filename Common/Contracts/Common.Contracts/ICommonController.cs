@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Contracts
 {
-    public interface ICommonController<DomainEntity,AddDTO,UpdateDTO,ResultDTO, QuerieFilterEntity> 
+    public interface ICommonController<DomainEntity,AddDTO,UpdateDTO,ResultDTO, QuerieFilterEntity> : IController
         where DomainEntity : class, IEntity
         where AddDTO : class, IEntityDTO, IAddDTO
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
@@ -15,7 +15,7 @@ namespace Common.Contracts
     {
         #region Add
         
-        Task<IActionResult> AddAsync(AddDTO entity, CancellationToken cancellationToken);
+        Task<IActionResult> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken);
         
         Task<IActionResult> AddAsync(IList<AddDTO> entities, CancellationToken cancellationToken);
         #endregion
@@ -29,19 +29,19 @@ namespace Common.Contracts
 
         #region Delete
         
-        Task<IActionResult> DeleteAsync(Guid entityId, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync(ulong entityId, CancellationToken cancellationToken);
         
-        Task<IActionResult> DeleteAsync(IList<Guid> entityIds, CancellationToken cancellationToken);
+        Task<IActionResult> DeleteAsync(IList<ulong> entityIds, CancellationToken cancellationToken);
         #endregion
 
         #region Search
         
-        Task<IActionResult> SearchAsync(Guid entityId, CancellationToken cancellationToken);
+        Task<IActionResult> SearchAsync(ulong entityId, CancellationToken cancellationToken);
 
         Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
         Task<IActionResult> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
-        Task<IActionResult> SearchAsync(IList<Guid> entityIds, int page, int pageSize, CancellationToken cancellationToken);
+        Task<IActionResult> SearchAsync(IList<ulong> entityIds, int page, int pageSize, CancellationToken cancellationToken);
         #endregion
     }
 }

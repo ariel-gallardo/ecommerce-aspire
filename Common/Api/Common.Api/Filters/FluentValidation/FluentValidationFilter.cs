@@ -26,13 +26,13 @@ namespace Common.Api.Filters.FluentValidation
                     var result = await validator.ValidateAsync(new ValidationContext<object>(arg.Value));
                     if (!result.IsValid)
                     {
-                        context.Result = new BadRequestObjectResult(new Response<IEnumerable<ValidationError>>
+                        context.Result = new BadRequestObjectResult(new Response<IGrouping<string, ValidationError>[]>
                         {
-                            Data = result.Errors.Select(e => new ValidationError
+                            Data = result.Errors.DistinctBy(x => x.ErrorMessage).Select(e => new ValidationError
                             {
                                 Property = string.IsNullOrWhiteSpace(e.PropertyName) ? "All" : e.PropertyName,
                                 Message = e.ErrorMessage
-                            }),
+                            }).GroupBy(x => x.Property).ToArray(),
                             Message = "Validation Errors.",
                             StatusCode = StatusCodes.Status400BadRequest
                         });
