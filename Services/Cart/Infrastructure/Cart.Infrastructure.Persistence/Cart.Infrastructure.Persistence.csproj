@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="$(Cart)\Cart.Domain\Cart.Domain.csproj" />
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure\Common.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

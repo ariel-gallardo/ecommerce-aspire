@@ -17,6 +17,7 @@
     <ProjectReference Include="$(Cart)\Cart.Controllers\Cart.Controllers.csproj" />
     <ProjectReference Include="$(CartInfra)\Cart.Infrastructure.Persistence\Cart.Infrastructure.Persistence.csproj" />
     <ProjectReference Include="$(CartInfra)\Cart.Infrastructure.Seeders\Cart.Infrastructure.Seeders.csproj" />
+    <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
   </ItemGroup>
 
 </Project>

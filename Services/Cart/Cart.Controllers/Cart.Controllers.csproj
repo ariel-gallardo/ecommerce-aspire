@@ -9,6 +9,7 @@
   <ItemGroup>
     <ProjectReference Include="$(Cart)\Cart.Application\Cart.Application.csproj" />
     <ProjectReference Include="$(Cart)\Cart.Domain\Cart.Domain.csproj" />
+    <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
   </ItemGroup>
 
 </Project>

@@ -5,5 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="$(Payment)\Payment.Domain\Payment.Domain.csproj" />
+		<ProjectReference Include="$(CommonInfra)\Common.Infrastructure\Common.Infrastructure.csproj" />
+	</ItemGroup>
 </Project>

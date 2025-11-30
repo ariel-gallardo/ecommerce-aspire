@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
+	  <ProjectReference Include="$(Notification)\Notification.Application\Notification.Application.csproj" />
+	  <ProjectReference Include="$(Notification)\Notification.Domain\Notification.Domain.csproj" />
+	  <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
   </ItemGroup>
 
 </Project>

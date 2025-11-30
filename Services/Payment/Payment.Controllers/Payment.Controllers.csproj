@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
+	  <ProjectReference Include="$(Payment)\Payment.Application\Payment.Application.csproj" />
+	  <ProjectReference Include="$(Payment)\Payment.Domain\Payment.Domain.csproj" />
+	  <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
   </ItemGroup>
 
 </Project>

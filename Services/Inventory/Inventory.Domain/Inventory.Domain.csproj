@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(CommonApp)\Common.Application.DTO\Common.Application.DTO.csproj" />
     <ProjectReference Include="$(Common)\Domain\Common.Domain\Common.Domain.csproj" />
   </ItemGroup>
 

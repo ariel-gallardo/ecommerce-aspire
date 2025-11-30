@@ -5,5 +5,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Messages\Common.Infrastructure.Messages.csproj" />
+		<ProjectReference Include="$(Product)\Product.Domain\Product.Domain.csproj" />
+	</ItemGroup>
 </Project>

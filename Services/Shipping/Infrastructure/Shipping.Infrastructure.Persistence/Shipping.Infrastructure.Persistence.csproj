@@ -9,5 +9,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.10" />
   </ItemGroup>
-
+	<ItemGroup>
+		<ProjectReference Include="$(Shipping)\Shipping.Domain\Shipping.Domain.csproj" />
+		<ProjectReference Include="$(CommonInfra)\Common.Infrastructure\Common.Infrastructure.csproj" />
+	</ItemGroup>
 </Project>

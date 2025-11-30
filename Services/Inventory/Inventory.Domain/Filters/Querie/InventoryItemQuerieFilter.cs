@@ -1,14 +1,9 @@
-﻿using Common.Application.DTO.Expressions;
-using Common.Application.DTO.ValueObjects;
-using Common.Domain.Entities.Base;
-using Common.Domain.Enums;
-using Inventory.Domain.Entities;
+﻿using Common.Domain.Entities.Base;
 using Microsoft.AspNetCore.Mvc;
-using System.Linq.Expressions;
 
 namespace Inventory.Domain.Filters.Querie
 {
-    public class InventoryItemDTOQuerieFilter : QuerieFilter
+    public class InventoryItemQuerieFilter : QuerieFilter
     {
         [FromQuery]
         public string ProductId { get; set; }
