@@ -5,7 +5,6 @@ namespace Common.Infrastructure.Configurations
 {
     public class Redis
     {
-        public string DataMount { get; set; }
         public int SecondsToWaitDependency { get; set; }
         public int ExpirationMinutesCache { get; set; }
         public int ExpirationMintuesMaxCache { get; set; }
