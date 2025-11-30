@@ -24,7 +24,7 @@
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Messages\Common.Infrastructure.Messages.csproj" />
     <ProjectReference Include="$(Security)\Security.Domain\Security.Domain.csproj" />
-    <ProjectReference Include="$(Security)\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -93,7 +93,6 @@
     <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Messaging/Cart.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Persistence/Cart.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Seeders/Cart.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Services/Cart.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Inventory/Infrastructure/">
     <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Cache.Key/Inventory.Infrastructure.Cache.Key.csproj" />
@@ -101,7 +100,6 @@
     <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Messaging/Inventory.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Persistence/Inventory.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Seeders/Inventory.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Inventory/Infrastructure/Inventory.Infrastructure.Services/Inventory.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Invoice/Infrastructure/">
     <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Cache.Key/Invoice.Infrastructure.Cache.Key.csproj" />
@@ -109,7 +107,6 @@
     <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Messaging/Invoice.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Persistence/Invoice.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Seeders/Invoice.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Invoice/Infrastructure/Invoice.Infrastructure.Services/Invoice.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Logs/Infrastructure/">
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Cache.Key/Logs.Infrastructure.Cache.Key.csproj" />
@@ -117,7 +114,6 @@
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Messaging/Logs.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Persistence/Logs.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Seeders/Logs.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Logs/Infrastructure/Logs.Infrastructure.Services/Logs.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Notification/Infrastructure/">
     <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Cache.Key/Notification.Infrastructure.Cache.Key.csproj" />
@@ -125,7 +121,6 @@
     <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Messaging/Notification.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Persistence/Notification.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Seeders/Notification.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Notification/Infrastructure/Notification.Infrastructure.Services/Notification.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Order/Infrastructure/">
     <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Cache.Key/Order.Infrastructure.Cache.Key.csproj" />
@@ -133,7 +128,6 @@
     <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Messaging/Order.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Persistence/Order.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Seeders/Order.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Order/Infrastructure/Order.Infrastructure.Services/Order.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Payment/Infrastructure/">
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Cache.Key/Payment.Infrastructure.Cache.Key.csproj" />
@@ -141,7 +135,6 @@
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Messaging/Payment.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Persistence/Payment.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Seeders/Payment.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Services/Payment.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Product/Infrastructure/">
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Cache.Key/Product.Infrastructure.Cache.Key.csproj" />
@@ -149,7 +142,6 @@
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Messaging/Product.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Persistence/Product.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Seeders/Product.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Services/Product.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Services/Security/Infrastructure/">
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Cache.Key/Security.Infrastructure.Cache.Key.csproj" />
@@ -165,7 +157,6 @@
     <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Messaging/Shipping.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Persistence/Shipping.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Seeders/Shipping.Infrastructure.Seeders.csproj" />
-    <Project Path="Services/Shipping/Infrastructure/Shipping.Infrastructure.Services/Shipping.Infrastructure.Services.csproj" />
   </Folder>
   <Folder Name="/Tests/" />
   <Project Path="ApiGateway/ApiGateway.csproj" />

@@ -25,3 +25,11 @@ The main features include:
 - Messaging with MassTransit  
 - Role - and claim-based authentication/authorization  
 - Docker (optional, for dependencies like RabbitMQ or Redis)  
+
+
+## Example Commands
+dotnet new classlib --name Invoice.Infrastructure.Persistence --output Services/Invoice/Infrastructure/Invoice.Infrastructure.Persistence
+dotnet new classlib --name Invoice.Infrastructure.Cache.Key --output Services/Invoice/Infrastructure/Invoice.Infrastructure.Cache.Key
+dotnet new classlib --name Invoice.Infrastructure.Contracts --output Services/Invoice/Infrastructure/Invoice.Infrastructure.Contracts
+dotnet new classlib --name Invoice.Infrastructure.Messaging --output Services/Invoice/Infrastructure/Invoice.Infrastructure.Messaging
+dotnet new classlib --name Invoice.Infrastructure.Seeders --output Services/Invoice/Infrastructure/Invoice.Infrastructure.Seeders

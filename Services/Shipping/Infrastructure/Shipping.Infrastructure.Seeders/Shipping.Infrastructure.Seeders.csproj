@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Common\infrastructure\Common.Infrastructure.Seeder\Common.Infrastructure.Seeder.csproj" />
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Seeder\Common.Infrastructure.Seeder.csproj" />
   </ItemGroup>
 
 </Project>
