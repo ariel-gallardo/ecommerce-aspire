@@ -9,7 +9,7 @@ namespace Common.Domain.Contracts.Entities
         ulong? UpdatedById { get; set; }
         ulong? DeletedById { get; set; }
         DateTime CreatedAt { get; set; }
-        DateTime UpdatedAt { get; set; }
+        DateTime? UpdatedAt { get; set; }
         DateTime? DeletedAt { get; set; }
         User CreatedBy { get; set; }
         User UpdatedBy { get; set; }

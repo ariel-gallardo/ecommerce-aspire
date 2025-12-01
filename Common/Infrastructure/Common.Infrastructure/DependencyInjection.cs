@@ -35,7 +35,7 @@ namespace Common.Infrastructure
             
             services.Configure<AppSettings>(options =>
             {
-                var currentCfg = configuration.GetSection("AppSettings") ?? configuration.GetSection("Parameters:AppSettings");
+                var currentCfg = configuration.GetSection("Parameters:AppSettings") ?? configuration.GetSection("AppSettings");
                 currentCfg.Bind(options);
             });
 

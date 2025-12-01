@@ -8,7 +8,7 @@ namespace Common.Domain.Entities.Base
         public ulong? UpdatedById { get; set; }
         public ulong? DeletedById { get; set; }
         public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
         public virtual User CreatedBy { get; set; }
         public virtual User UpdatedBy { get; set; }
