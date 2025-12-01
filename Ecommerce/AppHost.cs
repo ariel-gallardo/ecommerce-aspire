@@ -13,8 +13,8 @@ var rabbitUser = builder.AddParameterFromConfiguration("RabbitUser", "Parameters
 var rabbitPass = builder.AddParameterFromConfiguration("RabbitPassword", "Parameters:AppSettings:RabbitMQ:Password");
 var mySQLPass = builder.AddParameterFromConfiguration("MySQLPassword", "Parameters:AppSettings:MySQL:Password");
 
-var cache = builder.AddRedis("cache", password: redisPass);
-var rabbitMQ = builder.AddRabbitMQ("rabbit", rabbitUser, rabbitPass);
+var cache = builder.AddRedis("cache", password: redisPass).WithDataBindMount(redisDataMount);
+var rabbitMQ = builder.AddRabbitMQ("rabbit", rabbitUser, rabbitPass).WithDataBindMount(rabbitDataMount);
 
 var isTesting = builder.Environment.IsEnvironment("Testing");
 
