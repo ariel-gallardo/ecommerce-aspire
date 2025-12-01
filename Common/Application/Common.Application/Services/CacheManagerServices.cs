@@ -118,7 +118,7 @@ namespace Common.Application.Services
         public void SetCancellationToken(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
-            _cancellationToken.Value.ThrowIfCancellationRequested();
+            //_cancellationToken.Value.ThrowIfCancellationRequested();
         }
 
         public async Task RemoveAsync(params string[] keys)

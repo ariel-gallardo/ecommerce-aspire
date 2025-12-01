@@ -46,8 +46,8 @@ namespace Common.Infrastructure
                 a.CreatedById = _usrServices.Id;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                await _ctx.AddAsync(a, cancellationToken);
-                await _ctx.SaveChangesAsync(cancellationToken);
+                await _ctx.AddAsync(a);
+                await _ctx.SaveChangesAsync();
                 return entity;
             }
             else if(entity is IAuditableGuid b)
@@ -56,12 +56,12 @@ namespace Common.Infrastructure
                 b.CreatedById = _usrServices.Id;
                 _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(b).Property(x => x.DeletedAt).IsModified = false;
-                await _ctx.AddAsync(b, cancellationToken);
-                await _ctx.SaveChangesAsync(cancellationToken);
+                await _ctx.AddAsync(b);
+                await _ctx.SaveChangesAsync();
                 return entity;
             }
-            await _ctx.AddAsync(entity, cancellationToken);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _ctx.AddAsync(entity);
+            await _ctx.SaveChangesAsync();
             return entity;
         }
 
@@ -69,7 +69,7 @@ namespace Common.Infrastructure
             where AddDTO : class, IEntityDTO
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
-        => _map.Map<ResultDTO>(await AddAsync(_map.Map<DomainEntity>(entity), cancellationToken));
+        => _map.Map<ResultDTO>(await AddAsync(_map.Map<DomainEntity>(entity),cancellationToken));
 
         public async Task<IList<DomainEntity>> AddAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
@@ -120,18 +120,18 @@ namespace Common.Infrastructure
                 (entity as IAuditable).UpdatedAt = DateTime.UtcNow;
                 (entity as IAuditable).UpdatedById = _usrServices.Id;
                 _ctx.Update(entity);
-                await _ctx.SaveChangesAsync(cancellationToken);
+                await _ctx.SaveChangesAsync();
                 return entity;
             }else if(entity is IAuditableGuid)
             {
                 (entity as IAuditableGuid).UpdatedAt = DateTime.UtcNow;
                 (entity as IAuditableGuid).UpdatedById = _usrServices.Id;
                 _ctx.Update(entity);
-                await _ctx.SaveChangesAsync(cancellationToken);
+                await _ctx.SaveChangesAsync();
                 return entity;
             }
             _ctx.Update(entity);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync();
             return entity;
         }
 
@@ -147,7 +147,7 @@ namespace Common.Infrastructure
                     throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iE.Id);
                 else
                 {
-                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iE.Id, cancellationToken);
+                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iE.Id);
                     return _map.Map<ResultDTO>(await UpdateAsync(_map.Map(entity, dbEntity), cancellationToken));
                 }
             }
@@ -168,7 +168,7 @@ namespace Common.Infrastructure
             {
                 if (e is IAuditable a)
                 {
-                    var existing = _ctx.Set<DomainEntity>().Find(a.Id, cancellationToken);
+                    var existing = _ctx.Set<DomainEntity>().Find(a.Id);
                     a.UpdatedAt = DateTime.UtcNow;
                     a.UpdatedById = _usrServices.Id;
                     _ctx.Entry(existing).CurrentValues.SetValues(a);
@@ -178,7 +178,7 @@ namespace Common.Infrastructure
                 }
                 else if (e is IAuditableGuid b)
                 {
-                    var existing = _ctx.Set<DomainEntity>().Find(b.Id, cancellationToken);
+                    var existing = _ctx.Set<DomainEntity>().Find(b.Id);
                     b.UpdatedAt = DateTime.UtcNow;
                     b.UpdatedById = _usrServices.Id;
                     _ctx.Entry(existing).CurrentValues.SetValues(b);
@@ -189,7 +189,7 @@ namespace Common.Infrastructure
                 return e;
             });
             _ctx.UpdateRange(entities);
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync();
             return (IList<DomainEntity>)entities;
         }
         public async Task<IList<ResultDTO>> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entity, CancellationToken cancellationToken)
@@ -211,7 +211,7 @@ namespace Common.Infrastructure
                 throw new NotImplementedException($"{typeof(DomainEntity)} does not implement IIdentifiable");
 
             var entity = await _ctx.Set<DomainEntity>()
-                                   .FirstOrDefaultAsync(x => ((IIdentifiable)x).Id == id, cancellationToken);
+                                   .FirstOrDefaultAsync(x => ((IIdentifiable)x).Id == id);
 
             if (entity == null)
                 throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Delete, id);
@@ -237,7 +237,7 @@ namespace Common.Infrastructure
                 _ctx.Remove(entity);
             }
 
-            await _ctx.SaveChangesAsync(cancellationToken);
+            await _ctx.SaveChangesAsync();
         }
 
         public async Task DeleteAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
@@ -259,7 +259,7 @@ namespace Common.Infrastructure
                           .ExecuteUpdateAsync(u => 
                             u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditable)x).DeletedById, x => _usrServices.Id)
-                          , cancellationToken);
+                          );
             }
             else if (typeof(IAuditableGuid).IsAssignableFrom(typeof(DomainEntity)))
             {
@@ -268,15 +268,15 @@ namespace Common.Infrastructure
                           .ExecuteUpdateAsync(u =>
                             u.SetProperty(x => ((IAuditableGuid)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditableGuid)x).DeletedById, x => _usrServices.Id)
-                          , cancellationToken);
+                          );
             }
             else
             {
                 var entities = await _ctx.Set<DomainEntity>()
                                          .Where(x => ids.Contains(((IIdentifiable)x).Id))
-                                         .ToListAsync(cancellationToken);
+                                         .ToListAsync();
                 _ctx.RemoveRange(entities);
-                await _ctx.SaveChangesAsync(cancellationToken);
+                await _ctx.SaveChangesAsync();
             }
         }
 
@@ -291,7 +291,7 @@ namespace Common.Infrastructure
                 return await _ctx.Set<DomainEntity>()
                                  .AsNoTracking()
                                  .Cast<IIdentifiable>()
-                                 .AnyAsync(x => x.Id == id, cancellationToken);
+                                 .AnyAsync(x => x.Id == id);
             }
             return false;
         }
@@ -302,13 +302,13 @@ namespace Common.Infrastructure
             if (typeof(IIdentifiable).IsAssignableFrom(typeof(DomainEntity)))
             {
                 var set = _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>();
-                var foundAll = await set.AllAsync(x => ids.Contains(x.Id), cancellationToken);
+                var foundAll = await set.AllAsync(x => ids.Contains(x.Id));
 
                 if (foundAll) return (true, Array.Empty<ulong>());
 
                 var foundIds = await set.Where(x => ids.Contains(x.Id))
                                         .Select(x => x.Id)
-                                        .ToListAsync(cancellationToken);
+                                        .ToListAsync();
 
                 return (false, ids.Where(x => !foundIds.Contains(x)).ToList());
             }
@@ -327,7 +327,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.AnyAsync(cancellationToken);
+            return await querie.AnyAsync();
         }
         #endregion
 
@@ -344,7 +344,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.FirstOrDefaultAsync(cancellationToken);
+            return await querie.FirstOrDefaultAsync();
         }
 
         public async Task<ResultDTO> SearchOneAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
@@ -360,7 +360,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
         }
         #endregion
 
@@ -375,14 +375,14 @@ namespace Common.Infrastructure
                                  .Cast<IIdentifiable>()
                                  .Where(x => x.Id == id)
                                  .Cast<DomainEntity>()
-                                 .FirstOrDefaultAsync(cancellationToken);
+                                 .FirstOrDefaultAsync();
             }
             return null;
         }
         public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
-        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<ulong> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
@@ -438,7 +438,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
         }
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
@@ -461,28 +461,28 @@ namespace Common.Infrastructure
         #region Transaction
         public async Task BeginTransaction(CancellationToken cancellationToken)
         {
-            _transaction = await _ctx.Database.BeginTransactionAsync(cancellationToken);
+            _transaction = await _ctx.Database.BeginTransactionAsync();
         }
 
         public async Task CreateSavePoint(string name, CancellationToken cancellationToken)
-        => await _transaction.CreateSavepointAsync(name, cancellationToken);
+        => await _transaction.CreateSavepointAsync(name);
 
         public async Task RollbackToSavepoint(string name, CancellationToken cancellationToken)
-        => await _transaction.RollbackToSavepointAsync(name, cancellationToken);
+        => await _transaction.RollbackToSavepointAsync(name);
 
         public async Task ReleaseSavepoint(string name, CancellationToken cancellationToken)
-        => await _transaction.ReleaseSavepointAsync(name, cancellationToken);
+        => await _transaction.ReleaseSavepointAsync(name);
 
         public async Task CommitTransaction(CancellationToken cancellationToken)
         {
-            await _transaction.CommitAsync(cancellationToken);
+            await _transaction.CommitAsync();
             await _transaction.DisposeAsync();
             _transaction = null;
         }
 
         public async Task RollbackTransaction(CancellationToken cancellationToken)
         {
-            await _transaction.RollbackAsync(cancellationToken);
+            await _transaction.RollbackAsync();
             await _transaction.DisposeAsync();
             _transaction = null;
         }

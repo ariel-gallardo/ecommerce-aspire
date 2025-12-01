@@ -24,25 +24,41 @@ namespace Common.Infrastructure
         protected void ConfigureAuditable<U>(EntityTypeBuilder<U> builder) where U : class, IAuditable
         {
             ConfigureIdentifiable(builder);
-            builder.Property(x => x.CreatedAt).HasColumnName("fecha_creacion").IsRequired(true);
-            builder.Property(x => x.UpdatedAt).HasColumnName("fecha_modificacion").IsRequired(false);
-            builder.Property(x => x.DeletedAt).HasColumnName("fecha_eliminacion").IsRequired(false);
+            builder.Property(x => x.CreatedAt).IsRequired(true);
+            builder.Property(x => x.UpdatedAt).IsRequired(false);
+            builder.Property(x => x.DeletedAt).IsRequired(false);
             builder.Property(x => x.CreatedById);
             builder.Property(x => x.UpdatedById).IsRequired(false);
             builder.Property(x => x.DeletedById).IsRequired(false);
-            builder.HasQueryFilter(x => x.DeletedAt == null);
+
+            builder.HasIndex(x => x.CreatedAt);
+            builder.HasIndex(x => x.UpdatedAt);
+            builder.HasIndex(x => x.DeletedAt);
+
+            builder.HasIndex(x => x.CreatedById);
+            builder.HasIndex(x => x.UpdatedById);
+            builder.HasIndex(x => x.DeletedById);
+            builder.HasQueryFilter(x => x.DeletedAt == null && x.DeletedById == null);
         }
 
         protected void ConfigureAuditableGuid<U>(EntityTypeBuilder<U> builder) where U : class, IAuditableGuid
         {
             ConfigureIdentifiableGuid(builder);
-            builder.Property(x => x.CreatedAt).HasColumnName("fecha_creacion").IsRequired(true);
-            builder.Property(x => x.UpdatedAt).HasColumnName("fecha_modificacion").IsRequired(false);
-            builder.Property(x => x.DeletedAt).HasColumnName("fecha_eliminacion").IsRequired(false);
+            builder.Property(x => x.CreatedAt).IsRequired(true);
+            builder.Property(x => x.UpdatedAt).IsRequired(false);
+            builder.Property(x => x.DeletedAt).IsRequired(false);
             builder.Property(x => x.CreatedById);
             builder.Property(x => x.UpdatedById).IsRequired(false);
             builder.Property(x => x.DeletedById).IsRequired(false);
-            builder.HasQueryFilter(x => x.DeletedAt == null);
+
+            builder.HasIndex(x => x.CreatedAt);
+            builder.HasIndex(x => x.UpdatedAt);
+            builder.HasIndex(x => x.DeletedAt);
+
+            builder.HasIndex(x => x.CreatedById);
+            builder.HasIndex(x => x.UpdatedById);
+            builder.HasIndex(x => x.DeletedById);
+            builder.HasQueryFilter(x => x.DeletedAt == null && x.DeletedById == null);
         }
     }
 }

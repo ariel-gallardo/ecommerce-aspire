@@ -1,5 +1,6 @@
 ﻿using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Messages.Entities;
+using Common.Infrastructure.Persistence;
 using Logs.Infrastructure.Messaging.Consumer;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
@@ -46,9 +47,12 @@ namespace Common.Infrastructure
             services.AddRabbitMq(configuration, env, messageAssemblies);
             services.AddDbContext<DbContext,IDBContext>(options =>
             {
+                var sp = services.BuildServiceProvider();
                 var conString = $"{configuration.GetConnectionString(name)};Database={name.ToLower()}";
-                options.UseMySql(conString, ServerVersion.AutoDetect(conString));
-                options.UseSnakeCaseNamingConvention();
+                options
+                .UseMySql(conString, ServerVersion.AutoDetect(conString))
+                .UseSnakeCaseNamingConvention()
+                .AddInterceptors(new DbExceptionInterceptor());
             });
             
             if (env.IsDevelopment())
