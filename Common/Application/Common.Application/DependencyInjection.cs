@@ -9,6 +9,7 @@ using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
 using MassTransit.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -37,7 +38,7 @@ namespace Common.Application
         {
             return services.AddValidatorsFromAssemblies(assemblies);
         }
-        public static IServiceCollection AddApplicationRedis(this IServiceCollection services)
+        public static IServiceCollection AddApplicationRedis(this IServiceCollection services, IConfiguration configuration)
         {
             var sP = services.BuildServiceProvider();
             var appSettings = sP.GetRequiredService<IOptions<AppSettings>>().Value;
@@ -45,7 +46,7 @@ namespace Common.Application
             return services.AddStackExchangeRedisCache(options =>
             {              
                 options.InstanceName = appSettings.Redis.InstanceName;
-                options.Configuration = appSettings.Redis.Configuration;
+                options.Configuration = configuration.GetConnectionString("redis");
             });
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 

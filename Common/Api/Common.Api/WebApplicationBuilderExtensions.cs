@@ -73,7 +73,7 @@ namespace Common.Api
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
-            builder.Services.AddApplicationRedis();
+            builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddSeeders(env, _seederAssemblies);
             builder.Services.AddApi(_controllerAssemblies);
             builder.Services.AddSwaggerGen();

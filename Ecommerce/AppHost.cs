@@ -7,11 +7,12 @@ var cfg = builder.Configuration;
 var redisDataMount = cfg["Parameters:Redis:DataMount"];
 var rabbitDataMount = cfg["Parameters:RabbitMQ:DataMount"];
 var mySQLDataMountBase = cfg["Parameters:MySQL:DataMount"];
+var appSettings = builder.AddParameterFromConfiguration("AppSettings", "Parameters:AppSettings");
 
 var redisPass = builder.AddParameterFromConfiguration("RedisPassword", "Parameters:Redis:Password");
 var rabbitUser = builder.AddParameterFromConfiguration("RabbitUser", "Parameters:RabbitMQ:Username");
 var rabbitPass = builder.AddParameterFromConfiguration("RabbitPassword", "Parameters:RabbitMQ:Password");
-var mySQLPass = builder.AddParameterFromConfiguration("RabbitPassword", "Parameters:MySQL:Password");
+var mySQLPass = builder.AddParameterFromConfiguration("MySQLPassword", "Parameters:MySQL:Password");
 
 var cache = builder.AddRedis("cache", password: redisPass);
 var rabbitMQ = builder.AddRabbitMQ("rabbit", rabbitUser, rabbitPass);
@@ -55,7 +56,6 @@ var isTesting = builder.Environment.IsEnvironment("Testing");
 
 var cartApi = builder.AddProject<Projects.Cart_API>("cart")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? cartDbTesting : cartDb)
@@ -63,7 +63,8 @@ var cartApi = builder.AddProject<Projects.Cart_API>("cart")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? cartDbTesting : cartDb);
+    .WaitFor(isTesting ? cartDbTesting : cartDb)
+    .WithEnvironment("AppSettings", appSettings);
 var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
     .WithOpenApi()
     .WithAppSettingsEnvironments(cfg)
@@ -77,7 +78,6 @@ var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
     .WaitFor(isTesting ? inventoryDbTesting : inventoryDb);
 var invoiceApi = builder.AddProject<Projects.Invoice_API>("invoice")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithReference(isTesting ? invoiceDbTesting : invoiceDb)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
@@ -85,10 +85,10 @@ var invoiceApi = builder.AddProject<Projects.Invoice_API>("invoice")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? invoiceDbTesting : invoiceDb);
+    .WaitFor(isTesting ? invoiceDbTesting : invoiceDb)
+    .WithEnvironment("AppSettings", appSettings);
 var logsApi = builder.AddProject<Projects.Logs_API>("logs")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? logsDbTesting : logsDb)
@@ -96,10 +96,10 @@ var logsApi = builder.AddProject<Projects.Logs_API>("logs")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? logsDbTesting : logsDb);
+    .WaitFor(isTesting ? logsDbTesting : logsDb)
+    .WithEnvironment("AppSettings", appSettings);
 var notificationApi = builder.AddProject<Projects.Notification_API>("notification")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? notificationDbTesting : notificationDb)
@@ -107,10 +107,10 @@ var notificationApi = builder.AddProject<Projects.Notification_API>("notificatio
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? notificationDbTesting : notificationDb);
+    .WaitFor(isTesting ? notificationDbTesting : notificationDb)
+    .WithEnvironment("AppSettings", appSettings);
 var orderApi = builder.AddProject<Projects.Order_API>("order")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? orderDbTesting : orderDb)
@@ -118,10 +118,10 @@ var orderApi = builder.AddProject<Projects.Order_API>("order")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? orderDbTesting : orderDb);
+    .WaitFor(isTesting ? orderDbTesting : orderDb)
+    .WithEnvironment("AppSettings", appSettings);
 var paymentApi = builder.AddProject<Projects.Payment_API>("payment")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? paymentDbTesting : paymentDb)
@@ -129,10 +129,10 @@ var paymentApi = builder.AddProject<Projects.Payment_API>("payment")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? paymentDbTesting : paymentDb);
+    .WaitFor(isTesting ? paymentDbTesting : paymentDb)
+    .WithEnvironment("AppSettings", appSettings);
 var productApi = builder.AddProject<Projects.Product_API>("product")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? productDbTesting : productDb)
@@ -140,10 +140,10 @@ var productApi = builder.AddProject<Projects.Product_API>("product")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? productDbTesting : productDb);
+    .WaitFor(isTesting ? productDbTesting : productDb)
+    .WithEnvironment("AppSettings", appSettings);
 var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? securityDbTesting : securityDb)
@@ -151,10 +151,10 @@ var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? securityDbTesting : securityDb);
+    .WaitFor(isTesting ? securityDbTesting : securityDb)
+    .WithEnvironment("AppSettings", appSettings);
 var shippingApi = builder.AddProject<Projects.Shipping_API>("shipping")
     .WithOpenApi()
-    .WithAppSettingsEnvironments(cfg)
     .WithExternalHttpEndpoints()
     .WithHttpHealthCheck("/health")
     .WithReference(isTesting ? shippingDbTesting : shippingDb)
@@ -162,7 +162,8 @@ var shippingApi = builder.AddProject<Projects.Shipping_API>("shipping")
     .WithReference(cache)
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
-    .WaitFor(isTesting ? shippingDbTesting : shippingDb);
+    .WaitFor(isTesting ? shippingDbTesting : shippingDb)
+    .WithEnvironment("AppSettings", appSettings);
 
 var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
     .WithExternalHttpEndpoints()
