@@ -21,6 +21,18 @@ namespace Common.Application.Profiles.Base
                 .ConvertUsing(id => new IdentifiableEntity { Id = id });
             CreateMap<IdentifiableEntity, IdentifiableMessage>()
                 .ReverseMap();
+
+            CreateMap<IdentifiableGuidDTO, IdentifiableGuidEntity>()
+            .ReverseMap();
+
+            CreateMap<IdentifiableGuidDTO, Guid>();
+            CreateMap<IdentifiableGuidEntity, Guid>();
+            CreateMap<IdentifiableGuidDTO, Guid>();
+            CreateMap<IIdentifiableGuid, Guid>();
+            CreateMap<Guid, IdentifiableGuidEntity>()
+                .ConvertUsing(id => new IdentifiableGuidEntity { Id = id });
+            CreateMap<IdentifiableGuidEntity, IdentifiableGuidMessage>()
+                .ReverseMap();
         }
     }
 }

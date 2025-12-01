@@ -3,7 +3,7 @@ using Common.Contracts.DTO.ABM;
 
 namespace Product.Application.DTO
 {
-    public class CategoryDTO : AuditableDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class CategoryDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }

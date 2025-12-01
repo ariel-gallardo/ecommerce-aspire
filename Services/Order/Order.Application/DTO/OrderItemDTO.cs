@@ -4,7 +4,7 @@ using Common.Contracts.DTO.ABM;
 
 namespace Order.Application.DTO
 {
-    public class OrderItemDTO : AuditableDTO, IAddDTO, IUpdateDTO
+    public class OrderItemDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO
     {
         public Guid ProductId { get; set; }
         public PriceDTO Price { get; set; }

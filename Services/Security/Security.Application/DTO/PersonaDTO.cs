@@ -3,7 +3,7 @@ using Common.Contracts.DTO.ABM;
 
 namespace Security.Application.DTO
 {
-    public class PersonaDTO : AuditableDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class PersonaDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
     {
         public string Name { get; set; }
         public string Lastname { get; set; }

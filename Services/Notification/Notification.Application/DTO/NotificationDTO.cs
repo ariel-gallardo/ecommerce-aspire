@@ -3,7 +3,7 @@ using Common.Contracts.DTO.ABM;
 
 namespace Notification.Application.DTO
 {
-    public class NotificationDTO : AuditableDTO, IAddDTO, IUpdateDTO
+    public class NotificationDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO
     {
         public string Recipient { get; set; }
         public string Subject { get; set; }

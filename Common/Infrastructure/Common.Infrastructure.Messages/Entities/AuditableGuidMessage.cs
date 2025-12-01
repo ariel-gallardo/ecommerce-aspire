@@ -1,7 +1,7 @@
 ﻿
 namespace Common.Infrastructure.Messages.Entities
 {
-    public class AuditableMessage : IdentifiableMessage
+    public class AuditableGuidMessage : IdentifiableGuidMessage
     {
         public string CreatedAt { get; set; }
         public string UpdatedAt { get; set; }

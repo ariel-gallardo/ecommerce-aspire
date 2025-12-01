@@ -4,7 +4,7 @@ using Common.Contracts.DTO.ABM;
 
 namespace Shipping.Application.DTO
 {
-    public class ShipmentDTO : AuditableDTO, IAddDTO, IUpdateDTO
+    public class ShipmentDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO
     {
         public string TrackingNumber { get; set; }
         public string Carrier { get; set; }
