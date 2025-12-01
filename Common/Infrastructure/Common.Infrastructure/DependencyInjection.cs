@@ -14,6 +14,8 @@ namespace Common.Infrastructure
         {
             return services.AddMassTransit(c =>
             {
+                var sP = services.BuildServiceProvider();
+                var appSettings = sP.GetRequiredService<IOptions<AppSettings>>().Value;
                 var types = messageAssemblies
                 .Concat(new Assembly[] { typeof(LogErrorRequestConsumer).Assembly })
                 .SelectMany(a => a.GetTypes())
@@ -24,7 +26,8 @@ namespace Common.Infrastructure
                 c.AddConsumers(types);
                 c.UsingRabbitMq((ctx, cfg) =>
                 {
-                    cfg.Host(configuration.GetConnectionString("rabbit"));
+                    var conString = configuration.GetConnectionString("rabbit");
+                    cfg.Host(conString);
                     cfg.ConfigureEndpoints(ctx);
                 });
             });

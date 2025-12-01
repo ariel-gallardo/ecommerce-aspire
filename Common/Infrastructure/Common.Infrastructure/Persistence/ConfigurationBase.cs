@@ -27,9 +27,9 @@ namespace Common.Infrastructure
             builder.Property(x => x.CreatedAt).HasColumnName("fecha_creacion").IsRequired(true);
             builder.Property(x => x.UpdatedAt).HasColumnName("fecha_modificacion").IsRequired(false);
             builder.Property(x => x.DeletedAt).HasColumnName("fecha_eliminacion").IsRequired(false);
-            builder.HasOne(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById);
-            builder.HasOne(x => x.UpdatedBy).WithMany().HasForeignKey(x => x.UpdatedById).IsRequired(false);
-            builder.HasOne(x => x.DeletedBy).WithMany().HasForeignKey(x => x.DeletedById).IsRequired(false);
+            builder.Property(x => x.CreatedById);
+            builder.Property(x => x.UpdatedById).IsRequired(false);
+            builder.Property(x => x.DeletedById).IsRequired(false);
             builder.HasQueryFilter(x => x.DeletedAt == null);
         }
 
@@ -39,9 +39,9 @@ namespace Common.Infrastructure
             builder.Property(x => x.CreatedAt).HasColumnName("fecha_creacion").IsRequired(true);
             builder.Property(x => x.UpdatedAt).HasColumnName("fecha_modificacion").IsRequired(false);
             builder.Property(x => x.DeletedAt).HasColumnName("fecha_eliminacion").IsRequired(false);
-            builder.HasOne(x => x.CreatedBy).WithMany().HasForeignKey(x => x.CreatedById);
-            builder.HasOne(x => x.UpdatedBy).WithMany().HasForeignKey(x => x.UpdatedById).IsRequired(false);
-            builder.HasOne(x => x.DeletedBy).WithMany().HasForeignKey(x => x.DeletedById).IsRequired(false);
+            builder.Property(x => x.CreatedById);
+            builder.Property(x => x.UpdatedById).IsRequired(false);
+            builder.Property(x => x.DeletedById).IsRequired(false);
             builder.HasQueryFilter(x => x.DeletedAt == null);
         }
     }

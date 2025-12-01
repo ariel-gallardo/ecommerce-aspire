@@ -45,8 +45,9 @@ namespace Common.Application
 
             return services.AddStackExchangeRedisCache(options =>
             {              
+                var consString = configuration.GetConnectionString("cache");
                 options.InstanceName = appSettings.Redis.InstanceName;
-                options.Configuration = configuration.GetConnectionString("redis");
+                options.Configuration = consString;
             });
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 

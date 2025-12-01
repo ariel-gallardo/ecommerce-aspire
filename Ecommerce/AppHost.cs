@@ -8,10 +8,10 @@ var redisDataMount = cfg["Parameters:Redis:DataMount"];
 var rabbitDataMount = cfg["Parameters:RabbitMQ:DataMount"];
 var mySQLDataMountBase = cfg["Parameters:MySQL:DataMount"];
 
-var redisPass = builder.AddParameterFromConfiguration("RedisPassword", "Parameters:Redis:Password");
-var rabbitUser = builder.AddParameterFromConfiguration("RabbitUser", "Parameters:RabbitMQ:Username");
-var rabbitPass = builder.AddParameterFromConfiguration("RabbitPassword", "Parameters:RabbitMQ:Password");
-var mySQLPass = builder.AddParameterFromConfiguration("MySQLPassword", "Parameters:MySQL:Password");
+var redisPass = builder.AddParameterFromConfiguration("RedisPassword", "Parameters:AppSettings:Redis:Password");
+var rabbitUser = builder.AddParameterFromConfiguration("RabbitUser", "Parameters:AppSettings:RabbitMQ:Username");
+var rabbitPass = builder.AddParameterFromConfiguration("RabbitPassword", "Parameters:AppSettings:RabbitMQ:Password");
+var mySQLPass = builder.AddParameterFromConfiguration("MySQLPassword", "Parameters:AppSettings:MySQL:Password");
 
 var cache = builder.AddRedis("cache", password: redisPass);
 var rabbitMQ = builder.AddRabbitMQ("rabbit", rabbitUser, rabbitPass);

@@ -9,6 +9,7 @@ namespace Common.Infrastructure.Configurations
         public int ExpirationMinutesCache { get; set; }
         public int ExpirationMintuesMaxCache { get; set; }
         public int RetryTimesDependency { get; set; }
+        public string Password { get; set; }
         public string InstanceName { get; set; }
         [JsonIgnore]
         public DistributedCacheEntryOptions DistributedCacheEntryOptions => new DistributedCacheEntryOptions

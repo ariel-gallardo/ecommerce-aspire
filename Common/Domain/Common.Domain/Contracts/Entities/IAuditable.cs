@@ -1,5 +1,4 @@
 ﻿using Common.Contracts.Entities;
-using Common.Domain.Entities;
 
 namespace Common.Domain.Contracts.Entities
 {
@@ -11,8 +10,5 @@ namespace Common.Domain.Contracts.Entities
         DateTime CreatedAt { get; set; }
         DateTime? UpdatedAt { get; set; }
         DateTime? DeletedAt { get; set; }
-        User CreatedBy { get; set; }
-        User UpdatedBy { get; set; }
-        User DeletedBy { get; set; }
     }
 }
