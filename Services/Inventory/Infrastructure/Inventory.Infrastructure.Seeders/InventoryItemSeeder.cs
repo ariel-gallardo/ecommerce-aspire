@@ -44,7 +44,7 @@ namespace Inventory.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             await _cache.WaitAsync(_dependencies, cancellationToken);
-            var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);
+            var adminId = await _cache.GetAsync<ulong>(CacheKeyUser.SeedIdAdmin);
             var prodIds = await _cache.GetAsync<List<Guid>>(CacheKeyProduct.SeedIds);
             
             Items = Enumerable.Range(1, prodIds.Count()).Select(i =>

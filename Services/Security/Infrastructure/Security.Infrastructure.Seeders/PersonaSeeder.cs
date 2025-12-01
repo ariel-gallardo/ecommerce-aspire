@@ -38,7 +38,7 @@ namespace Security.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             
-            var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin);
+            var userAdminIds = await _cache.GetAsync<List<ulong>>(CacheKeyUser.SeedIdsAdmin);
 
             People = Enumerable.Range(1, _quantity).Select(x =>
             {

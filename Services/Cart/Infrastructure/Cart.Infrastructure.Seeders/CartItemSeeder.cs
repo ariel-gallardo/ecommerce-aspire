@@ -43,10 +43,10 @@ namespace Cart.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             await _cache.WaitAsync(_dependencies, cancellationToken);
-            var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin);
+            var adminId = await _cache.GetAsync<ulong>(CacheKeyUser.SeedIdAdmin);
             var prodIds = await _cache.GetAsync<List<Guid>>(CacheKeyProduct.SeedIds);
             var cartIds = await _cache.GetAsync<List<Guid>>(CacheKeyCart.SeedIds);
-            var cartUserIds = await _cache.GetAsync<List<Guid>>(CacheKeyCart.SeedUserIds);
+            var cartUserIds = await _cache.GetAsync<List<ulong>>(CacheKeyCart.SeedUserIds);
             var unitProductList = await _cache.GetAsync<List<Tuple<Guid, Unit>>>(CacheKeyInventory.SeedUnitProducts);
 
             Items = Enumerable.Range(1, cartIds.Count()).Select(i =>

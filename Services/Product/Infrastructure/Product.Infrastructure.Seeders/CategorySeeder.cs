@@ -31,7 +31,7 @@ namespace Product.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             await _cache.WaitAsync(CacheKeyUser.SeedCreatedIdsAdmin, cancellationToken);
-            var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin, cancellationToken);
+            var userAdminIds = await _cache.GetAsync<List<ulong>>(CacheKeyUser.SeedIdsAdmin, cancellationToken);
             int total = _quantity;
             int part = total / 3;
             int remainder = total % 3;

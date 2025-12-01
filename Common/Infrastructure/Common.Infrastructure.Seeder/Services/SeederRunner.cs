@@ -33,7 +33,7 @@ namespace Common.Infrastructure.Seeder.Services
                     catch(Exception e)
                     {
                         _logger.LogInformation(e, $"Seeder Runner - {_context.Database.ProviderName}");
-                        return null;
+                        throw e;
                     }
                 }).ToList();
             if(seedTasks.Any())
@@ -49,7 +49,7 @@ namespace Common.Infrastructure.Seeder.Services
                         }
                     }catch(Exception e)
                     {
-
+                        throw e;
                     }
                 
             }

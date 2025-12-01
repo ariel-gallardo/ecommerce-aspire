@@ -132,7 +132,7 @@ namespace Common.Infrastructure.Seeder.Entities
             entity.CreatedAt = DateTime.UtcNow;
         }
 
-        protected void AddAuditableProperties(IAuditableGuid entity, IList<Guid> userIds)
+        protected void AddAuditableProperties(IAuditableGuid entity, IList<ulong> userIds)
         {
             var createdByIdNumber = userIds.ElementAt(_random.Next(0, userIds.Count() - 1));
             var updatedByIdNumber = userIds.ElementAt(_random.Next(0, userIds.Count() - 1));
@@ -147,7 +147,7 @@ namespace Common.Infrastructure.Seeder.Entities
             entity.CreatedAt = DateTime.UtcNow;
         }
 
-        protected void AddAuditableProperties(IAuditableGuid entity, Guid userId, Guid adminId)
+        protected void AddAuditableProperties(IAuditableGuid entity, ulong userId, ulong adminId)
         {
             entity.CreatedById = adminId;
             entity.CreatedAt = DateTime.UtcNow;

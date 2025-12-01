@@ -33,7 +33,7 @@ namespace Product.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             await _cache.WaitAsync(_dependencies);
-            var userAdminIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsAdmin);
+            var userAdminIds = await _cache.GetAsync<List<ulong>>(CacheKeyUser.SeedIdsAdmin);
             var categoryIds = await _cache.GetAsync<List<Guid>>(CacheKeyCategory.SeedIds);
 
             Products = Enumerable.Range(1, _quantity).Select(i =>

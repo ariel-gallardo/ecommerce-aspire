@@ -47,8 +47,8 @@ namespace Cart.Infrastructure.Seeders
                 return Array.Empty<object>();
             }
             await _cache.WaitAsync(_dependencies);
-            var userIds = await _cache.GetAsync<List<Guid>>(CacheKeyUser.SeedIdsClient);
-            var adminId = await _cache.GetAsync<Guid>(CacheKeyUser.SeedIdAdmin, cancellationToken);
+            var userIds = await _cache.GetAsync<List<ulong>>(CacheKeyUser.SeedIdsClient);
+            var adminId = await _cache.GetAsync<ulong>(CacheKeyUser.SeedIdAdmin, cancellationToken);
             Carts = Enumerable.Range(1, userIds.Count).Select(i =>
             {
                 if(i % 3 == 0)
