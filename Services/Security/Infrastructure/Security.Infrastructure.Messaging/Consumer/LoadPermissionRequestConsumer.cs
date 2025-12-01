@@ -2,6 +2,7 @@
 using Common.Extensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
+using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using Common.Infrastructure.Repositories;
 using MassTransit;
@@ -21,21 +22,15 @@ namespace Security.Infrastructure.Messaging.Consumer
         public override async Task OnConsume(ConsumeContext<LoadPermissionRequest> context)
         {
             var request = context.Message;
-            var actionName = CacheKeyCommon.PolicyActionName(request.Controller, request.Action);
-            var actionNameCreated = CacheKeyCommon.PolicyActionNameCreated(request.Controller, request.Action);
-            var policy = await _cache.GetAsync<string>(actionName);
-            if (string.IsNullOrEmpty(policy))
+            var res = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
+            if (await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
             {
-                var res = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
-                if (await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
-                {
-                    var permission = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
-                    await context.RespondAsync<Message<string>>(new Message<string> { Data = permission.Policy.AsStringUsingMemberValue() });
-                }
-                else
-                {
-                    await context.RespondAsync<Message<string>>(new Message<string> { Data = null});
-                }
+                var permission = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
+                await context.RespondAsync<Message<string>>(new Message<string> { Data = permission.Policy.AsStringUsingMemberValue() });
+            }
+            else
+            {
+                await context.RespondAsync<Message<string>>(new Message<string> { Data = null });
             }
         }
     }

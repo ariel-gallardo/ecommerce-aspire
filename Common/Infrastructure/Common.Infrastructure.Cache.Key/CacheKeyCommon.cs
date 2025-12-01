@@ -12,5 +12,11 @@
             var actionCache = $"Policy:{controllerName}:{actionName}";
             return actionCache;
         }
+
+        public static string PolicyUrl(string url)
+        {
+            var actionCache = $@"Policy:Url:{url.Trim()}";
+            return actionCache;
+        }
     }
 }
