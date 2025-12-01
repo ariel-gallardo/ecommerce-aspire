@@ -7,7 +7,6 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
-using MassTransit.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -17,7 +16,6 @@ using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
 using System.Text;
-using System.Text.Json.Serialization;
 
 namespace Common.Application
 {

@@ -128,28 +128,28 @@ namespace Common.Infrastructure.Seeder.Entities
             var createdByIdNumber = _random.Next(0, userIds.Count() - 1);
             var updatedByIdNumber = _random.Next(0, userIds.Count() - 1);
             var deletedByIdNumber = _random.Next(0, userIds.Count() - 1);
+            entity.CreatedById = ulong.Parse(createdByIdNumber.ToString());
             entity.CreatedAt = DateTime.UtcNow;
         }
 
         protected void AddAuditableProperties(IAuditableGuid entity, IList<Guid> userIds)
         {
-            var createdByIdNumber = _random.Next(0, userIds.Count() - 1);
-            var updatedByIdNumber = _random.Next(0, userIds.Count() - 1);
-            var deletedByIdNumber = _random.Next(0, userIds.Count() - 1);
+            var createdByIdNumber = userIds.ElementAt(_random.Next(0, userIds.Count() - 1));
+            var updatedByIdNumber = userIds.ElementAt(_random.Next(0, userIds.Count() - 1));
+            var deletedByIdNumber = userIds.ElementAt(_random.Next(0, userIds.Count() - 1));
+            entity.CreatedById = createdByIdNumber;
             entity.CreatedAt = DateTime.UtcNow;
         }
 
-        protected void AddAuditableProperties(IAuditable entity, long userId, long adminId)
+        protected void AddAuditableProperties(IAuditable entity, ulong userId, ulong adminId)
         {
-            var updatedByIdNumber = _random.Next(1, 100);
-            var deletedByIdNumber = _random.Next(1, 100);
+            entity.CreatedById = adminId;
             entity.CreatedAt = DateTime.UtcNow;
         }
 
         protected void AddAuditableProperties(IAuditableGuid entity, Guid userId, Guid adminId)
         {
-            var updatedByIdNumber = _random.Next(1, 100);
-            var deletedByIdNumber = _random.Next(1, 100);
+            entity.CreatedById = adminId;
             entity.CreatedAt = DateTime.UtcNow;
         }
     }
