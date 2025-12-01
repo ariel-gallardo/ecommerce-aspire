@@ -15,8 +15,6 @@ namespace Common.Infrastructure
         {
             return services.AddMassTransit(c =>
             {
-                var sP = services.BuildServiceProvider();
-                var appSettings = sP.GetRequiredService<IOptions<AppSettings>>().Value;
                 var types = messageAssemblies
                 .Concat(new Assembly[] { typeof(LogErrorRequestConsumer).Assembly })
                 .SelectMany(a => a.GetTypes())

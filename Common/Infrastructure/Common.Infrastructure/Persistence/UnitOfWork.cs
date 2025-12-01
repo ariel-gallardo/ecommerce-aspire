@@ -6,7 +6,6 @@ using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
 using Common.Domain.Contracts.Entities;
-using Common.Domain.Entities.Base;
 using Common.Domain.Enums;
 using Common.Domain.Exceptions;
 using Common.Infrastructure.Extensions;
@@ -46,8 +45,8 @@ namespace Common.Infrastructure
                 a.CreatedById = _usrServices.Id;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
-                await _ctx.AddAsync(a);
-                await _ctx.SaveChangesAsync();
+                await _ctx.AddAsync(a,cancellationToken);
+                await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }
             else if(entity is IAuditableGuid b)
@@ -56,12 +55,12 @@ namespace Common.Infrastructure
                 b.CreatedById = _usrServices.Id;
                 _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(b).Property(x => x.DeletedAt).IsModified = false;
-                await _ctx.AddAsync(b);
-                await _ctx.SaveChangesAsync();
+                await _ctx.AddAsync(b,cancellationToken);
+                await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }
             await _ctx.AddAsync(entity);
-            await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
@@ -93,8 +92,8 @@ namespace Common.Infrastructure
                 }
                     return e;
             });
-            await _ctx.AddRangeAsync(entities);
-            await _ctx.SaveChangesAsync();
+            await _ctx.AddRangeAsync(entities,cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
             return (IList<DomainEntity>)entities;
         }
 
@@ -120,18 +119,18 @@ namespace Common.Infrastructure
                 (entity as IAuditable).UpdatedAt = DateTime.UtcNow;
                 (entity as IAuditable).UpdatedById = _usrServices.Id;
                 _ctx.Update(entity);
-                await _ctx.SaveChangesAsync();
+                await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }else if(entity is IAuditableGuid)
             {
                 (entity as IAuditableGuid).UpdatedAt = DateTime.UtcNow;
                 (entity as IAuditableGuid).UpdatedById = _usrServices.Id;
                 _ctx.Update(entity);
-                await _ctx.SaveChangesAsync();
+                await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }
             _ctx.Update(entity);
-            await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
@@ -188,8 +187,8 @@ namespace Common.Infrastructure
                 }
                 return e;
             });
-            _ctx.UpdateRange(entities);
-            await _ctx.SaveChangesAsync();
+            _ctx.UpdateRange(entities, cancellationToken);
+            await _ctx.SaveChangesAsync(cancellationToken);
             return (IList<DomainEntity>)entities;
         }
         public async Task<IList<ResultDTO>> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entity, CancellationToken cancellationToken)
@@ -237,7 +236,7 @@ namespace Common.Infrastructure
                 _ctx.Remove(entity);
             }
 
-            await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync(cancellationToken);
         }
 
         public async Task DeleteAsync<DomainEntity>(IList<ulong> ids, CancellationToken cancellationToken)
@@ -259,7 +258,7 @@ namespace Common.Infrastructure
                           .ExecuteUpdateAsync(u => 
                             u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditable)x).DeletedById, x => _usrServices.Id)
-                          );
+                          ,cancellationToken);
             }
             else if (typeof(IAuditableGuid).IsAssignableFrom(typeof(DomainEntity)))
             {
@@ -268,15 +267,15 @@ namespace Common.Infrastructure
                           .ExecuteUpdateAsync(u =>
                             u.SetProperty(x => ((IAuditableGuid)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditableGuid)x).DeletedById, x => _usrServices.Id)
-                          );
+                          , cancellationToken);
             }
             else
             {
                 var entities = await _ctx.Set<DomainEntity>()
                                          .Where(x => ids.Contains(((IIdentifiable)x).Id))
-                                         .ToListAsync();
-                _ctx.RemoveRange(entities);
-                await _ctx.SaveChangesAsync();
+                                         .ToListAsync(cancellationToken);
+                _ctx.RemoveRange(entities,cancellationToken);
+                await _ctx.SaveChangesAsync(cancellationToken);
             }
         }
 
@@ -291,7 +290,7 @@ namespace Common.Infrastructure
                 return await _ctx.Set<DomainEntity>()
                                  .AsNoTracking()
                                  .Cast<IIdentifiable>()
-                                 .AnyAsync(x => x.Id == id);
+                                 .AnyAsync(x => x.Id == id,cancellationToken);
             }
             return false;
         }
@@ -308,7 +307,7 @@ namespace Common.Infrastructure
 
                 var foundIds = await set.Where(x => ids.Contains(x.Id))
                                         .Select(x => x.Id)
-                                        .ToListAsync();
+                                        .ToListAsync(cancellationToken);
 
                 return (false, ids.Where(x => !foundIds.Contains(x)).ToList());
             }
@@ -327,7 +326,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.AnyAsync();
+            return await querie.AnyAsync(cancellationToken);
         }
         #endregion
 
@@ -344,7 +343,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.FirstOrDefaultAsync();
+            return await querie.FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<ResultDTO> SearchOneAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
@@ -360,7 +359,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
+            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
         }
         #endregion
 
@@ -375,14 +374,14 @@ namespace Common.Infrastructure
                                  .Cast<IIdentifiable>()
                                  .Where(x => x.Id == id)
                                  .Cast<DomainEntity>()
-                                 .FirstOrDefaultAsync();
+                                 .FirstOrDefaultAsync(cancellationToken);
             }
             return null;
         }
         public async Task<ResultDTO> SearchAsync<DomainEntity, ResultDTO>(ulong id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
-        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
+        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id == id).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IList<ulong> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
@@ -438,7 +437,7 @@ namespace Common.Infrastructure
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
             }
-            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync();
+            return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
         }
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)

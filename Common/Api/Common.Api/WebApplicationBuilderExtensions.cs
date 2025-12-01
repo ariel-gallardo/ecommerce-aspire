@@ -68,7 +68,7 @@ namespace Common.Api
                 builder.Configuration.AddUserSecrets(apiAssembly);
             }
 
-            builder.AddServiceDefaults();
+            
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
@@ -81,6 +81,7 @@ namespace Common.Api
             {
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
             });
+            builder.AddServiceDefaults();
             var app = builder.Build();
             app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseCors("AllowMySite");
