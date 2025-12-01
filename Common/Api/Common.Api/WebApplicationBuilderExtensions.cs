@@ -87,7 +87,6 @@ namespace Common.Api
             app.MapDefaultEndpoints();
             if (app.Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.MapOpenApi("/swagger/docs/{documentName}/swagger.json");
             }
 

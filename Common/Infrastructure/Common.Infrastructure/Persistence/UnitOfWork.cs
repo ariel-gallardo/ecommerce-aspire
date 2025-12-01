@@ -43,9 +43,20 @@ namespace Common.Infrastructure
             if (entity is IAuditable a)
             {
                 a.CreatedAt = DateTime.UtcNow;
+                a.CreatedById = _usrServices.Id;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
                 await _ctx.AddAsync(a, cancellationToken);
+                await _ctx.SaveChangesAsync(cancellationToken);
+                return entity;
+            }
+            else if(entity is IAuditableGuid b)
+            {
+                b.CreatedAt = DateTime.UtcNow;
+                b.CreatedById = _usrServices.Id;
+                _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
+                _ctx.Entry(b).Property(x => x.DeletedAt).IsModified = false;
+                await _ctx.AddAsync(b, cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }
@@ -68,11 +79,19 @@ namespace Common.Infrastructure
                 if (e is IAuditable a)
                 {
                     a.CreatedAt = DateTime.UtcNow;
+                    a.CreatedById = _usrServices.Id;
                     _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
                     _ctx.Entry(a).Property(x => x.DeletedAt).IsModified = false;
                     return a;
+                }else if(e is IAuditableGuid b)
+                {
+                    b.CreatedAt = DateTime.UtcNow;
+                    b.CreatedById = _usrServices.Id;
+                    _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
+                    _ctx.Entry(b).Property(x => x.DeletedAt).IsModified = false;
+                    return b;
                 }
-                return e;
+                    return e;
             });
             await _ctx.AddRangeAsync(entities);
             await _ctx.SaveChangesAsync();
@@ -99,6 +118,14 @@ namespace Common.Infrastructure
             if (entity is IAuditable)
             {
                 (entity as IAuditable).UpdatedAt = DateTime.UtcNow;
+                (entity as IAuditable).UpdatedById = _usrServices.Id;
+                _ctx.Update(entity);
+                await _ctx.SaveChangesAsync(cancellationToken);
+                return entity;
+            }else if(entity is IAuditableGuid)
+            {
+                (entity as IAuditableGuid).UpdatedAt = DateTime.UtcNow;
+                (entity as IAuditableGuid).UpdatedById = _usrServices.Id;
                 _ctx.Update(entity);
                 await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
@@ -143,9 +170,20 @@ namespace Common.Infrastructure
                 {
                     var existing = _ctx.Set<DomainEntity>().Find(a.Id, cancellationToken);
                     a.UpdatedAt = DateTime.UtcNow;
+                    a.UpdatedById = _usrServices.Id;
                     _ctx.Entry(existing).CurrentValues.SetValues(a);
                     _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedAt).IsModified = false;
                     _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedAt).IsModified = false;
+                    return existing;
+                }
+                else if (e is IAuditableGuid b)
+                {
+                    var existing = _ctx.Set<DomainEntity>().Find(b.Id, cancellationToken);
+                    b.UpdatedAt = DateTime.UtcNow;
+                    b.UpdatedById = _usrServices.Id;
+                    _ctx.Entry(existing).CurrentValues.SetValues(b);
+                    _ctx.Entry(existing).Property(x => (x as IAuditableGuid).CreatedAt).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditableGuid).DeletedAt).IsModified = false;
                     return existing;
                 }
                 return e;
@@ -181,9 +219,18 @@ namespace Common.Infrastructure
             if (entity is IAuditable a)
             {
                 a.DeletedAt = DateTime.UtcNow;
+                a.DeletedById = _usrServices.Id;
                 _ctx.Entry(a).Property(x => x.CreatedAt).IsModified = false;
                 _ctx.Entry(a).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Update(a);
+            }
+            else if (entity is IAuditableGuid b)
+            {
+                b.DeletedAt = DateTime.UtcNow;
+                b.DeletedById = _usrServices.Id;
+                _ctx.Entry(b).Property(x => x.CreatedAt).IsModified = false;
+                _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
+                _ctx.Update(b);
             }
             else
             {
@@ -209,7 +256,19 @@ namespace Common.Infrastructure
             {
                 await _ctx.Set<DomainEntity>()
                           .Where(x => ids.Contains(((IIdentifiable)x).Id))
-                          .ExecuteUpdateAsync(u => u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime), cancellationToken);
+                          .ExecuteUpdateAsync(u => 
+                            u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
+                            .SetProperty(x => ((IAuditable)x).DeletedById, x => _usrServices.Id)
+                          , cancellationToken);
+            }
+            else if (typeof(IAuditableGuid).IsAssignableFrom(typeof(DomainEntity)))
+            {
+                await _ctx.Set<DomainEntity>()
+                          .Where(x => ids.Contains(((IIdentifiable)x).Id))
+                          .ExecuteUpdateAsync(u =>
+                            u.SetProperty(x => ((IAuditableGuid)x).DeletedAt, x => currentTime)
+                            .SetProperty(x => ((IAuditableGuid)x).DeletedById, x => _usrServices.Id)
+                          , cancellationToken);
             }
             else
             {
