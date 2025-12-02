@@ -49,13 +49,14 @@ namespace Common.Api.Filters
                             policyUrl = url;
                             policyUrlKey = CacheKeyCommon.PolicyUrl(url);
                             policy = await _cache.GetAsync<string>(policyUrlKey);
+                            if (string.IsNullOrWhiteSpace(policy)) policy = Policy.Unknown.AsStringUsingMemberValue();
                         }
                     }
                 }
                 else
                 {
-
                     policy = await _cache.GetAsync<string>(actionName);
+                    if (string.IsNullOrWhiteSpace(policy)) policy = Policy.Unknown.AsStringUsingMemberValue();
                 }
                 if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
                 {
