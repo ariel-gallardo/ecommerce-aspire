@@ -51,7 +51,17 @@ var isTesting = builder.Environment.IsEnvironment("Testing");
     var productDb = !isTesting ? builder.AddMySql("ProductDb", mySQLPass).WithDataBindMount(Path.Join(mySQLDataMountBase, "product")).WithPhpMyAdmin() : null;
     var securityDb = !isTesting ? builder.AddMySql("SecurityDb", mySQLPass).WithDataBindMount(Path.Join(mySQLDataMountBase, "security")).WithPhpMyAdmin() : null;
     var shippingDb = !isTesting ? builder.AddMySql("ShippingDb", mySQLPass).WithDataBindMount(Path.Join(mySQLDataMountBase, "shipping")).WithPhpMyAdmin() : null;
-
+var logsApi = builder.AddProject<Projects.Logs_API>("logs")
+    .WithOpenApi()
+    .WithExternalHttpEndpoints()
+    .WithHttpHealthCheck("/health")
+    .WithReference(isTesting ? logsDbTesting : logsDb)
+    .WithReference(rabbitMQ)
+    .WithReference(cache)
+    .WaitFor(rabbitMQ)
+    .WaitFor(cache)
+    .WaitFor(isTesting ? logsDbTesting : logsDb)
+    .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 
 var cartApi = builder.AddProject<Projects.Cart_API>("cart")
     .WithOpenApi()
@@ -63,6 +73,7 @@ var cartApi = builder.AddProject<Projects.Cart_API>("cart")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? cartDbTesting : cartDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
     .WithOpenApi()
@@ -75,6 +86,7 @@ var inventoryApi = builder.AddProject<Projects.Inventory_API>("inventory")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? inventoryDbTesting : inventoryDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 
 var invoiceApi = builder.AddProject<Projects.Invoice_API>("invoice")
@@ -87,18 +99,9 @@ var invoiceApi = builder.AddProject<Projects.Invoice_API>("invoice")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? invoiceDbTesting : invoiceDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
-var logsApi = builder.AddProject<Projects.Logs_API>("logs")
-    .WithOpenApi()
-    .WithExternalHttpEndpoints()
-    .WithHttpHealthCheck("/health")
-    .WithReference(isTesting ? logsDbTesting : logsDb)
-    .WithReference(rabbitMQ)
-    .WithReference(cache)
-    .WaitFor(rabbitMQ)
-    .WaitFor(cache)
-    .WaitFor(isTesting ? logsDbTesting : logsDb)
-    .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
+
 var notificationApi = builder.AddProject<Projects.Notification_API>("notification")
     .WithOpenApi()
     .WithExternalHttpEndpoints()
@@ -109,6 +112,7 @@ var notificationApi = builder.AddProject<Projects.Notification_API>("notificatio
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? notificationDbTesting : notificationDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var orderApi = builder.AddProject<Projects.Order_API>("order")
     .WithOpenApi()
@@ -120,6 +124,7 @@ var orderApi = builder.AddProject<Projects.Order_API>("order")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? orderDbTesting : orderDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var paymentApi = builder.AddProject<Projects.Payment_API>("payment")
     .WithOpenApi()
@@ -131,6 +136,7 @@ var paymentApi = builder.AddProject<Projects.Payment_API>("payment")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? paymentDbTesting : paymentDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var productApi = builder.AddProject<Projects.Product_API>("product")
     .WithOpenApi()
@@ -142,6 +148,7 @@ var productApi = builder.AddProject<Projects.Product_API>("product")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? productDbTesting : productDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WithOpenApi()
@@ -153,6 +160,7 @@ var securityApi = builder.AddProject<Projects.Security_API>("security")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? securityDbTesting : securityDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 var shippingApi = builder.AddProject<Projects.Shipping_API>("shipping")
     .WithOpenApi()
@@ -164,6 +172,7 @@ var shippingApi = builder.AddProject<Projects.Shipping_API>("shipping")
     .WaitFor(rabbitMQ)
     .WaitFor(cache)
     .WaitFor(isTesting ? shippingDbTesting : shippingDb)
+    .WaitFor(logsApi)
     .WithAppSettingsEnvironments(cfg.GetSection("AppSettings"));
 
 var apiGateway = builder.AddProject<Projects.ApiGateway>("api-gateway")
