@@ -245,12 +245,6 @@ namespace Common.Api.Filters.OpenApi
                 });
                 _commonData.ProcessedMethods.Add(method);
 
-                var headMethod = tI2.GetMethods()
-                .Where(m => m.GetCustomAttributes(true)
-                    .OfType<HttpMethodAttribute>()
-                    .Any(a => a.HttpMethods.Contains("HEAD")))
-                .FirstOrDefault();
-
                 var status200Response = method.CustomAttributes
                     .FirstOrDefault(attr => attr.AttributeType == typeof(ProducesResponseTypeAttribute) &&
                                             attr.ConstructorArguments.Any(arg => (int)arg.Value == StatusCodes.Status200OK));
