@@ -1,4 +1,5 @@
-﻿using Common.Application.Profiles.Base;
+﻿using AutoMapper;
+using Common.Application.Profiles.Base;
 using Common.Application.Services;
 using Common.Contracts;
 using Common.Extensions;
@@ -10,6 +11,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Security.Infrastructure;
@@ -21,14 +23,53 @@ namespace Common.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
+            if (env.IsDevelopment())
+            {
+                MapperConfiguration mapper = null;
+                try
+                {
+                    mapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
+                        cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
+                        cfg.ShouldMapProperty = pi =>
+                        {
+                            var ignoredProperties = new[]
+                            {
+                            "CreatedById",
+                            "UpdatedById",
+                            "DeletedById",
+                            "CreatedAt",
+                            "UpdatedAt",
+                            "DeletedAt",
+                            "OrderBy",
+                            "Page",
+                            "PageSize",
+                            "Quantity",
+                            "Price",
+                            "Coordinate",
+                            "Address",
+                        };
+                            return !ignoredProperties.Any(prefix => pi.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+                        };
+
+                    });
+                }
+                catch (MethodAccessException)
+                {
+
+                }
+                if(mapper != null)
+                mapper.AssertConfigurationIsValid();
+            }
             services.AddAutoMapper(cfg =>
             {
                 cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
                 cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
-            }, assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
 
+            });
             return services;
         }
 

@@ -4,7 +4,7 @@ using Shipping.Domain.Enums;
 
 namespace Shipping.Domain.Entities
 {
-    public class Shipment : AuditableEntity
+    public class Shipment : AuditableGuidEntity
     {
         public string TrackingNumber { get; set; }
         public string Carrier { get; set; }

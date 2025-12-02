@@ -14,9 +14,19 @@ namespace Security.Application.Profiles
         public UserProfile()
         {
             CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<UserLoginDTO, UserQuerieFilter>();
-            CreateMap<UserRegisterDTO, UserQuerieFilter>();
+            CreateMap<UserLoginDTO, UserQuerieFilter>()
+                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Page, opt => opt.Ignore())
+                .ForMember(dest => dest.PageSize, opt => opt.Ignore())
+                .ForMember(dest => dest.Role, opt => opt.Ignore())
+                .ForMember(dest => dest.PersonaId, opt => opt.Ignore());
+            CreateMap<UserRegisterDTO, UserQuerieFilter>()
+                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Page, opt => opt.Ignore())
+                .ForMember(dest => dest.PageSize, opt => opt.Ignore())
+                .ForMember(dest => dest.Role, opt => opt.Ignore());
             CreateMap<UserRegisterDTO, User>()
+                .ForMember(dest => dest.Persona, opt => opt.Ignore())
                 .ForMember(dest => dest.Password, opt => opt.MapFrom<PasswordHashResolver>())
                 .ReverseMap()
                 .ForMember(dest => dest.Password, opt => opt.Ignore())

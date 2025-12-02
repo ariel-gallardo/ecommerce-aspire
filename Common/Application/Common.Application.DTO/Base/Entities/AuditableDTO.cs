@@ -1,5 +1,4 @@
-﻿using Common.Api.CustomAttributes;
-using Common.Contracts.DTO.Base;
+﻿using Common.Contracts.DTO.Base;
 using System.Text.Json.Serialization;
 
 namespace Common.Application.DTO.Base.Entities
@@ -12,5 +11,11 @@ namespace Common.Application.DTO.Base.Entities
         public string UpdatedAt { get; set; }
         [JsonIgnore]
         public string DeletedAt { get; set; }
+        [JsonIgnore]
+        public ulong CreatedById { get; set; }
+        [JsonIgnore]
+        public ulong? UpdatedById { get; set; }
+        [JsonIgnore]
+        public ulong? DeletedById { get; set; }
     }
 }

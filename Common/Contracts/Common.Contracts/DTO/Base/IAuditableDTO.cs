@@ -10,5 +10,8 @@ namespace Common.Contracts.DTO.Base
         string UpdatedAt { get; set; }
         [JsonIgnore]
         string DeletedAt { get; set; }
+        public ulong CreatedById { get; set; }
+        public ulong? UpdatedById { get; set; }
+        public ulong? DeletedById { get; set; }
     }
 }

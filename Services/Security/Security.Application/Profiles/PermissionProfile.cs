@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Common.Application.DTO.Base.Entities;
+using Common.Domain.Entities.Base;
 using Common.Infrastructure.Entities.Enums;
 using Security.Application.DTO;
 using Security.Domain.Entities;
@@ -11,12 +13,28 @@ namespace Security.Application.Profiles
     {
         public PermissionProfile()
         {
-            CreateMap<PermissionDTO, Permission>().ReverseMap();
-            CreateMap<PermissionDTO, PermissionQuerieFilter>();
-            CreateMap<LoadPermissionRequest, PermissionQuerieFilter>();
-            CreateMap<CreatePermissionRequest, PermissionQuerieFilter>();
+            CreateMap<PermissionDTO, Permission>()
+                .IncludeBase<AuditableGuidDTO, AuditableGuidEntity>()
+                .ReverseMap();
+            CreateMap<PermissionDTO, PermissionQuerieFilter>()
+                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Page, opt => opt.Ignore())
+                .ForMember(dest => dest.PageSize, opt => opt.Ignore());
+            CreateMap<LoadPermissionRequest, PermissionQuerieFilter>()
+                 .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Page, opt => opt.Ignore())
+                .ForMember(dest => dest.PageSize, opt => opt.Ignore());
+            CreateMap<CreatePermissionRequest, PermissionQuerieFilter>()
+                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
+                .ForMember(dest => dest.Page, opt => opt.Ignore())
+                .ForMember(dest => dest.PageSize, opt => opt.Ignore());
             CreateMap<CreatePermissionRequest, Permission>()
-                .ForMember(dest => dest.Policy, opt => opt.MapFrom(x => Policy.Unknown));
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(x => Policy.Unknown))
+                .ForMember(dest => dest.CreatedById, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedById, opt => opt.Ignore())
+                .ForMember(dest => dest.DeletedById, opt => opt.Ignore())
+                .ForMember(dest => dest.UpdatedAt, opt => opt.Ignore())
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }

@@ -5,7 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace Security.Application.DTO
 {
-    public class UserDTO : AuditableDTO, IResultDTO
+    public class UserDTO : IdentifiableDTO, IResultDTO
     {
         public string Username { get; set; }
         public string Email { get; set; }

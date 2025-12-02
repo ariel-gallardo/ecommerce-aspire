@@ -8,6 +8,6 @@ namespace Security.Controllers.Contracts
 {
     public interface IPermissionController : ICommonController<Permission,PermissionDTO, PermissionDTO, PermissionDTO,PermissionQuerieFilter>
     {
-        Task<IActionResult> CanAccess(string url, CancellationToken cancellationToken);
+        Task<IActionResult> CanAccess([FromHeader] string url, CancellationToken cancellationToken);
     }
 }

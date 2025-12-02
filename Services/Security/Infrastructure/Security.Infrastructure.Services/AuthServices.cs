@@ -54,6 +54,7 @@ namespace Security.Infrastructure
 
         public async Task<bool?> CanAccess(string policyName)
         {
+            if (policyName == "Access.Public") return true;
             var user = _httpContextAccessor?.HttpContext?.User;
             if (!user.Identity.IsAuthenticated) return null;
             var result = await _authorizationService.AuthorizeAsync(user, policyName);

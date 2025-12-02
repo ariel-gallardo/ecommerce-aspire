@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Security.Infrastructure.Messaging.Messages.Request;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata;
 
@@ -243,6 +244,19 @@ namespace Common.Api.Filters.OpenApi
                     return templateMatch && methodMatch;
                 });
                 _commonData.ProcessedMethods.Add(method);
+
+                var headMethod = tI2.GetMethods()
+                .Where(m => m.GetCustomAttributes(true)
+                    .OfType<HttpMethodAttribute>()
+                    .Any(a => a.HttpMethods.Contains("HEAD")))
+                .FirstOrDefault();
+                var op = operation;
+                if (headMethod != null)
+                {
+                    operation.Summary = $"HEAD {headMethod.Name}";
+                    
+                }
+
                 var status200Response = method.CustomAttributes
                     .FirstOrDefault(attr => attr.AttributeType == typeof(ProducesResponseTypeAttribute) &&
                                             attr.ConstructorArguments.Any(arg => (int)arg.Value == StatusCodes.Status200OK));

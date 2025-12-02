@@ -16,7 +16,10 @@ namespace Security.Controllers
         {
         }
 
-        [HttpHead]
+        [HttpHead("can-access")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BaseResponse))]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized, Type = typeof(BaseResponse))]
+        [ProducesResponseType(StatusCodes.Status403Forbidden, Type = typeof(BaseResponse))]
         public async Task<IActionResult> CanAccess([FromHeader(Name = "X-Url")] string url, CancellationToken cancellationToken)
         {
             return StatusCode(StatusCodes.Status200OK, new BaseResponse

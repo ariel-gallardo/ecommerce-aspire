@@ -8,7 +8,7 @@ namespace Cart.Application.Profiles
     {
         public CartItemProfile()
         {
-            CreateMap<CartItemDTO, CartItem>().ReverseMap();
+            CreateMap<CartItemDTO, CartItem>().ForMember(dest => dest.Cart, opt => opt.Ignore()).ReverseMap();
         }
     }
 }
