@@ -250,12 +250,6 @@ namespace Common.Api.Filters.OpenApi
                     .OfType<HttpMethodAttribute>()
                     .Any(a => a.HttpMethods.Contains("HEAD")))
                 .FirstOrDefault();
-                var op = operation;
-                if (headMethod != null)
-                {
-                    operation.Summary = $"HEAD {headMethod.Name}";
-                    
-                }
 
                 var status200Response = method.CustomAttributes
                     .FirstOrDefault(attr => attr.AttributeType == typeof(ProducesResponseTypeAttribute) &&
