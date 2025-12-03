@@ -79,7 +79,11 @@ namespace Common.Api.Filters
                             {
                                 await _cache.SaveAsync(actionName, policy);
                                 await _cache.SaveAsync(actionNameCreated, true);
-                                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public) return;
+                                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public)
+                                {
+                                    await _authServices.AuthAsAdmin();
+                                    return;
+                                }
                             }
                         }
                     }
@@ -106,6 +110,7 @@ namespace Common.Api.Filters
                         return;
                     }
                 }
+
                 if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
                 {
                     var response = new ObjectResult(new BaseResponse
@@ -131,6 +136,10 @@ namespace Common.Api.Filters
                         response.StatusCode = StatusCodes.Status401Unauthorized;
                         context.Result = response;
                         return;
+                    }
+                    else if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public)
+                    {
+                        await _authServices.AuthAsAdmin();
                     }
                 }
             }

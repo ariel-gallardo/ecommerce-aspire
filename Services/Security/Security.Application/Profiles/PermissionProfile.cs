@@ -15,7 +15,9 @@ namespace Security.Application.Profiles
         {
             CreateMap<PermissionDTO, Permission>()
                 .IncludeBase<AuditableGuidDTO, AuditableGuidEntity>()
-                .ReverseMap();
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => !string.IsNullOrWhiteSpace(orig.Policy) ? Enum.Parse<Policy>(orig.Policy) : Policy.Unknown))
+                .ReverseMap()
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => $"Policy.{orig.Policy.ToString()}"));
             CreateMap<PermissionDTO, PermissionQuerieFilter>()
                 .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
                 .ForMember(dest => dest.Page, opt => opt.Ignore())

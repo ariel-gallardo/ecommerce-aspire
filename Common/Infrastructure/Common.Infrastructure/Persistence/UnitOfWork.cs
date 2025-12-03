@@ -55,7 +55,7 @@ namespace Common.Infrastructure
                 b.CreatedById = _usrServices.Id;
                 _ctx.Entry(b).Property(x => x.UpdatedAt).IsModified = false;
                 _ctx.Entry(b).Property(x => x.DeletedAt).IsModified = false;
-                await _ctx.AddAsync(b,cancellationToken);
+                await _ctx.AddAsync(b, cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
                 return entity;
             }

@@ -39,9 +39,9 @@ namespace Security.Infrastructure.Seeders
             };
             Permissions = Enumerable.Range(1, _quantity).Select(i => new Permission
             {
-                Url = i % 2 != 0 ? $"/path_{_random.Next(1, 100)}/sub_path_{_random.Next(1, 100)}" : string.Empty,
-                Action = i % 2 == 0 ? $"Action {_random.Next(1, 30)}" : string.Empty,
-                Controller = i % 2 == 0 ? $"Controller {_random.Next(1, 30)}" : string.Empty,
+                Url = i % 2 != 0 ? $"/path_{_random.Next(1, 100)}/sub_path_{_random.Next(1, 100)}" : null,
+                Action = i % 2 == 0 ? $"Action {_random.Next(1, 30)}" : null,
+                Controller = i % 2 == 0 ? $"Controller {_random.Next(1, 30)}" : null,
                 Policy = i % 3 == 0 ? (i % 7 == 0 ? Policy.Administrator : (i % 4 == 0 ? Policy.Client : Policy.Public)) : Policy.Unknown,
                 CreatedById = adminId,
                 CreatedAt = DateTime.UtcNow
