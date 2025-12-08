@@ -404,42 +404,32 @@ namespace Common.Infrastructure
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
-            switch (typeof(DomainEntity))
-            {
-                case IIdentifiable:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
-                case IIdentifiableGuid:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiableGuid)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
-                default:
-                    return null;
-            }
+            if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+            else if(typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiableGuid)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+            return null;
         }
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<Key, DomainEntity>(IList<Key> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
-            switch (typeof(DomainEntity))
-            {
-                case IIdentifiable:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<ulong>).Contains(((IIdentifiable)x).Id)).PaginateAsync<DomainEntity,DomainEntity>(_map, page, pageSize);
-                case IIdentifiableGuid:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<Guid>).Contains(((IIdentifiableGuid)x).Id)).PaginateAsync<DomainEntity, DomainEntity>(_map, page, pageSize);
-                default: return new PagedList<DomainEntity>();
-            }
+            if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<ulong>).Contains(((IIdentifiable)x).Id)).PaginateAsync<DomainEntity,DomainEntity>(_map, page, pageSize);
+            else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<Guid>).Contains(((IIdentifiableGuid)x).Id)).PaginateAsync<DomainEntity, DomainEntity>(_map, page, pageSize);
+            return new PagedList<DomainEntity>();
         }
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<Key,DomainEntity, ResultDTO>(IList<Key> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
-            switch (typeof(DomainEntity))
-            {
-                case IIdentifiable:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y =>  y.Equals(((IIdentifiable)x).Id)) ).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
-                case IIdentifiableGuid:
-                    return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y => y.Equals(((IIdentifiableGuid)x).Id))).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
-                default: return new PagedList<ResultDTO>();
-            }
+            if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y =>  y.Equals(((IIdentifiable)x).Id)) ).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
+            else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y => y.Equals(((IIdentifiableGuid)x).Id))).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
+            return new PagedList<ResultDTO>();
         }
 
 
