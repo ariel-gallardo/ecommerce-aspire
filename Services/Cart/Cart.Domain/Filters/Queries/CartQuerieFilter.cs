@@ -12,6 +12,7 @@ namespace Cart.Domain.Filters.Queries
         }
         public string Id { get; set; }
         public string ProductId { get; set; }
+        public ulong? UserId { get; set; }
         public IEnumerable<string> ProductIds { get; set; }
         #region Expressions
         private Expression<Func<CartEntity, bool>>? FindById
@@ -25,6 +26,10 @@ namespace Cart.Domain.Filters.Queries
         private Expression<Func<CartEntity, bool>>? FindByProductIds
         {
             get => ProductIds.Any() ? x => ProductIds.Any(y => x.Items.Any(z => z.ProductId.Equals(Guid.Parse(y)))) : null;
+        }
+        private Expression<Func<CartEntity, bool>>? FindByUserId
+        {
+            get => UserId.HasValue ? x => x.CreatedById == UserId : null;
         }
         #endregion
     }

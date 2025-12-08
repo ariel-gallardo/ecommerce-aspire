@@ -33,14 +33,17 @@ namespace Common.Contracts
         #endregion
 
         #region Delete
-        Task<BaseResponse> DeleteAsync<DomainEntity>([FromQuery] ulong entityId, CancellationToken cancellationToken)
+        Task<BaseResponse> DeleteAsync<Key,DomainEntity>([FromQuery] Key entityId, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity;
-        Task<BaseResponse> DeleteAsync<DomainEntity>([FromBody] IList<ulong> entityIds, CancellationToken cancellationToken)
+        Task<BaseResponse> DeleteAsync<Key,DomainEntity>([FromBody] IList<Key> entityIds, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity;
         #endregion
 
         #region Search
-        Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>([FromQuery] ulong entityId, CancellationToken cancellationToken)
+        Task<BaseResponse> SearchAsync<Key,DomainEntity, ResultDTO>([FromQuery] Key entityId, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;
 
@@ -50,7 +53,8 @@ namespace Common.Contracts
         Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>([FromBody] IQuerieFilter filters, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;
-        Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>([FromBody] IList<ulong> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+        Task<BaseResponse> SearchAsync<Key,DomainEntity, ResultDTO>([FromBody] IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;
         #endregion

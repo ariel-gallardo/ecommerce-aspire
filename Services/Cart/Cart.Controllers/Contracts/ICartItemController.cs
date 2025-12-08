@@ -5,7 +5,7 @@ using Common.Contracts;
 
 namespace Cart.Controllers.Contracts
 {
-    public interface ICartItemController : ICommonController<CartItem, CartItemDTO, CartItemDTO, CartItemDTO, CartItemQuerieFilter>
+    public interface ICartItemController : ICommonController<Guid, CartItem, CartItemDTO, CartItemDTO, CartItemDTO, CartItemQuerieFilter>
     {
     }
 }

@@ -5,7 +5,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers.Contracts
 {
-    public interface IPersonasController : ICommonController<Persona, PersonaDTO, PersonaDTO, PersonaDTO, PersonaQuerieFilter>
+    public interface IPersonasController : ICommonController<Guid, Persona, PersonaDTO, PersonaDTO, PersonaDTO, PersonaQuerieFilter>
     {
     }
 }

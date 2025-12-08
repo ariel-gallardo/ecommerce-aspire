@@ -4,7 +4,7 @@ using Product.Domain.Filters.Querie;
 
 namespace Product.Controllers.Contracts
 {
-    public interface IProductController : ICommonController<Domain.Entities.Product, ProductDTO, ProductDTO, ProductDTO, ProductQuerieFilter>
+    public interface IProductController : ICommonController<Guid, Domain.Entities.Product, ProductDTO, ProductDTO, ProductDTO, ProductQuerieFilter>
     {
     }
 }

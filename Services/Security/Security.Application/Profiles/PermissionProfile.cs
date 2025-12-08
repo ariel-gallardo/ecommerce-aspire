@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Common.Application.DTO.Base.Entities;
 using Common.Domain.Entities.Base;
+using Common.Extensions;
 using Common.Infrastructure.Entities.Enums;
 using Security.Application.DTO;
 using Security.Domain.Entities;
@@ -15,9 +16,9 @@ namespace Security.Application.Profiles
         {
             CreateMap<PermissionDTO, Permission>()
                 .IncludeBase<AuditableGuidDTO, AuditableGuidEntity>()
-                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => !string.IsNullOrWhiteSpace(orig.Policy) ? Enum.Parse<Policy>(orig.Policy) : Policy.Unknown))
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => orig.Policy.AsEnumUsingMemberValue<Policy>()))
                 .ReverseMap()
-                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => $"Policy.{orig.Policy.ToString()}"));
+                .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => orig.Policy.AsStringUsingMemberValue()));
             CreateMap<PermissionDTO, PermissionQuerieFilter>()
                 .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
                 .ForMember(dest => dest.Page, opt => opt.Ignore())

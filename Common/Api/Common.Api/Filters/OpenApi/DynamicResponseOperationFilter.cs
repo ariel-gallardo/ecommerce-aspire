@@ -115,7 +115,7 @@ namespace Common.Api.Filters.OpenApi
                 && commonMethods.Contains(cA.MethodInfo.Name) 
                 && cA.ControllerTypeInfo.BaseType != null
                 && cA.ControllerTypeInfo.BaseType is TypeInfo tI
-                && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,>)))
+                && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
             {
                 var method = tI.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                     .FirstOrDefault(m =>
@@ -133,7 +133,7 @@ namespace Common.Api.Filters.OpenApi
                     _commonData.ProcessedMethods.Add(method);
 
                     var args = tI.GetGenericArguments();
-                    var (domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4]);
+                    var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
 
                     operation.Responses.Clear();
                     if (responseMethods.Contains(method.Name))
@@ -228,7 +228,7 @@ namespace Common.Api.Filters.OpenApi
             else if(
                 context.Description.ActionDescriptor is ControllerActionDescriptor cA2
                 && cA2.ControllerTypeInfo is TypeInfo tI2
-                && tI2.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,>)))
+                && tI2.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
             {
                 var method = tI2.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .FirstOrDefault(m =>

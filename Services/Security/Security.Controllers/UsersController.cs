@@ -11,7 +11,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers
 {
-    public class UsersController : CommonController<User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>, IUsersController
+    public class UsersController : CommonController<ulong, User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>, IUsersController
     {
         private readonly IUserServices _userServices;
 

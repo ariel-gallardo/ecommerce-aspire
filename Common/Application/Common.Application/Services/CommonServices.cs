@@ -79,10 +79,11 @@ namespace Common.Application.Services
         #endregion
 
         #region Delete
-        public async Task<BaseResponse> DeleteAsync<DomainEntity>(ulong entityId, CancellationToken cancellationToken)
+        public async Task<BaseResponse> DeleteAsync<Key,DomainEntity>(Key entityId, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
         {
-            await _unitOfWork.DeleteAsync<DomainEntity>(entityId, cancellationToken);
+            await _unitOfWork.DeleteAsync<Key,DomainEntity>(entityId, cancellationToken);
             return new BaseResponse
             {
                 Message = $"{typeof(DomainEntity).Name} - {entityId.ToString()} - deleted.",
@@ -90,10 +91,11 @@ namespace Common.Application.Services
             };
         }
 
-        public async Task<BaseResponse> DeleteAsync<DomainEntity>(IList<ulong> entityIds, CancellationToken cancellationToken)
+        public async Task<BaseResponse> DeleteAsync<Key,DomainEntity>(IList<Key> entityIds, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
         {
-            await _unitOfWork.DeleteAsync<DomainEntity>(entityIds, cancellationToken);
+            await _unitOfWork.DeleteAsync<Key,DomainEntity>(entityIds, cancellationToken);
             return new BaseResponse
             {
                 Message = $"{typeof(DomainEntity).Name} - {string.Join(",",entityIds)} - deleted.",
@@ -103,12 +105,13 @@ namespace Common.Application.Services
         #endregion
 
         #region Search
-        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(ulong entityId, CancellationToken cancellationToken)
+        public async Task<BaseResponse> SearchAsync<Key,DomainEntity, ResultDTO>(Key entityId, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
             BaseResponse response;
-            var result = await _unitOfWork.SearchAsync<DomainEntity,ResultDTO>(entityId, cancellationToken);
+            var result = await _unitOfWork.SearchAsync<Key,DomainEntity,ResultDTO>(entityId, cancellationToken);
             if(result != null)
             {
                 response = new Response<ResultDTO> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };
@@ -166,12 +169,13 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(IList<ulong> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<BaseResponse> SearchAsync<Key,DomainEntity, ResultDTO>(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+            
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
         {
             BaseResponse response;
-            var result = await _unitOfWork.SearchAsync<DomainEntity,ResultDTO>(entityIds, page, pageSize, cancellationToken);
+            var result = await _unitOfWork.SearchAsync<Key,DomainEntity,ResultDTO>(entityIds, page, pageSize, cancellationToken);
             if (result.Any())
             {
                 response = new Response<IList<ResultDTO>> { Data = result, Message = $"{typeof(DomainEntity).Name} found.", StatusCode = StatusCodes.Status200OK };

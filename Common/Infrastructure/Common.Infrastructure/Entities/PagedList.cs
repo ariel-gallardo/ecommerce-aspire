@@ -4,6 +4,13 @@ namespace Common.Infrastructure.Entities
 {
     public class PagedList<T> : List<T>, IPagedList<T> where T : class
     {
+        public PagedList()
+        {
+            CurrentPage = 0;
+            TotalPages = 0;
+            PageSize = 0;
+            TotalCount = 0;
+        }
         public PagedList(IList<T> items, int count, int pageNumber, int pageSize)
         {
             CurrentPage = pageNumber;

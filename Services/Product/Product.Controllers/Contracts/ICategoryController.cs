@@ -5,7 +5,7 @@ using Product.Domain.Filters.Querie;
 
 namespace Product.Controllers.Contracts
 {
-    public interface ICategoryController : ICommonController<Category, CategoryDTO, CategoryDTO, CategoryDTO, CategoryQuerieFilter>
+    public interface ICategoryController : ICommonController<Guid, Category, CategoryDTO, CategoryDTO, CategoryDTO, CategoryQuerieFilter>
     {
     }
 }

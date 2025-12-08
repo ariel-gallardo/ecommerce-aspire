@@ -26,7 +26,7 @@ namespace Common.Api
                 .Where(t => !t.IsAbstract && t.IsClass &&
                             t.BaseType != null &&
                             t.BaseType.IsGenericType &&
-                            t.BaseType.GetGenericTypeDefinition() == typeof(CommonController<,,,,>)))
+                            t.BaseType.GetGenericTypeDefinition() == typeof(CommonController<,,,,,>)))
             .Select(t => new { Type = t, GenericType = t.GetInterfaces().Last() })
             .ToArray();
             

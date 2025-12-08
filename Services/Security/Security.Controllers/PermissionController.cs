@@ -10,7 +10,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers
 {
-    public class PermissionController : CommonController<Permission, PermissionDTO, PermissionDTO, PermissionDTO, PermissionQuerieFilter>, IPermissionController
+    public class PermissionController : CommonController<Guid, Permission, PermissionDTO, PermissionDTO, PermissionDTO, PermissionQuerieFilter>, IPermissionController
     {
         public PermissionController(ICommonServices services) : base(services)
         {

@@ -5,7 +5,7 @@ using Inventory.Domain.Filters.Querie;
 
 namespace Inventory.Controllers.Contracts
 {
-    public interface IInventoryItemController : ICommonController<InventoryItem, InventoryItemDTO, InventoryItemDTO, InventoryItemDTO, InventoryItemQuerieFilter>
+    public interface IInventoryItemController : ICommonController<Guid, InventoryItem, InventoryItemDTO, InventoryItemDTO, InventoryItemDTO, InventoryItemQuerieFilter>
     {
     }
 }

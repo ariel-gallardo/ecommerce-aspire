@@ -7,7 +7,7 @@ using CartEntity = Cart.Domain.Entities.Cart;
 
 namespace Cart.Controllers
 {
-    public class CartController : CommonController<CartEntity, CartDTO, CartDTO, CartDTO, CartQuerieFilter>, ICartController
+    public class CartController : CommonController<Guid, CartEntity, CartDTO, CartDTO, CartDTO, CartQuerieFilter>, ICartController
     {
         public CartController(ICommonServices services) : base(services)
         {

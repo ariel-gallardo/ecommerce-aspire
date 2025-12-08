@@ -7,7 +7,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers
 {
-    public class PersonasController : CommonController<Persona, PersonaDTO, PersonaDTO, PersonaDTO, PersonaQuerieFilter>, IPersonasController
+    public class PersonasController : CommonController<Guid, Persona, PersonaDTO, PersonaDTO, PersonaDTO, PersonaQuerieFilter>, IPersonasController
     {
         public PersonasController(ICommonServices services) : base(services)
         {

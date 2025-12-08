@@ -6,7 +6,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers.Contracts
 {
-    public interface IUsersController : ICommonController<User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>
+    public interface IUsersController : ICommonController<ulong, User, UserRegisterDTO, UserRegisterDTO, UserDTO,UserQuerieFilter>
     {
         
         Task<IActionResult> Register([FromBody] UserRegisterDTO dto, CancellationToken cancellationToken);

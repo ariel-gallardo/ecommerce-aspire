@@ -6,7 +6,7 @@ using Product.Domain.Filters.Querie;
 
 namespace Product.Controllers
 {
-    public class CategoryController : CommonController<Domain.Entities.Category, CategoryDTO, CategoryDTO, CategoryDTO, CategoryQuerieFilter>, ICategoryController
+    public class CategoryController : CommonController<Guid, Domain.Entities.Category, CategoryDTO, CategoryDTO, CategoryDTO, CategoryQuerieFilter>, ICategoryController
     {
         public CategoryController(ICommonServices services) : base(services)
         {

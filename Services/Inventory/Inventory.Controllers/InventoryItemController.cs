@@ -7,7 +7,7 @@ using Inventory.Domain.Filters.Querie;
 
 namespace Inventory.Controllers
 {
-    public class InventoryItemController : CommonController<InventoryItem, InventoryItemDTO, InventoryItemDTO, InventoryItemDTO, InventoryItemQuerieFilter>, IInventoryItemController
+    public class InventoryItemController : CommonController<Guid, InventoryItem, InventoryItemDTO, InventoryItemDTO, InventoryItemDTO, InventoryItemQuerieFilter>, IInventoryItemController
     {
         public InventoryItemController(ICommonServices services) : base(services)
         {

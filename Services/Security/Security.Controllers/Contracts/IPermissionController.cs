@@ -6,7 +6,7 @@ using Security.Domain.Filters.Queries;
 
 namespace Security.Controllers.Contracts
 {
-    public interface IPermissionController : ICommonController<Permission,PermissionDTO, PermissionDTO, PermissionDTO,PermissionQuerieFilter>
+    public interface IPermissionController : ICommonController<Guid, Permission,PermissionDTO, PermissionDTO, PermissionDTO,PermissionQuerieFilter>
     {
         Task<IActionResult> CanAccess([FromHeader] string url, CancellationToken cancellationToken);
     }
