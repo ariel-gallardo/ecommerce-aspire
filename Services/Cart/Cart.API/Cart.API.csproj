@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(Cart)\Cart.Application\Cart.Application.csproj" />
+    <ProjectReference Include="$(Cart)\Cart.Controllers\Cart.Controllers.csproj" />
+    <ProjectReference Include="$(CartInfra)\Cart.Infrastructure.Persistence\Cart.Infrastructure.Persistence.csproj" />
+    <ProjectReference Include="$(CartInfra)\Cart.Infrastructure.Seeders\Cart.Infrastructure.Seeders.csproj" />
+    <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
+  </ItemGroup>
+
+</Project>

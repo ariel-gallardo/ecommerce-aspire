@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Seeder\Common.Infrastructure.Seeder.csproj" />
+    <ProjectReference Include="$(ProductInfra)\Product.Infrastructure.Cache.Key\Product.Infrastructure.Cache.Key.csproj" />
+    <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Cache.Key\Security.Infrastructure.Cache.Key.csproj" />
+    <ProjectReference Include="$(InventoryInfra)\Inventory.Infrastructure.Cache.Key\Inventory.Infrastructure.Cache.Key.csproj" />
+    <ProjectReference Include="..\..\Inventory.Domain\Inventory.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

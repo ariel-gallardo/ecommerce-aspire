@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Common.Application.DTO.Base.Entities;
 using Common.Domain.Entities.Base;
-using Common.Infrastructure.Messages.Entities;
 
 namespace Common.Application.Profiles.Base
 {
@@ -9,22 +8,15 @@ namespace Common.Application.Profiles.Base
     {
         public IdentifiableProfile()
         {
-            CreateMap<IdentifiableDTO, IdentifiableEntity>()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)))
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id.ToString()));
 
-            CreateMap<IdentifiableDTO, Guid>()
-                .ConvertUsing(src => Guid.Parse(src.Id));
+            CreateMap<IdentifiableDTO, IdentifiableEntity>().ReverseMap();
+            CreateMap<IdentifiableEntity, ulong>().ConvertUsing(entity => entity.Id);
+            CreateMap<ulong, IdentifiableEntity>().ConvertUsing(id => new IdentifiableEntity { Id = id });
 
-            CreateMap<IdentifiableEntity, Guid>()
-                .ConvertUsing(src => src.Id);
-            CreateMap<Guid, IdentifiableEntity>()
-                .ConvertUsing(guid => new IdentifiableEntity { Id = guid });
 
-            CreateMap<IdentifiableEntity, IdentifiableMessage>()
-                .ReverseMap()
-                .ForMember(dest => dest.Id, opt => opt.MapFrom(src => Guid.Parse(src.Id)));
+            CreateMap<IdentifiableGuidDTO, IdentifiableGuidEntity>().ReverseMap();
+            CreateMap<IdentifiableGuidEntity, Guid>().ConvertUsing(entity => entity.Id);
+            CreateMap<Guid, IdentifiableGuidEntity>().ConvertUsing(id => new IdentifiableGuidEntity { Id = id });
         }
     }
 }

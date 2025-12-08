@@ -29,79 +29,121 @@ namespace Common.Api.Filters
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
         {
-                var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
-                var controller = actionDescriptor?.ControllerName;
-                var action = actionDescriptor?.ActionName;
-                if (!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
+            var actionDescriptor = context.ActionDescriptor as ControllerActionDescriptor;
+            var controller = actionDescriptor?.ControllerName;
+            var action = actionDescriptor?.ActionName;
+            if (!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
+            {
+                string policy = Policy.Unknown.AsStringUsingMemberValue();
+                var actionName = CacheKeyCommon.PolicyActionName(controller, action);
+                var actionNameCreated = CacheKeyCommon.PolicyActionNameCreated(controller, action);
+                var policyUrl = string.Empty;
+                var policyUrlKey = string.Empty;
+                if (action == "CanAccess" && controller == "Permission")
                 {
-                    var actionName = CacheKeyCommon.PolicyActionName(controller, action);
-                    var actionNameCreated = CacheKeyCommon.PolicyActionNameCreated(controller, action);
-                    var policy = await _cache.GetAsync<string>(actionName);
-                    if (string.IsNullOrEmpty(policy))
+                    if (context.HttpContext.Request.Headers.TryGetValue("X-Url", out var value))
                     {
-                        try
+                        var url = value.FirstOrDefault();
+                        if (!String.IsNullOrWhiteSpace(url))
                         {
-                            var response = await _policyClient.GetResponse<Message<string>>(new LoadPermissionRequest { Controller = controller, Action = action });
-                            action = response.Message.Data;
-                            if(!string.IsNullOrWhiteSpace(action))
+                            policyUrl = url;
+                            policyUrlKey = CacheKeyCommon.PolicyUrl(url);
+                            policy = await _cache.GetAsync<string>(policyUrlKey);
+                            if (string.IsNullOrWhiteSpace(policy)) policy = Policy.Unknown.AsStringUsingMemberValue();
+                        }
+                    }
+                }
+                else
+                {
+                    policy = await _cache.GetAsync<string>(actionName);
+                    if (string.IsNullOrWhiteSpace(policy)) policy = Policy.Unknown.AsStringUsingMemberValue();
+                }
+                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
+                {
+                    try
+                    {
+                        var response = await _policyClient.GetResponse<Message<string>>(
+                            String.IsNullOrWhiteSpace(policyUrl) ?
+                            new LoadPermissionRequest { Controller = controller, Action = action }
+                            : new LoadPermissionRequest { Url = policyUrl }
+                            );
+                        var data = response.Message.Data;
+                        if (!String.IsNullOrWhiteSpace(data))
+                        {
+                            policy = data;
+                            if (!string.IsNullOrWhiteSpace(policyUrl))
                             {
-                                await _cache.SaveAsync(actionName, action);
+                                await _cache.SaveAsync(policyUrlKey, policy);
+                            }
+                            else if (!string.IsNullOrWhiteSpace(action))
+                            {
+                                await _cache.SaveAsync(actionName, policy);
                                 await _cache.SaveAsync(actionNameCreated, true);
-                                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public) return;
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            if (!_authServices.IsAuthenticated)
-                            {
-                                var response = new ObjectResult(new BaseResponse
+                                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public)
                                 {
-                                    StatusCode = StatusCodes.Status401Unauthorized,
-                                    Message = "Unauthorized."
-                                });
-                                response.StatusCode = StatusCodes.Status401Unauthorized;
-                                context.Result = response;
-                                return;
+                                    await _authServices.AuthAsAdmin();
+                                    return;
+                                }
                             }
-                            var result = new ObjectResult(new BaseResponse
-                            {
-                                Message = e.Message,
-                                StatusCode = StatusCodes.Status403Forbidden
-                            });
-                            result.StatusCode = StatusCodes.Status403Forbidden;
-                            context.Result = result;
-                            return;
                         }
                     }
-                    if(policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
+                    catch (Exception e)
                     {
-                        var response = new ObjectResult(new BaseResponse
-                        {
-                            StatusCode = StatusCodes.Status404NotFound,
-                            Message = "Pardon our dust! This page is currently under development."
-                        });
-                        response.StatusCode = StatusCodes.Status404NotFound;
-                        context.Result = response;
-                        return;
-                    }
-                    else
-                    {
-                        var canAccess = await _authServices.CanAccess(policy);
-                        if (!canAccess.HasValue || !canAccess.Value)
+                        if (!_authServices.IsAuthenticated)
                         {
                             var response = new ObjectResult(new BaseResponse
                             {
-                                StatusCode = canAccess == null
-                                ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
-                                Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
+                                StatusCode = StatusCodes.Status401Unauthorized,
+                                Message = "Unauthorized."
                             });
                             response.StatusCode = StatusCodes.Status401Unauthorized;
                             context.Result = response;
                             return;
                         }
+                        var result = new ObjectResult(new BaseResponse
+                        {
+                            Message = e.Message,
+                            StatusCode = StatusCodes.Status403Forbidden
+                        });
+                        result.StatusCode = StatusCodes.Status403Forbidden;
+                        context.Result = result;
+                        return;
                     }
                 }
-            
+
+                if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Unknown)
+                {
+                    var response = new ObjectResult(new BaseResponse
+                    {
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = "Pardon our dust! This page is currently under development."
+                    });
+                    response.StatusCode = StatusCodes.Status404NotFound;
+                    context.Result = response;
+                    return;
+                }
+                else
+                {
+                    var canAccess = await _authServices.CanAccess(policy);
+                    if (!canAccess.HasValue || !canAccess.Value)
+                    {
+                        var response = new ObjectResult(new BaseResponse
+                        {
+                            StatusCode = canAccess == null
+                            ? StatusCodes.Status401Unauthorized : StatusCodes.Status403Forbidden,
+                            Message = canAccess == null ? "Unauthorized." : "You do not have permission to perform this action."
+                        });
+                        response.StatusCode = StatusCodes.Status401Unauthorized;
+                        context.Result = response;
+                        return;
+                    }
+                    else if (policy.AsEnumUsingMemberValue<Policy>() == Policy.Public)
+                    {
+                        await _authServices.AuthAsAdmin();
+                    }
+                }
+            }
+
         }
     }
 }

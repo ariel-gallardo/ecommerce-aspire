@@ -20,6 +20,7 @@ using Microsoft.OpenApi.Models;
 using Security.Infrastructure.Messaging.Messages.Request;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using System.Reflection.Metadata;
 
@@ -32,6 +33,7 @@ namespace Common.Api.Filters.OpenApi
         private static string[] responseMethods = new string[] { "AddAsync", "UpdateAsync", "SearchAsync", "SearchFirstAsync" };
         private static string[] validationMethods = new string[] { "AddAsync", "UpdateAsync" };
         private static string[] excludeSingleParameters = new string[] { "Page", "PageSize" };
+        private static string[] collections = new string[] { "", "" };
 
         private static string status200String = StatusCodes.Status200OK.ToString();
         private static string status201String = StatusCodes.Status201Created.ToString();
@@ -113,7 +115,7 @@ namespace Common.Api.Filters.OpenApi
                 && commonMethods.Contains(cA.MethodInfo.Name) 
                 && cA.ControllerTypeInfo.BaseType != null
                 && cA.ControllerTypeInfo.BaseType is TypeInfo tI
-                && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,>)))
+                && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
             {
                 var method = tI.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                     .FirstOrDefault(m =>
@@ -131,19 +133,17 @@ namespace Common.Api.Filters.OpenApi
                     _commonData.ProcessedMethods.Add(method);
 
                     var args = tI.GetGenericArguments();
-                    var (domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4]);
+                    var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
 
                     operation.Responses.Clear();
                     if (responseMethods.Contains(method.Name))
                     {
                         var schemaRepository = new SchemaRepository();
-
                         
                         var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
                         || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
                        
                         var schema = _schemaGenerator.GenerateSchema(returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO, schemaRepository);
-
                         if (excludedPagination.Contains(method.Name))
                         {
                             operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();
@@ -228,7 +228,7 @@ namespace Common.Api.Filters.OpenApi
             else if(
                 context.Description.ActionDescriptor is ControllerActionDescriptor cA2
                 && cA2.ControllerTypeInfo is TypeInfo tI2
-                && tI2.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,>)))
+                && tI2.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
             {
                 var method = tI2.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly)
                 .FirstOrDefault(m =>
@@ -244,6 +244,7 @@ namespace Common.Api.Filters.OpenApi
                     return templateMatch && methodMatch;
                 });
                 _commonData.ProcessedMethods.Add(method);
+
                 var status200Response = method.CustomAttributes
                     .FirstOrDefault(attr => attr.AttributeType == typeof(ProducesResponseTypeAttribute) &&
                                             attr.ConstructorArguments.Any(arg => (int)arg.Value == StatusCodes.Status200OK));

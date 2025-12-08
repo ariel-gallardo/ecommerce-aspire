@@ -1,7 +1,6 @@
 ﻿using Common.Domain.Exceptions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
@@ -119,21 +118,15 @@ namespace Common.Application.Services
         public void SetCancellationToken(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
-            _cancellationToken.Value.ThrowIfCancellationRequested();
+            //_cancellationToken.Value.ThrowIfCancellationRequested();
         }
 
         public async Task RemoveAsync(params string[] keys)
         {
             var entities = Enumerable.Range(0, keys.Length - 1).Select(async i =>
             {
-                try
-                {
-                    await _cache.RemoveAsync(keys[i], _cancellationToken.Value);
-                }
-                catch (Exception e)
-                {
-
-                }
+                await _cache.RemoveAsync(keys[i], _cancellationToken.Value);
+                
             });
             if(entities.Any()) await Task.WhenAll(entities);
         }

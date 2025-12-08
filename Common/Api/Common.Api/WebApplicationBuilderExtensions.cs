@@ -2,11 +2,14 @@
 using Common.Application;
 using Common.Infrastructure;
 using Common.Infrastructure.Seeder;
+using Logs.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -61,30 +64,41 @@ namespace Common.Api
             where DBContext : DbContext
         {
             var env = builder.Environment;
-            if (env.IsDevelopment())
+            if (env.IsDevelopment() || env.IsEnvironment("Testing"))
             {
                 var apiAssembly = Assembly.GetExecutingAssembly();
                 builder.Configuration.AddUserSecrets(apiAssembly);
             }
-            // Registramos infraestructura y servicios
-            builder.AddServiceDefaults();
+
+            
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
-            builder.Services.AddApplicationAutoMapper(_autoMapperAssemblies);
+            builder.Services.AddApplicationAutoMapper(env,_autoMapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
-            builder.Services.AddApplicationRedis();
+            builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddSeeders(env, _seederAssemblies);
             builder.Services.AddApi(_controllerAssemblies);
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(c =>
+            {
+                c.DocInclusionPredicate((docName, apiDesc) =>
+                {
+                    return new[] {
+                        "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
+                    }.Contains(apiDesc.HttpMethod);
+                });
+            });
             builder.Services.AddOpenApi(c =>
             {
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
+                c.ShouldInclude = (api) => true;
             });
+            builder.AddServiceDefaults();
             var app = builder.Build();
+            app.UseMiddleware<GlobalExceptionMiddleware>();
+            app.UseCors("AllowMySite");
             app.MapDefaultEndpoints();
             if (app.Environment.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
                 app.MapOpenApi("/swagger/docs/{documentName}/swagger.json");
             }
 

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
+    <ProjectReference Include="$(Payment)\Payment.Application\Payment.Application.csproj" />
+    <ProjectReference Include="$(Payment)\Payment.Controllers\Payment.Controllers.csproj" />
+	  <ProjectReference Include="$(PaymentInfra)\Payment.Infrastructure.Persistence\Payment.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

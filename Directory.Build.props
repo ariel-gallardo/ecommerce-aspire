@@ -1,0 +1,29 @@
+<Project>
+  <PropertyGroup>
+	<SolutionDir>$(MSBuildThisFileectory)</SolutionDir>
+	<Common>$(SolutionDir)\Common</Common>
+	<CommonApi>$(Common)\Api</CommonApi>
+	<CommonApp>$(Common)\Application</CommonApp>
+	<Cart>$(SolutionDir)\Services\Cart</Cart>
+	<Inventory>$(SolutionDir)\Services\Inventory</Inventory>
+	<Invoice>$(SolutionDir)\Services\Invoice</Invoice>
+	 <Logs>$(SolutionDir)\Services\Logs</Logs>
+	 <Order>$(SolutionDir)\Services\Order</Order>
+	<Notification>$(SolutionDir)\Services\Notification</Notification>
+	<Payment>$(SolutionDir)\Services\Payment</Payment>
+	<Product>$(SolutionDir)\Services\Product</Product>
+	<Security>$(SolutionDir)\Services\Security</Security>
+	<Shipping>$(SolutionDir)\Services\Shipping</Shipping>
+	<CommonInfra>$(Common)\Infrastructure</CommonInfra>
+	<CartInfra>$(Cart)\Infrastructure</CartInfra>
+	<InventoryInfra>$(Inventory)\Infrastructure</InventoryInfra>
+	<InvoiceInfra>$(Invoice)\Infrastructure</InvoiceInfra>
+	  <LogsInfra>$(Logs)\Infrastructure</LogsInfra>
+	  <OrderInfra>$(Order)\Infrastructure</OrderInfra>
+	<NotificationInfra>$(Notification)\Infrastructure</NotificationInfra>
+	<PaymentInfra>$(Payment)\Infrastructure</PaymentInfra>
+	<ProductInfra>$(Product)\Infrastructure</ProductInfra>
+	<SecurityInfra>$(Security)\Infrastructure</SecurityInfra>
+	<ShippingInfra>$(Shipping)\Infrastructure</ShippingInfra>
+</PropertyGroup>
+</Project>

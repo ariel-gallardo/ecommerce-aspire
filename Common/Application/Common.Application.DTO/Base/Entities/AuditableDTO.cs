@@ -1,32 +1,21 @@
-﻿using Common.Api.CustomAttributes;
-using Common.Contracts.DTO.Base;
+﻿using Common.Contracts.DTO.Base;
+using System.Text.Json.Serialization;
 
 namespace Common.Application.DTO.Base.Entities
 {
-    [IgnoreAuditable]
     public class AuditableDTO : IdentifiableDTO, IAuditableDTO
     {
-        public string CreatedById { get; set; }
-        public string UpdatedById { get; set; }
-        public string DeletedById { get; set; }
+        [JsonIgnore]
         public string CreatedAt { get; set; }
+        [JsonIgnore]
         public string UpdatedAt { get; set; }
+        [JsonIgnore]
         public string DeletedAt { get; set; }
-
-        public override bool Equals(object? obj)
-        {
-            return obj is AuditableDTO dTO &&
-                   CreatedById == dTO.CreatedById &&
-                   UpdatedById == dTO.UpdatedById &&
-                   DeletedById == dTO.DeletedById &&
-                   CreatedAt == dTO.CreatedAt &&
-                   UpdatedAt == dTO.UpdatedAt &&
-                   DeletedAt == dTO.DeletedAt;
-        }
-
-        public override int GetHashCode()
-        {
-            return HashCode.Combine(CreatedById, UpdatedById, DeletedById, CreatedAt, UpdatedAt, DeletedAt);
-        }
+        [JsonIgnore]
+        public ulong CreatedById { get; set; }
+        [JsonIgnore]
+        public ulong? UpdatedById { get; set; }
+        [JsonIgnore]
+        public ulong? DeletedById { get; set; }
     }
 }

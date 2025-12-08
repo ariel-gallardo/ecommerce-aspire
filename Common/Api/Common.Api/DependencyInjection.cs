@@ -1,12 +1,18 @@
 ﻿using Common.Api.Controllers;
 using Common.Api.Filters;
+using Common.Api.Filters.Controllers;
+using Common.Api.Filters.FluentValidation;
 using Common.Application.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 using System.Reflection;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Common.Api
@@ -20,7 +26,7 @@ namespace Common.Api
                 .Where(t => !t.IsAbstract && t.IsClass &&
                             t.BaseType != null &&
                             t.BaseType.IsGenericType &&
-                            t.BaseType.GetGenericTypeDefinition() == typeof(CommonController<,,,,>)))
+                            t.BaseType.GetGenericTypeDefinition() == typeof(CommonController<,,,,,>)))
             .Select(t => new { Type = t, GenericType = t.GetInterfaces().Last() })
             .ToArray();
             
@@ -30,7 +36,13 @@ namespace Common.Api
             foreach (var cA in controllerAssemblies)
             {
                 var assemblyPart = new AssemblyPart(cA);
-                builder.Services.AddControllers(o => o.Filters.Add<PolicyFilter>()).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
+                builder.Services.AddControllers(o =>
+                {
+                    o.Filters.Add<PolicyFilter>();
+                    o.Filters.Add<GlobalExceptionFilter>();
+                    o.Filters.Add<FluentValidationFilter>();
+                    o.Filters.Add<ControllerPaginationFilter>();
+                }).ConfigureApplicationPartManager(apm => apm.ApplicationParts.Add(assemblyPart));
             }
            
             builder.Services.Replace(ServiceDescriptor.Transient<IControllerActivator, ServiceBasedControllerActivator>());
@@ -41,11 +53,10 @@ namespace Common.Api
         {
             services.AddMvc()
             .AddControllersAsServicesFromDI(controllerAssemblies)
-            .AddJsonOptions(options =>
+            .AddNewtonsoftJson(options =>
             {
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                options.JsonSerializerOptions.DefaultIgnoreCondition =
-                    System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull;
+                options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+                options.SerializerSettings.Converters.Add(new StringEnumConverter(namingStrategy: new CamelCaseNamingStrategy()));
             }).ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;

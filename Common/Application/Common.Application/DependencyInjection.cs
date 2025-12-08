@@ -1,4 +1,5 @@
-﻿using Common.Application.Profiles.Base;
+﻿using AutoMapper;
+using Common.Application.Profiles.Base;
 using Common.Application.Services;
 using Common.Contracts;
 using Common.Extensions;
@@ -8,7 +9,9 @@ using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Security.Infrastructure;
@@ -20,13 +23,53 @@ namespace Common.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
+            if (env.IsDevelopment())
+            {
+                MapperConfiguration mapper = null;
+                try
+                {
+                    mapper = new MapperConfiguration(cfg =>
+                    {
+                        cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
+                        cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
+                        cfg.ShouldMapProperty = pi =>
+                        {
+                            var ignoredProperties = new[]
+                            {
+                            "CreatedById",
+                            "UpdatedById",
+                            "DeletedById",
+                            "CreatedAt",
+                            "UpdatedAt",
+                            "DeletedAt",
+                            "OrderBy",
+                            "Page",
+                            "PageSize",
+                            "Quantity",
+                            "Price",
+                            "Coordinate",
+                            "Address",
+                        };
+                            return !ignoredProperties.Any(prefix => pi.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
+                        };
+
+                    });
+                }
+                catch (MethodAccessException)
+                {
+
+                }
+                if(mapper != null)
+                mapper.AssertConfigurationIsValid();
+            }
             services.AddAutoMapper(cfg =>
             {
                 cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-            }, assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
+                cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
 
+            });
             return services;
         }
 
@@ -34,19 +77,32 @@ namespace Common.Application
         {
             return services.AddValidatorsFromAssemblies(assemblies);
         }
-        public static IServiceCollection AddApplicationRedis(this IServiceCollection services)
+        public static IServiceCollection AddApplicationRedis(this IServiceCollection services, IConfiguration configuration)
         {
             var sP = services.BuildServiceProvider();
             var appSettings = sP.GetRequiredService<IOptions<AppSettings>>().Value;
 
             return services.AddStackExchangeRedisCache(options =>
             {              
+                var consString = configuration.GetConnectionString("cache");
                 options.InstanceName = appSettings.Redis.InstanceName;
-                options.Configuration = appSettings.Redis.Configuration;
+                options.Configuration = consString;
             });
         }
         public static IServiceCollection AddApplicationServices(this IServiceCollection services, params Assembly[] assemblies) 
         {
+            services.AddCors(o =>
+            {
+                o.AddPolicy("AllowMySite", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .WithExposedHeaders("X-Current-Page", "X-Total-Pages", "X-Page-Size", "X-Total-Count", "X-Url");
+                });
+            });
+
             services.AddAuthorization(o =>
             {
                 o.AddPolicy(Policy.Administrator.AsStringUsingMemberValue(), policy =>

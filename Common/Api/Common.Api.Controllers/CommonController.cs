@@ -3,15 +3,15 @@ using Common.Contracts.DTO.ABM;
 using Common.Contracts.DTO.Base;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public abstract class CommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO, QuerieFilterEntity> : ControllerBase, 
-        ICommonController<DomainEntity, AddDTO, UpdateDTO, ResultDTO,QuerieFilterEntity>
+    public abstract class CommonController<Key,DomainEntity, AddDTO, UpdateDTO, ResultDTO, QuerieFilterEntity> : ControllerBase, 
+        ICommonController<Key,DomainEntity, AddDTO, UpdateDTO, ResultDTO,QuerieFilterEntity>
+        
         where DomainEntity : class, IEntity
         where AddDTO : class, IEntityDTO, IAddDTO
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
@@ -57,16 +57,16 @@ namespace Common.Api.Controllers
 
         #region Delete
         [HttpDelete]
-        public async Task<IActionResult> DeleteAsync([FromQuery] Guid entityId, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromQuery] Key entityId, CancellationToken cancellationToken)
         {
-            var response = await _services.DeleteAsync<DomainEntity>(entityId, cancellationToken);
+            var response = await _services.DeleteAsync<Key,DomainEntity>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpDelete("range")]
-        public async Task<IActionResult> DeleteAsync([FromBody] IList<Guid> entityIds, CancellationToken cancellationToken)
+        public async Task<IActionResult> DeleteAsync([FromBody] IList<Key> entityIds, CancellationToken cancellationToken)
         {
-            var response = await _services.DeleteAsync<DomainEntity>(entityIds, cancellationToken);
+            var response = await _services.DeleteAsync<Key,DomainEntity>(entityIds, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
         #endregion
@@ -74,9 +74,9 @@ namespace Common.Api.Controllers
         #region Search
 
         [HttpGet]
-        public async Task<IActionResult> SearchAsync([FromQuery] Guid entityId, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchAsync([FromQuery] Key entityId, CancellationToken cancellationToken)
         {
-            var response = await _services.SearchAsync<DomainEntity,ResultDTO>(entityId, cancellationToken);
+            var response = await _services.SearchAsync<Key,DomainEntity,ResultDTO>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
@@ -95,9 +95,10 @@ namespace Common.Api.Controllers
         }
 
         [HttpGet("ids")]
-        public async Task<IActionResult> SearchAsync([FromQuery] IList<Guid> entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
+        public async Task<IActionResult> SearchAsync([FromQuery] IList<Key>? entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
-            var response = await _services.SearchAsync<DomainEntity, ResultDTO>(entityIds,page, pageSize, cancellationToken);
+            if (entityIds == null) entityIds = Array.Empty<Key>();
+            var response = await _services.SearchAsync<Key,DomainEntity, ResultDTO>(entityIds,page, pageSize, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
         #endregion
