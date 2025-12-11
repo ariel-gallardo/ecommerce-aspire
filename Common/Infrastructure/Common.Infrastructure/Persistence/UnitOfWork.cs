@@ -151,6 +151,15 @@ namespace Common.Infrastructure
                     dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iE.Id);
                     return _map.Map<ResultDTO>(await UpdateAsync(_map.Map(entity, dbEntity), cancellationToken));
                 }
+            }else if (entity is IIdentifiableGuidDTO iEGuid)
+            {
+                if (!await ExistsAsync<Guid, DomainEntity>(iEGuid.Id, cancellationToken))
+                    throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iEGuid.Id.ToString());
+                else
+                {
+                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iEGuid.Id);
+                    return _map.Map<ResultDTO>(await UpdateAsync(_map.Map(entity, dbEntity), cancellationToken));
+                }
             }
             return _map.Map<ResultDTO>(null);
         }
