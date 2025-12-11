@@ -257,7 +257,9 @@ namespace Common.Infrastructure
             if (typeof(IAuditable).IsAssignableFrom(typeof(DomainEntity)))
             {
                 await _ctx.Set<DomainEntity>()
-                          .Where(x => ids.Any(y => y.Equals(((IIdentifiable)x).Id)))
+                          .Cast<IIdentifiable>()
+                          .Where(x => ids.Any(y => y.Equals(x.Id)))
+                          .Cast<DomainEntity>()
                           .ExecuteUpdateAsync(u => 
                             u.SetProperty(x => ((IAuditable)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditable)x).DeletedById, x => _usrServices.Id)
@@ -266,7 +268,9 @@ namespace Common.Infrastructure
             else if (typeof(IAuditableGuid).IsAssignableFrom(typeof(DomainEntity)))
             {
                 await _ctx.Set<DomainEntity>()
-                          .Where(x => ids.Any(y => y.Equals(((IIdentifiable)x).Id)))
+                          .Cast<IIdentifiable>()
+                          .Where(x => ids.Any(y => y.Equals(x.Id)))
+                          .Cast<DomainEntity>()
                           .ExecuteUpdateAsync(u =>
                             u.SetProperty(x => ((IAuditableGuid)x).DeletedAt, x => currentTime)
                             .SetProperty(x => ((IAuditableGuid)x).DeletedById, x => _usrServices.Id)
@@ -275,7 +279,9 @@ namespace Common.Infrastructure
             else
             {
                 var entities = await _ctx.Set<DomainEntity>()
-                                         .Where(x => ids.Any(y => y.Equals(((IIdentifiable)x).Id)))
+                                         .Cast<IIdentifiable>()
+                                         .Where(x => ids.Any(y => y.Equals(x.Id)))
+                                         .Cast<DomainEntity>()
                                          .ToListAsync(cancellationToken);
                 _ctx.RemoveRange(entities,cancellationToken);
                 await _ctx.SaveChangesAsync(cancellationToken);
@@ -405,9 +411,9 @@ namespace Common.Infrastructure
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiable)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
             else if(typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ((IIdentifiableGuid)x).Id.Equals(id)).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
             return null;
         }
 
@@ -415,9 +421,9 @@ namespace Common.Infrastructure
         where DomainEntity : class, IEntity
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<ulong>).Contains(((IIdentifiable)x).Id)).PaginateAsync<DomainEntity,DomainEntity>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id)).PaginateAsync<DomainEntity>(_map, page, pageSize);
             else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => (ids as IList<Guid>).Contains(((IIdentifiableGuid)x).Id)).PaginateAsync<DomainEntity, DomainEntity>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id)).PaginateAsync<DomainEntity>(_map, page, pageSize);
             return new PagedList<DomainEntity>();
         }
 
@@ -426,9 +432,9 @@ namespace Common.Infrastructure
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y =>  y.Equals(((IIdentifiable)x).Id)) ).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id) ).PaginateAsync<ResultDTO>(_map, page, pageSize);
             else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Where(x => ids.Any(y => y.Equals(((IIdentifiableGuid)x).Id))).PaginateAsync<DomainEntity, ResultDTO>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id) ).PaginateAsync<ResultDTO>(_map, page, pageSize);
             return new PagedList<ResultDTO>();
         }
 

@@ -74,5 +74,37 @@ namespace Common.Infrastructure.Extensions
             var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
             return new PagedList<ResultType>(items, count, page, pageSize);
         }
+
+        public static async Task<IPagedList<ResultType>> PaginateAsync<ResultType>(this IQueryable<IIdentifiable> source, IMapper mapper, IQuerieFilter filters)
+        where ResultType : class
+        {
+            var count = await source.CountAsync();
+            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize);
+        }
+
+        public static async Task<IPagedList<ResultType>> PaginateAsync<ResultType>(this IQueryable<IIdentifiable> source, IMapper mapper, int page, int pageSize)
+        where ResultType : class
+        {
+            var count = await source.CountAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            return new PagedList<ResultType>(items, count, page, pageSize);
+        }
+
+        public static async Task<IPagedList<ResultType>> PaginateAsync<ResultType>(this IQueryable<IIdentifiableGuid> source, IMapper mapper, IQuerieFilter filters)
+        where ResultType : class
+        {
+            var count = await source.CountAsync();
+            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize);
+        }
+
+        public static async Task<IPagedList<ResultType>> PaginateAsync<ResultType>(this IQueryable<IIdentifiableGuid> source, IMapper mapper, int page, int pageSize)
+        where ResultType : class
+        {
+            var count = await source.CountAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            return new PagedList<ResultType>(items, count, page, pageSize);
+        }
     }
 }

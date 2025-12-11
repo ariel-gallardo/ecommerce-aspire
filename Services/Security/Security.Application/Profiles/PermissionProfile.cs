@@ -18,6 +18,7 @@ namespace Security.Application.Profiles
                 .IncludeBase<AuditableGuidDTO, AuditableGuidEntity>()
                 .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => orig.Policy.AsEnumUsingMemberValue<Policy>()))
                 .ReverseMap()
+                .IncludeBase<AuditableGuidEntity,AuditableGuidDTO>()
                 .ForMember(dest => dest.Policy, opt => opt.MapFrom(orig => orig.Policy.AsStringUsingMemberValue()));
             CreateMap<PermissionDTO, PermissionQuerieFilter>()
                 .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
