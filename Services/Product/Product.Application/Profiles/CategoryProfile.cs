@@ -8,7 +8,9 @@ namespace Product.Application.Profiles
     {
         public CategoryProfile()
         {
-            CreateMap<Category, CategoryDTO>().ReverseMap();
+            CreateMap<Category, CategoryDTO>()
+                .ForMember(dest => dest.Children, opt => opt.MapFrom(src => src.Children))
+                .ReverseMap();
         }
     }
 }

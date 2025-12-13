@@ -9,6 +9,9 @@ namespace Product.Infrastructure.Persistence
         {
         }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        => optionsBuilder.UseLazyLoadingProxies();
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             var assembly = Assembly.GetExecutingAssembly();

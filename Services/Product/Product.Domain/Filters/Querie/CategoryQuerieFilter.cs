@@ -12,6 +12,10 @@ namespace Product.Domain.Filters.Querie
         public string Name { get; set; }
         [FromQuery]
         public string Description { get; set; }
+        [FromQuery]
+        public string ParentId { get; set; }
+        [FromQuery]
+        public bool? OnlyParents { get; set; }
 
         #region Expressions
         private Expression<Func<Entities.Category, bool>>? FindByName
@@ -21,6 +25,14 @@ namespace Product.Domain.Filters.Querie
         private Expression<Func<Entities.Category, bool>>? FindByDescription
         {
             get =>!string.IsNullOrEmpty(Description) ? x => EF.Functions.Like(x.Description,$"%{Description}%") : null;
+        }
+        private Expression<Func<Entities.Category, bool>>? FindByParentId
+        {
+            get => !string.IsNullOrEmpty(ParentId) ? x => x.ParentId == Guid.Parse(ParentId) : null;
+        }
+        private Expression<Func<Entities.Category, bool>>? FindOnlyParents
+        {
+            get => OnlyParents.HasValue && OnlyParents.Value ? x => !x.ParentId.HasValue : null;
         }
         #endregion
     }

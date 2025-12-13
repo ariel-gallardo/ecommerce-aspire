@@ -26,37 +26,43 @@ namespace Common.Api
 
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _autoMapperAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _autoMapperAssemblies = _autoMapperAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
         public static WebApplicationBuilder AddValidatorAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _validatorAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _validatorAssemblies = _validatorAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
         public static WebApplicationBuilder AddServiceAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _serviceAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _serviceAssemblies = _serviceAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
         public static WebApplicationBuilder AddControllerAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _controllerAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _controllerAssemblies = _controllerAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
         public static WebApplicationBuilder AddSeederAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _seederAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _seederAssemblies = _seederAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
         public static WebApplicationBuilder AddMessageAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _messageAssemblies = assemblies ?? Array.Empty<Assembly>();
+            _messageAssemblies = _messageAssemblies.Concat(assemblies).ToArray();
+            return builder;
+        }
+
+        public static WebApplicationBuilder AddQuerieModifierAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _serviceAssemblies = _serviceAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 

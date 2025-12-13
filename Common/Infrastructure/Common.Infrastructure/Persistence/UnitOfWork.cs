@@ -25,14 +25,17 @@ namespace Common.Infrastructure
         private readonly IMapper _map;
         private readonly IAuthServices _usrServices;
         private readonly IExpressionBuilder _builder;
+        private readonly IServiceProvider _sp;
         private IDbContextTransaction _transaction;
 
-        public UnitOfWork(DbContext context, IMapper mapper, IAuthServices userServices, IExpressionBuilder builder)
+
+        public UnitOfWork(DbContext context, IMapper mapper, IAuthServices userServices, IExpressionBuilder builder, IServiceProvider sp)
         {
             _ctx = context;
             _map = mapper;
             _usrServices = userServices;
             _builder = builder;
+            _sp = sp;
         }
 
         public DbContext Context => _ctx;
@@ -369,6 +372,7 @@ namespace Common.Infrastructure
                     querie = querie.Where(expressions);
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
+                querie = querie.ApplyModifiers(_sp);
             }
             return await querie.FirstOrDefaultAsync(cancellationToken);
         }
@@ -385,6 +389,7 @@ namespace Common.Infrastructure
                     querie = querie.Where(expressions);
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
+                querie = querie.ApplyModifiers(_sp);
             }
             return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
         }
@@ -402,6 +407,7 @@ namespace Common.Infrastructure
                                  .Cast<IIdentifiable>()
                                  .Where(x => x.Id.Equals(id))
                                  .Cast<DomainEntity>()
+                                 .ApplyModifiers(_sp)
                                  .FirstOrDefaultAsync(cancellationToken);
             }
             else if (typeof(IIdentifiableGuid).IsAssignableFrom(typeof(DomainEntity)))
@@ -411,6 +417,7 @@ namespace Common.Infrastructure
                                  .Cast<IIdentifiableGuid>()
                                  .Where(x => x.Id.Equals(id))
                                  .Cast<DomainEntity>()
+                                 .ApplyModifiers(_sp)
                                  .FirstOrDefaultAsync(cancellationToken);
             }
             return null;
@@ -420,9 +427,9 @@ namespace Common.Infrastructure
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ApplyModifiers(_sp).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
             else if(typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ApplyModifiers(_sp).ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
             return null;
         }
 
@@ -430,9 +437,9 @@ namespace Common.Infrastructure
         where DomainEntity : class, IEntity
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id)).PaginateAsync<DomainEntity>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id)).ApplyModifiers(_sp).PaginateAsync<DomainEntity>(_map, page, pageSize);
             else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id)).PaginateAsync<DomainEntity>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id)).ApplyModifiers(_sp).PaginateAsync<DomainEntity>(_map, page, pageSize);
             return new PagedList<DomainEntity>();
         }
 
@@ -441,21 +448,21 @@ namespace Common.Infrastructure
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id) ).PaginateAsync<ResultDTO>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id) ).ApplyModifiers(_sp).PaginateAsync<ResultDTO>(_map, page, pageSize);
             else if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiableGuid)))
-                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id) ).PaginateAsync<ResultDTO>(_map, page, pageSize);
+                return await _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiableGuid>().Where(x => ids.Cast<Guid>().Contains(x.Id) ).ApplyModifiers(_sp).PaginateAsync<ResultDTO>(_map, page, pageSize);
             return new PagedList<ResultDTO>();
         }
 
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(where).PaginateAsync<DomainEntity, DomainEntity>(_map, page, pageSize);
+        => await _ctx.Set<DomainEntity>().AsNoTracking().Where(where).ApplyModifiers(_sp).PaginateAsync<DomainEntity, DomainEntity>(_map, page, pageSize);
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO
-             => await _ctx.Set<DomainEntity>().AsNoTracking().Where(where).PaginateAsync<DomainEntity,ResultDTO>(_map,page,pageSize);
+             => await _ctx.Set<DomainEntity>().AsNoTracking().Where(where).ApplyModifiers(_sp).PaginateAsync<DomainEntity,ResultDTO>(_map,page,pageSize);
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
@@ -468,6 +475,7 @@ namespace Common.Infrastructure
                     querie = querie.Where(expressions);
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
+                querie = querie.ApplyModifiers(_sp);
             }
             return await querie.PaginateAsync<DomainEntity,DomainEntity>(_map, filters);
         }
@@ -484,6 +492,7 @@ namespace Common.Infrastructure
                     querie = querie.Where(expressions);
                 if (!string.IsNullOrWhiteSpace(filters.OrderBy))
                     querie = querie.ApplyOrderBy(filters.OrderBy);
+                querie = querie.ApplyModifiers(_sp);
             }
             return await querie.ProjectTo<ResultDTO>(_map.ConfigurationProvider).FirstOrDefaultAsync(cancellationToken);
         }
@@ -493,6 +502,7 @@ namespace Common.Infrastructure
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
             var querie = _ctx.Set<DomainEntity>().AsQueryable();
+            querie = querie.ApplyModifiers(_sp);
             if (filters != null)
             {
                 var expressions = _builder.Build<DomainEntity>(filters);

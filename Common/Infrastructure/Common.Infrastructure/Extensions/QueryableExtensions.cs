@@ -11,6 +11,15 @@ namespace Common.Infrastructure.Extensions
 {
     public static class QueryableExtensions
     {
+        public static IQueryable<T> ApplyModifiers<T>(this IQueryable<T> query, IServiceProvider sp) where T : class
+        {
+            var modifiers = sp.GetServices<IQueryModifier<T>>();
+            foreach (var modifier in modifiers)
+            {
+                query = modifier.Apply(query);
+            }
+            return query;
+        }
         public static IQueryable<T> ApplyOrderBy<T>(this IQueryable<T> query, string? orderBy)
         {
             if (string.IsNullOrWhiteSpace(orderBy))

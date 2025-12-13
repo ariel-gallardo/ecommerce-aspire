@@ -43,7 +43,6 @@ namespace Common.Contracts
 
         #region Search
         Task<BaseResponse> SearchAsync<Key,DomainEntity, ResultDTO>([FromQuery] Key entityId, CancellationToken cancellationToken)
-            
             where DomainEntity : class, IEntity
             where ResultDTO : class, IEntityDTO, IResultDTO;
 

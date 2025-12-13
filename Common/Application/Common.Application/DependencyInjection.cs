@@ -18,6 +18,7 @@ using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
 using System.Text;
+using DecoratR;
 
 namespace Common.Application
 {
@@ -148,6 +149,7 @@ namespace Common.Application
                 else if (typeof(ISingleton).IsAssignableFrom(type)) services.AddSingleton(@interface, type);
                 else if (typeof(ITransient).IsAssignableFrom(type)) services.AddTransient(@interface, type);
             }
+            services.Decorate<ICommonServices>().With<CommonServicesDecorator>();
             return services;
         }
     }

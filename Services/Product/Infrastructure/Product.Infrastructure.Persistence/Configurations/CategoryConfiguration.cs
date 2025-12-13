@@ -14,6 +14,7 @@ namespace Product.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Name).IsRequired(true);
             builder.HasIndex(x => x.Name).IsUnique();
             builder.Property(x => x.Description).IsRequired(false);
+            builder.Property(x => x.ParentId).HasDefaultValue(null);
             builder
                 .HasOne(x => x.Parent)
                 .WithMany(x => x.Children)
