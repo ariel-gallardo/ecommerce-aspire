@@ -1,70 +1,26 @@
-﻿using AutoMapper;
-using System.Security.Claims;
-using Security.Application.DTO;
-using Security.Application.Profiles.Resolvers;
-using Security.Domain.Const;
-using Security.Domain.Entities;
-using Security.Domain.Filters.Queries;
+﻿
 using Common.Domain.Entities;
+using Mapster;
+using Security.Application.DTO;
+using Security.Domain.Const;
+using Security.Domain.Filters.Queries;
+using System.Security.Claims;
 
 namespace Security.Application.Profiles
 {
-    public class UserProfile : Profile
+    
+	public class UserProfile : IRegister 
     {
-        public UserProfile()
-        {
-            CreateMap<User, UserDTO>().ReverseMap();
-            CreateMap<UserLoginDTO, UserQuerieFilter>()
-                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
-                .ForMember(dest => dest.Page, opt => opt.Ignore())
-                .ForMember(dest => dest.PageSize, opt => opt.Ignore())
-                .ForMember(dest => dest.Role, opt => opt.Ignore())
-                .ForMember(dest => dest.PersonaId, opt => opt.Ignore());
-            CreateMap<UserRegisterDTO, UserQuerieFilter>()
-                .ForMember(dest => dest.OrderBy, opt => opt.Ignore())
-                .ForMember(dest => dest.Page, opt => opt.Ignore())
-                .ForMember(dest => dest.PageSize, opt => opt.Ignore())
-                .ForMember(dest => dest.Role, opt => opt.Ignore());
-            CreateMap<UserRegisterDTO, User>()
-                .ForMember(dest => dest.Persona, opt => opt.Ignore())
-                .ForMember(dest => dest.Password, opt => opt.MapFrom<PasswordHashResolver>())
-                .ReverseMap()
-                .ForMember(dest => dest.Password, opt => opt.Ignore())
-                .ForMember(dest => dest.RePassword, opt => opt.Ignore());
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<User, UserDTO>().TwoWays();
+            config.NewConfig<UserLoginDTO, UserQuerieFilter>().TwoWays();
+            config.NewConfig<UserRegisterDTO, UserQuerieFilter>().TwoWays();
+            config.NewConfig<UserRegisterDTO, User>().TwoWays();
 
             #region Claims
-            CreateMap<User, Claim[]>()
-                .ConvertUsing((user, ctx) =>
-                {
-                    var claims = new List<Claim>
-                    {
-                        new Claim(Claims.NameIdentifier, user.Id.ToString()),
-                        new Claim(Claims.Role, user.Rol.ToString()),
-                        new Claim(Claims.Name, user.Username),
-                        new Claim(Claims.Email, user.Email)
-                    };
-
-                    if (user.Persona != null)
-                    {
-                        claims.Add(new Claim(Claims.GivenName, user.Persona.Name));
-                        claims.Add(new Claim(Claims.Surname, user.Persona.Lastname));
-
-                        if (user.Persona.Address != null)
-                        {
-                            claims.Add(new Claim(Claims.Street, user.Persona.Address.Street));
-                            claims.Add(new Claim(Claims.Number, user.Persona.Address.Number.ToString()));
-                            claims.Add(new Claim(Claims.Neighborhood, user.Persona.Address.Neighborhood));
-                            claims.Add(new Claim(Claims.Description, user.Persona.Address.Description));
-
-                            if (user.Persona.Address.Coordinates != null)
-                            {
-                                claims.Add(new Claim(Claims.Latitude, user.Persona.Address.Coordinates.Latitude.ToString()));
-                                claims.Add(new Claim(Claims.Longitude, user.Persona.Address.Coordinates.Longitude.ToString()));
-                            }
-                        }
-                    }
-                    return claims.ToArray();
-                });
+            TypeAdapterConfig<User, UserClaimsDTO>
+                .NewConfig()
+                .MapToConstructor(true);
             #endregion
         }
     }

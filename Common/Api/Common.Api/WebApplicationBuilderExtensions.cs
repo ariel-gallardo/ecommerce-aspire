@@ -4,20 +4,17 @@ using Common.Infrastructure;
 using Common.Infrastructure.Seeder;
 using Logs.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Options;
-using Microsoft.OpenApi.Models;
 using System.Reflection;
 
 namespace Common.Api
 {
     public static class WebApplicationBuilderExtensions
     {
-        private static Assembly[] _autoMapperAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _mapperAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _validatorAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _serviceAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _controllerAssemblies = Array.Empty<Assembly>();
@@ -26,7 +23,7 @@ namespace Common.Api
 
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
-            _autoMapperAssemblies = _autoMapperAssemblies.Concat(assemblies).ToArray();
+            _mapperAssemblies = _mapperAssemblies.Concat(assemblies).ToArray();
             return builder;
         }
 
@@ -66,6 +63,12 @@ namespace Common.Api
             return builder;
         }
 
+        public static WebApplicationBuilder AddPipelinesAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _serviceAssemblies = _serviceAssemblies.Concat(assemblies).ToArray();
+            return builder;
+        }
+
         public static WebApplication BuildApi<DBContext>(this WebApplicationBuilder builder)
             where DBContext : DbContext
         {
@@ -79,7 +82,7 @@ namespace Common.Api
             
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationServices(_serviceAssemblies);
-            builder.Services.AddApplicationAutoMapper(env,_autoMapperAssemblies);
+            builder.Services.AddApplicationMapper(env,_mapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddSeeders(env, _seederAssemblies);

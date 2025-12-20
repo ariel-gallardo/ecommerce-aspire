@@ -1,14 +1,15 @@
-﻿using AutoMapper;
+﻿
 using Inventory.Application.DTO;
 using Inventory.Domain.Entities;
+using Mapster;
 
 namespace Inventory.Application.Profiles
 {
-    public class InventoryItemProfile : Profile
+    
+	public class InventoryItemProfile : IRegister 
     {
-        public InventoryItemProfile()
-        {
-            CreateMap<InventoryItemDTO, InventoryItem>().ReverseMap();
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<InventoryItemDTO, InventoryItem>().TwoWays();
         }
     }
 }

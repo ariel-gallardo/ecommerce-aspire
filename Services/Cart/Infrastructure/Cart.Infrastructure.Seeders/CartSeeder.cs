@@ -1,10 +1,11 @@
-﻿using AutoMapper;
+﻿
 using Cart.Domain.Entities;
 using Cart.Infrastructure.Cache.Key;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

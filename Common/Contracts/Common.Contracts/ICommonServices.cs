@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Contracts
 {
-    public interface ICommonServices : IScoped
+    public interface ICommonServices
     {
         #region Add
         Task<BaseResponse> AddAsync<AddDTO,DomainEntity,ResultDTO>([FromBody] AddDTO entity, CancellationToken cancellationToken)

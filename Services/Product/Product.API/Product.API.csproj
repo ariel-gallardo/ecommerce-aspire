@@ -20,6 +20,7 @@
     <ProjectReference Include="$(ProductInfra)\Product.Infrastructure.Seeders\Product.Infrastructure.Seeders.csproj" />
     <ProjectReference Include="$(Product)\Product.Application\Product.Application.csproj" />
     <ProjectReference Include="$(Product)\Product.Controllers\Product.Controllers.csproj" />
+    <ProjectReference Include="..\Application\Product.Application.Pipelines\Product.Application.Pipelines.csproj" />
   </ItemGroup>
 
 </Project>

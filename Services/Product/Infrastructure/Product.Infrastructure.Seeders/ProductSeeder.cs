@@ -1,9 +1,11 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿
+
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Product.Infrastructure.Messaging.Key;
@@ -28,7 +30,7 @@ namespace Product.Infrastructure.Seeders
             await _cache.RemoveAsync(CacheKeyProduct.SeedIds, CacheKeyProduct.SeedCreatedIds);
             if (await Set<ProductEntity>().AnyAsync(cancellationToken))
             {
-                await _cache.SaveAsync(CacheKeyProduct.SeedIds, await Set<ProductEntity>().OrderByDescending(x => x.CreatedAt).Take(_quantity).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync());
+                await _cache.SaveAsync(CacheKeyProduct.SeedIds, await Set<ProductEntity>().OrderByDescending(x => x.CreatedAt).Take(_quantity).ProjectToType<Guid>().ToListAsync());
                 await _cache.SaveAsync(CacheKeyProduct.SeedCreatedIds, true);
                 return Array.Empty<object>();
             }

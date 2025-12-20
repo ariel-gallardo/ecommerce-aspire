@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿
 using Common.Application.Profiles.Base;
 using Common.Application.Services;
 using Common.Contracts;
@@ -8,6 +8,8 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,59 +20,17 @@ using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
 using System.Text;
-using DecoratR;
 
 namespace Common.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
-            if (env.IsDevelopment())
-            {
-                MapperConfiguration mapper = null;
-                try
-                {
-                    mapper = new MapperConfiguration(cfg =>
-                    {
-                        cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-                        cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
-                        cfg.ShouldMapProperty = pi =>
-                        {
-                            var ignoredProperties = new[]
-                            {
-                            "CreatedById",
-                            "UpdatedById",
-                            "DeletedById",
-                            "CreatedAt",
-                            "UpdatedAt",
-                            "DeletedAt",
-                            "OrderBy",
-                            "Page",
-                            "PageSize",
-                            "Quantity",
-                            "Price",
-                            "Coordinate",
-                            "Address",
-                        };
-                            return !ignoredProperties.Any(prefix => pi.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
-                        };
-
-                    });
-                }
-                catch (MethodAccessException)
-                {
-
-                }
-                if(mapper != null)
-                mapper.AssertConfigurationIsValid();
-            }
-            services.AddAutoMapper(cfg =>
-            {
-                cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-                cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
-
-            });
+            var config = new TypeAdapterConfig();
+            config.Scan(assemblies.Concat(new[] { typeof(IdentifiableProfile).Assembly }).ToArray());
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
             return services;
         }
 
@@ -149,7 +109,8 @@ namespace Common.Application
                 else if (typeof(ISingleton).IsAssignableFrom(type)) services.AddSingleton(@interface, type);
                 else if (typeof(ITransient).IsAssignableFrom(type)) services.AddTransient(@interface, type);
             }
-            services.Decorate<ICommonServices>().With<CommonServicesDecorator>();
+            services.AddScoped<ICommonServices, CommonServices>();
+            services.Decorate<ICommonServices, CommonServicesDecorator>();
             return services;
         }
     }

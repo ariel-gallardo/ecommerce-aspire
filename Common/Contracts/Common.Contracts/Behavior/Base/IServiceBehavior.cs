@@ -1,8 +1,6 @@
-﻿using Common.Infrastructure.Entities.Contracts;
-
-namespace Common.Contracts.Behavior.Base
+﻿namespace Common.Contracts.Behavior.Base
 {
-    public interface IServiceBehavior<TRequest>
+    public interface IServiceBehavior<TRequest> : ITransient
     {
         int Order { get; }
     }

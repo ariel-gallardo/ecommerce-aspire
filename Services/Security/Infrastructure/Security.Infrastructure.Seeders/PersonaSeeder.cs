@@ -1,11 +1,13 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿
+
 using Common.Domain.Entities;
 using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Security.Infrastructure.Cache.Key;
@@ -33,7 +35,7 @@ namespace Security.Infrastructure.Seeders
             await _cache.WaitAsync(_dependencies, cancellationToken);
             if (await Set<Persona>().AnyAsync(cancellationToken))
             {
-                await _cache.SaveAsync(CacheKeyPersona.SeedIds, await Set<Persona>().OrderByDescending(x => x.CreatedAt).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync(cancellationToken));
+                await _cache.SaveAsync(CacheKeyPersona.SeedIds, await Set<Persona>().OrderByDescending(x => x.CreatedAt).ProjectToType<Guid>().ToListAsync(cancellationToken));
                 await _cache.SaveAsync(CacheKeyPersona.SeedCreatedIds, true);
                 return Array.Empty<object>();
             }

@@ -71,7 +71,6 @@
   </Folder>
   <Folder Name="/Services/Product/">
     <Project Path="Services/Product/Product.API/Product.API.csproj" />
-    <Project Path="Services/Product/Product.Application/Product.Application.csproj" />
     <Project Path="Services/Product/Product.Controllers/Product.Controllers.csproj" />
     <Project Path="Services/Product/Product.Domain/Product.Domain.csproj" />
   </Folder>
@@ -136,6 +135,10 @@
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Messaging/Payment.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Persistence/Payment.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Seeders/Payment.Infrastructure.Seeders.csproj" />
+  </Folder>
+  <Folder Name="/Services/Product/Application/">
+    <Project Path="Services/Product/Application/Product.Application.Pipelines/Product.Application.Pipelines.csproj" />
+    <Project Path="Services/Product/Product.Application/Product.Application.csproj" />
   </Folder>
   <Folder Name="/Services/Product/Infrastructure/">
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Cache.Key/Product.Infrastructure.Cache.Key.csproj" />

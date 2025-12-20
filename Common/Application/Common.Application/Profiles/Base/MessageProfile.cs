@@ -1,12 +1,11 @@
-﻿using AutoMapper;
-using Common.Infrastructure.Messages.Entities;
+﻿using Mapster;
 
 namespace Common.Application.Profiles.Base
 {
-    public class MessageProfile : Profile
+    
+	public class MessageProfile : IRegister 
     {
-        public MessageProfile()
-        {
+        public void Register(TypeAdapterConfig config)        {
             
         }
     }

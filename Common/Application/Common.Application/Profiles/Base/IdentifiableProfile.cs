@@ -1,22 +1,23 @@
-﻿using AutoMapper;
+﻿
 using Common.Application.DTO.Base.Entities;
 using Common.Domain.Entities.Base;
+using Mapster;
 
 namespace Common.Application.Profiles.Base
 {
-    public class IdentifiableProfile : Profile
+    
+	public class IdentifiableProfile : IRegister 
     {
-        public IdentifiableProfile()
-        {
+        public void Register(TypeAdapterConfig config)        {
 
-            CreateMap<IdentifiableDTO, IdentifiableEntity>().ReverseMap();
-            CreateMap<IdentifiableEntity, ulong>().ConvertUsing(entity => entity.Id);
-            CreateMap<ulong, IdentifiableEntity>().ConvertUsing(id => new IdentifiableEntity { Id = id });
-
-
-            CreateMap<IdentifiableGuidDTO, IdentifiableGuidEntity>().ReverseMap();
-            CreateMap<IdentifiableGuidEntity, Guid>().ConvertUsing(entity => entity.Id);
-            CreateMap<Guid, IdentifiableGuidEntity>().ConvertUsing(id => new IdentifiableGuidEntity { Id = id });
+            config.NewConfig<IdentifiableDTO, IdentifiableEntity>().TwoWays();
+            config.NewConfig<IdentifiableEntity, ulong>()
+                .Map(dest => dest, src => src.Id)
+                .TwoWays();
+            config.NewConfig<IdentifiableGuidDTO, IdentifiableGuidEntity>().TwoWays();
+            config.NewConfig<IdentifiableGuidEntity, Guid>()
+                .Map(dest => dest, src => src.Id)
+                .TwoWays();
         }
     }
 }

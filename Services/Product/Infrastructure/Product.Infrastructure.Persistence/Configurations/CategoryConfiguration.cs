@@ -16,8 +16,8 @@ namespace Product.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Description).IsRequired(false);
             builder.Property(x => x.ParentId).HasDefaultValue(null);
             builder
-                .HasOne(x => x.Parent)
-                .WithMany(x => x.Children)
+                .HasMany(x => x.Children)
+                .WithOne(x => x.Parent)
                 .HasForeignKey(x => x.ParentId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);

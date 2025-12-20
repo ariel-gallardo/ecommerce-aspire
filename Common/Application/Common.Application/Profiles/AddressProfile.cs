@@ -1,14 +1,15 @@
-﻿using AutoMapper;
+﻿
 using Common.Application.DTO.ValueObjects;
 using Common.Domain.ValueObjects;
+using Mapster;
 
 namespace Common.Application.Profiles
 {
-    public class AddressProfile : Profile
+    
+	public class AddressProfile : IRegister 
     {
-        public AddressProfile()
-        {
-            CreateMap<Address, AddressDTO>().ReverseMap();
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<Address, AddressDTO>().TwoWays();
         }
     }
 }

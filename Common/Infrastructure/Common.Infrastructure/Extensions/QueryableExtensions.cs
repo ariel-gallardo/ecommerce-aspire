@@ -1,9 +1,9 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Common.Contracts;
+﻿using Common.Contracts;
 using Common.Contracts.Entities;
 using Common.Contracts.Queries;
 using Common.Infrastructure.Entities;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
@@ -70,9 +70,23 @@ namespace Common.Infrastructure.Extensions
             where DomainEntity : class, IEntity
             where ResultType : class
         {
+            var equals = typeof(DomainEntity).Equals(typeof(ResultType));
             var count = await source.CountAsync();
-            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
-            return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize);
+            if (!equals)
+            {
+                var items = filters.TakeAll.HasValue && filters.TakeAll.Value
+                ? await source.ProjectToType<ResultType>().ToListAsync()
+                : await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
+                return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize, filters.TakeAll.HasValue ? filters.TakeAll.Value : false);
+            }
+            else
+            {
+                var items = filters.TakeAll.HasValue && filters.TakeAll.Value
+                ? await source.ToListAsync()
+                : await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ToListAsync();
+                return new PagedList<DomainEntity>(items, count, filters.Page, filters.PageSize, filters.TakeAll.HasValue ? filters.TakeAll.Value : false) as IPagedList<ResultType>;
+            }
+
         }
 
         public static async Task<IPagedList<ResultType>> PaginateAsync<DomainEntity, ResultType>(this IQueryable<DomainEntity> source, IMapper mapper, int page, int pageSize)
@@ -80,7 +94,7 @@ namespace Common.Infrastructure.Extensions
         where ResultType : class
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
             return new PagedList<ResultType>(items, count, page, pageSize);
         }
 
@@ -88,7 +102,7 @@ namespace Common.Infrastructure.Extensions
         where ResultType : class
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
             return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize);
         }
 
@@ -96,7 +110,7 @@ namespace Common.Infrastructure.Extensions
         where ResultType : class
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
             return new PagedList<ResultType>(items, count, page, pageSize);
         }
 
@@ -104,7 +118,7 @@ namespace Common.Infrastructure.Extensions
         where ResultType : class
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            var items = await source.Skip((filters.Page - 1) * filters.PageSize).Take(filters.PageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
             return new PagedList<ResultType>(items, count, filters.Page, filters.PageSize);
         }
 
@@ -112,7 +126,7 @@ namespace Common.Infrastructure.Extensions
         where ResultType : class
         {
             var count = await source.CountAsync();
-            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectTo<ResultType>(mapper.ConfigurationProvider).ToListAsync();
+            var items = await source.Skip((page - 1) * pageSize).Take(pageSize).ProjectToType<ResultType>(mapper.Config).ToListAsync();
             return new PagedList<ResultType>(items, count, page, pageSize);
         }
     }

@@ -1,14 +1,15 @@
-﻿using AutoMapper;
+﻿
 using Common.Domain.Entities;
+using Mapster;
 using Security.Application.DTO;
 
 namespace Security.Application.Profiles
 {
-    public class PersonaProfile : Profile
+    
+	public class PersonaProfile : IRegister 
     {
-        public PersonaProfile()
-        {
-            CreateMap<Persona,PersonaDTO>().ReverseMap();
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<Persona,PersonaDTO>().TwoWays();
         }
     }
 }

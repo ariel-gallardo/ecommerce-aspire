@@ -1,8 +1,9 @@
-﻿using AutoMapper;
+﻿
 using Common.Extensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Messages.Entities;
 using Common.Infrastructure.Repositories;
+using MapsterMapper;
 using MassTransit;
 using Security.Domain.Entities;
 using Security.Domain.Filters.Queries;

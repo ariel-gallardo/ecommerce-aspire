@@ -1,16 +1,19 @@
-﻿using AutoMapper;
+﻿
+using Mapster;
 using Product.Application.DTO;
 using Product.Domain.Entities;
 
 namespace Product.Application.Profiles
 {
-    public class CategoryProfile : Profile
+    
+	public class CategoryProfile : IRegister 
     {
-        public CategoryProfile()
+        public void Register(TypeAdapterConfig config)
         {
-            CreateMap<Category, CategoryDTO>()
-                .ForMember(dest => dest.Children, opt => opt.MapFrom(src => src.Children))
-                .ReverseMap();
+            config.NewConfig<Category, CategoryDTO>()
+                .TwoWays()
+                .PreserveReference(true)
+                .MaxDepth(10);
         }
     }
 }

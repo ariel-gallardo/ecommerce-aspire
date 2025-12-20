@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿
 using Common.Domain.Enums;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
@@ -6,6 +6,7 @@ using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
 using Inventory.Domain.Entities;
 using Inventory.Infrastructure.Cache.Key;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Product.Infrastructure.Messaging.Key;

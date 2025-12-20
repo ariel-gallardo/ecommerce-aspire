@@ -11,11 +11,11 @@ namespace Common.Infrastructure.Entities
             PageSize = 0;
             TotalCount = 0;
         }
-        public PagedList(IList<T> items, int count, int pageNumber, int pageSize)
+        public PagedList(IList<T> items, int count, int pageNumber, int pageSize, bool takeAll = false)
         {
-            CurrentPage = pageNumber;
-            TotalPages = (int)Math.Ceiling(count / (double)pageSize);
-            PageSize = pageSize;
+            CurrentPage = takeAll ? 1 : pageNumber;
+            TotalPages = takeAll ? 1 : (int)Math.Ceiling(count / (double)pageSize);
+            PageSize = takeAll ? count : pageSize;
             TotalCount = count;
             AddRange(items);
         }

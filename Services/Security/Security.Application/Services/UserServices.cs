@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 using Common.Infrastructure.Entities;
@@ -8,6 +8,7 @@ using Security.Application.Contracts.Services;
 using Security.Infrastructure.Contracts;
 using Common.Infrastructure.Repositories;
 using Common.Domain.Entities;
+using MapsterMapper;
 
 namespace Security.Application
 {

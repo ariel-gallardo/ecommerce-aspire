@@ -1,11 +1,11 @@
-﻿using AutoMapper;
+﻿
 using Common.Domain.Entities;
 using Security.Application.DTO;
 using Security.Infrastructure.Contracts;
 
 namespace Security.Application.Profiles.Resolvers
 {
-    public class PasswordHashResolver : IValueResolver<UserRegisterDTO, User, string>
+    public class PasswordHashResolver
     {
         private readonly IAuthServices _authServices;
 
@@ -13,8 +13,5 @@ namespace Security.Application.Profiles.Resolvers
         {
             _authServices = authServices;
         }
-
-        public string Resolve(UserRegisterDTO source, User destination, string destMember, ResolutionContext context)
-        => _authServices.HashPassword(source.Password);
     }
 }

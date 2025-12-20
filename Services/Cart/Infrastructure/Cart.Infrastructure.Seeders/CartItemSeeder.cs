@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿
 using Cart.Domain.Entities;
 using Cart.Infrastructure.Cache.Key;
 using Common.Domain.Enums;
@@ -7,6 +7,7 @@ using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
 using Inventory.Infrastructure.Cache.Key;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

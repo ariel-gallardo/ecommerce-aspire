@@ -1,4 +1,5 @@
-﻿using Common.Infrastructure.Configurations;
+﻿using Common.Contracts;
+using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Messages.Entities;
 using Common.Infrastructure.Persistence;
 using Logs.Infrastructure.Messaging.Consumer;
