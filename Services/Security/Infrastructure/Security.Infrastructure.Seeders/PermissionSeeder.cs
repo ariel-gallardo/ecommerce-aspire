@@ -50,6 +50,14 @@ namespace Security.Infrastructure.Seeders
                 new Permission{ Controller = "Personas", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Personas", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
                 #endregion
+
+                #region Permission
+                new Permission{ Controller = "Permission", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                #endregion
                 
                 #region Error
                 new Permission{ Controller = "Error", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
