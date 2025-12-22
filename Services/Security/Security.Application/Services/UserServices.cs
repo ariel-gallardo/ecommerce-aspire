@@ -9,6 +9,7 @@ using Security.Infrastructure.Contracts;
 using Common.Domain.Entities;
 using MapsterMapper;
 using Common.Infrastructure.Contracts;
+using Mapster;
 
 namespace Security.Application
 {
@@ -30,10 +31,10 @@ namespace Security.Application
             var user = await _unitOfWork.SearchOneAsync<User>(filters, cancellationToken);
             if (user != null && _authServices.VerifyPassword(dto.Password, user.Password))
             {
-                var userClaims = _mapper.Map<Claim[]>(user);
+                var userClaims = user.Adapt<UserClaimsDTO>(_mapper.Config);
                 return new Response<string>
                 {
-                    Data = _authServices.GenerateToken(userClaims),
+                    Data = _authServices.GenerateToken(userClaims.All),
                     Message = $"Welcome {user.Username}",
                     StatusCode = StatusCodes.Status200OK
                 };

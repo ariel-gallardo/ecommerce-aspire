@@ -36,49 +36,53 @@ namespace Security.Infrastructure.Seeders
                 #region Users
                 new Permission{ Controller = "Users", Action = "Login", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Users", Action = "Register", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Users", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Users", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Users", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Users", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Users", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "Add", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "Update", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "Delete", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "Search", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "SearchFirst", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 #endregion
                 
                 #region Personas
-                new Permission{ Controller = "Personas", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Personas", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Personas", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Personas", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Personas", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "Add", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "Update", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "Delete", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "Search", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "SearchFirst", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
                 #endregion
 
                 #region Permission
-                new Permission{ Controller = "Permission", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Permission", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Permission", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Permission", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Permission", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "Add", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "Update", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "Delete", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "Search", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "SearchFirst", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Permission", Action = "CanAccess", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 #endregion
                 
                 #region Error
-                new Permission{ Controller = "Error", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Error", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Error", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Error", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Error", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "Add", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "Update", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "Delete", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "Search", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "SearchFirst", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 #endregion
 
                 #region Info
-                new Permission{ Controller = "Info", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Info", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Info", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Info", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
-                new Permission{ Controller = "Info", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "Add", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "Update", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "Delete", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "Search", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "SearchFirst", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 #endregion
 
                 #region Urls
                 new Permission{ Url="/users/login", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 new Permission{ Url="/users/register", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/profile", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/admin", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/admin/logs", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Url="/users/admin/permissions", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
                 #endregion
             };
             

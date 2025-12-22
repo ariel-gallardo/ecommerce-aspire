@@ -18,9 +18,8 @@ namespace Security.Application.Profiles
             config.NewConfig<UserRegisterDTO, User>().TwoWays();
 
             #region Claims
-            TypeAdapterConfig<User, UserClaimsDTO>
-                .NewConfig()
-                .MapToConstructor(true);
+            config.NewConfig<User, UserClaimsDTO>()
+                .ConstructUsing(src => new UserClaimsDTO(src));
             #endregion
         }
     }
