@@ -2,7 +2,7 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Common.Infrastructure
+namespace Common.Infrastructure.Persistence
 {
     public class ExpressionBuilder : IExpressionBuilder, IScoped
     {
@@ -11,7 +11,6 @@ namespace Common.Infrastructure
             var expressions = new List<Expression<Func<T, bool>>>();
             var type = filter.GetType();
 
-            // Campos
             foreach (var field in type.GetFields(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (typeof(Expression<Func<T, bool>>).IsAssignableFrom(field.FieldType))
@@ -22,7 +21,6 @@ namespace Common.Infrastructure
                 }
             }
 
-            // Propiedades
             foreach (var prop in type.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic))
             {
                 if (typeof(Expression<Func<T, bool>>).IsAssignableFrom(prop.PropertyType))

@@ -33,20 +33,47 @@ namespace Security.Infrastructure.Seeders
             var adminId = await _cache.GetAsync<ulong>(CacheKeyUser.SeedIdAdmin);
             var publicRoutes = new Permission[]
             {
+                #region Users
                 new Permission{ Controller = "Users", Action = "Login", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Users", Action = "Register", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Users", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                #endregion
+                
+                #region Personas
+                new Permission{ Controller = "Personas", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Personas", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Client, CreatedAt = DateTime.UtcNow },
+                #endregion
+                
+                #region Error
+                new Permission{ Controller = "Error", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Error", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                #endregion
+
+                #region Info
+                new Permission{ Controller = "Info", Action = "AddAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "UpdateAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Administrator, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Info", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                #endregion
+
+                #region Urls
                 new Permission{ Url="/users/login", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 new Permission{ Url="/users/register", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
+                #endregion
             };
-            Permissions = Enumerable.Range(1, _quantity).Select(i => new Permission
-            {
-                Url = i % 2 != 0 ? $"/path_{_random.Next(1, 100)}/sub_path_{_random.Next(1, 100)}" : null,
-                Action = i % 2 == 0 ? $"Action {_random.Next(1, 30)}" : null,
-                Controller = i % 2 == 0 ? $"Controller {_random.Next(1, 30)}" : null,
-                Policy = i % 3 == 0 ? (i % 7 == 0 ? Policy.Administrator : (i % 4 == 0 ? Policy.Client : Policy.Public)) : Policy.Unknown,
-                CreatedById = adminId,
-                CreatedAt = DateTime.UtcNow
-            }).Concat(publicRoutes);
+            
+            Permissions = publicRoutes;
             return Permissions;
         }
     }

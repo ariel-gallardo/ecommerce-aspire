@@ -81,10 +81,10 @@ namespace Common.Api
 
             
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
+            builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddApplicationServices(_serviceAssemblies);
             builder.Services.AddApplicationMapper(env,_mapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
-            builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddSeeders(env, _seederAssemblies);
             builder.Services.AddApi(_controllerAssemblies);
             builder.Services.AddSwaggerGen(c =>

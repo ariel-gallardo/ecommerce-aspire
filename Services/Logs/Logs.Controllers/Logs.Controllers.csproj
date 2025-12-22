@@ -6,4 +6,13 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Contracts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Api\Common.Api.Controllers\Common.Api.Controllers.csproj" />
+    <ProjectReference Include="..\Logs.Application\Logs.Application.csproj" />
+  </ItemGroup>
+
 </Project>

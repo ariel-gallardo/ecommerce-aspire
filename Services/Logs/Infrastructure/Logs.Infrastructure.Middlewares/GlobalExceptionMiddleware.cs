@@ -3,6 +3,7 @@ using Common.Infrastructure.Messages.Entities;
 using Logs.Infrastructure.Messaging.Request;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text.Json;
@@ -12,12 +13,10 @@ namespace Logs.Infrastructure.Middlewares
     public class GlobalExceptionMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly IPublishEndpoint _publisher;
 
-        public GlobalExceptionMiddleware(RequestDelegate next, IPublishEndpoint publisher)
+        public GlobalExceptionMiddleware(RequestDelegate next)
         {
             _next = next;
-            _publisher = publisher;
         }
 
         public async Task InvokeAsync(HttpContext context)
@@ -36,8 +35,8 @@ namespace Logs.Infrastructure.Middlewares
         {
             var entryName = Assembly.GetEntryAssembly()?.GetName().Name;
             var traceId = Activity.Current?.Id ?? context.TraceIdentifier;
-
-            await _publisher.Publish(new Message<LogErrorRequest>
+            var publisher = context.RequestServices.GetRequiredService<IPublishEndpoint>();
+            await publisher.Publish(new Message<LogErrorRequest>
             {
                 CreatedAt = DateTime.UtcNow.ToString(),
                 Data = new LogErrorRequest

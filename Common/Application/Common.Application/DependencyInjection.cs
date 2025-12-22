@@ -3,6 +3,7 @@ using Common.Application.Profiles.Base;
 using Common.Application.Services;
 using Common.Extensions;
 using Common.Infrastructure;
+using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities.Enums;
@@ -92,7 +93,11 @@ namespace Common.Application
                 };
             });
             services.AddHttpContextAccessor();
-            var allTypes = assemblies.Concat(new[] { typeof(AuthServices).Assembly, typeof(UnitOfWork).Assembly, typeof(CommonServices).Assembly }).Distinct()
+            var allTypes = assemblies.Concat(new[] { typeof(AuthServices).Assembly, 
+                typeof(UnitOfWork).Assembly, 
+                typeof(CommonServices).Assembly,
+                typeof(CacheManagerServices).Assembly
+            }).Distinct()
             .SelectMany(a => a.GetTypes())
             .Where(t => t.IsClass && !t.IsAbstract &&
                    (
