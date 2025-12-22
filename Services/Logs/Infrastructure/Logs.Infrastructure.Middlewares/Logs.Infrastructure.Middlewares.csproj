@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Infrastructure\Common.Infrastructure.Messages\Common.Infrastructure.Messages.csproj" />
+    <ProjectReference Include="..\Logs.Infrastructure.Messaging\Logs.Infrastructure.Messaging.csproj" />
+  </ItemGroup>
+
+</Project>

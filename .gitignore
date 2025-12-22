@@ -2,9 +2,6 @@
 [Bb]in/
 [Oo]bj/
 
-# Logs
-Logs/
-
 # Generated files
 project.lock.json
 .vs/
