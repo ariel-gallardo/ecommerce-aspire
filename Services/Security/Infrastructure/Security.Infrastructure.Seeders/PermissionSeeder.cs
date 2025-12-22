@@ -57,6 +57,7 @@ namespace Security.Infrastructure.Seeders
                 new Permission{ Controller = "Permission", Action = "DeleteAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Permission", Action = "SearchAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
                 new Permission{ Controller = "Permission", Action = "SearchFirstAsync", CreatedById = adminId, Policy = Policy.Support, CreatedAt = DateTime.UtcNow },
+                new Permission{ Controller = "Permission", Action = "CanAccess", CreatedById = adminId, Policy = Policy.Public, CreatedAt = DateTime.UtcNow },
                 #endregion
                 
                 #region Error
