@@ -1,4 +1,4 @@
-﻿using Common.Contracts.DTO.Base;
+﻿using Common.Infrastructure.Contracts;
 using System.Text.Json.Serialization;
 
 namespace Common.Application.DTO.Base.Entities

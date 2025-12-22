@@ -1,5 +1,4 @@
 using Common.Api;
-using Product.Application.Pipelines;
 using Product.Application.Profiles;
 using Product.Controllers;
 using Product.Domain.Modifier;
@@ -19,7 +18,7 @@ namespace Product.API
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
             .AddQuerieModifierAssemblies(typeof(CategoryQueryModifier).Assembly)
-            .AddPipelinesAssemblies(typeof(CategorySearchByFiltersPipeline).Assembly)
+            .AddPipelinesAssemblies()
             .BuildApi<ProductDbContext>();
             app.Run();
         }

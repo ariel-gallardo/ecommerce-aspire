@@ -1,11 +1,10 @@
 ﻿using Common.Application.Contracts;
-using Common.Contracts;
 using Common.Domain.Entities.Base;
 using Common.Extensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
+using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities;
-using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using FluentValidation;
@@ -19,10 +18,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Security.Infrastructure.Messaging.Messages.Request;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Reflection.Metadata;
 
 namespace Common.Api.Filters.OpenApi
 {

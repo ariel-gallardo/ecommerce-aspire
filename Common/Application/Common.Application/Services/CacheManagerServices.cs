@@ -1,12 +1,12 @@
 ﻿using Common.Domain.Exceptions;
-using Common.Infrastructure.Cache;
+using Common.Infrastructure.Cache.Exceptions;
 using Common.Infrastructure.Configurations;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Options;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
-namespace Common.Application.Services
+namespace Common.Infrastructure.Cache
 {
     public class CacheManagerServices : ICacheManagerServices
     {

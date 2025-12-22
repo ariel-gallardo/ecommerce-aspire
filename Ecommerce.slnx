@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/Common/">
-    <Project Path="Common/Contracts/Common.Contracts/Common.Contracts.csproj" />
     <Project Path="Common/Domain/Common.Domain/Common.Domain.csproj" />
     <Project Path="Common/Extensions/Common.Extensions/Common.Extensions.csproj" />
   </Folder>
@@ -17,9 +16,11 @@
   <Folder Name="/Common/Infrastructure/">
     <Project Path="Common/Infrastructure/Common.Infrastructure.Cache.Key/Common.Infrastructure.Cache.Key.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Cache/Common.Infrastructure.Cache.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Configurations/Common.Infrastructure.Configurations.csproj" Id="98402cc1-9b80-46e5-baa6-62a0fc88e9bf" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Contracts/Common.Infrastructure.Contracts.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Entities/Common.Infrastructure.Entities.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Messages/Common.Infrastructure.Messages.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Persistence/Common.Infrastructure.Persistence.csproj" Id="ac3cd36e-1f6c-4b3a-a044-0318d9b570ad" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Seeder/Common.Infrastructure.Seeder.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure/Common.Infrastructure.csproj" />
   </Folder>

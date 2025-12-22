@@ -1,5 +1,4 @@
-﻿using Common.Contracts.DTO.Base;
-using Microsoft.EntityFrameworkCore.Infrastructure;
+﻿using Common.Infrastructure.Contracts;
 
 namespace Common.Application.DTO.Base.Entities
 {

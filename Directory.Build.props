@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-	<SolutionDir>$(MSBuildThisFileectory)</SolutionDir>
+	<SolutionDir>$(MSBuildThisFileDirectory)</SolutionDir>
 	<Common>$(SolutionDir)\Common</Common>
 	<CommonApi>$(Common)\Api</CommonApi>
 	<CommonApp>$(Common)\Application</CommonApp>

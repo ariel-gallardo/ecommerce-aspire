@@ -1,6 +1,6 @@
-﻿using Common.Infrastructure;
-using Common.Infrastructure.Converters;
+﻿using Common.Infrastructure.Converters;
 using Common.Infrastructure.Entities.Enums;
+using Common.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Security.Domain.Entities;

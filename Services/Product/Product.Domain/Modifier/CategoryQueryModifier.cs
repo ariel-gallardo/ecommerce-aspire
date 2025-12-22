@@ -1,5 +1,4 @@
-﻿using Common.Contracts.Queries;
-using Microsoft.EntityFrameworkCore;
+﻿using Common.Infrastructure.Contracts;
 using Product.Domain.Entities;
 
 namespace Product.Domain.Modifier

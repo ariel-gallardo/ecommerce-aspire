@@ -1,5 +1,5 @@
-﻿using Common.Contracts;
-using Common.Domain.Entities;
+﻿using Common.Domain.Entities;
+using Common.Infrastructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Security.Application.DTO;
 using Security.Domain.Filters.Queries;

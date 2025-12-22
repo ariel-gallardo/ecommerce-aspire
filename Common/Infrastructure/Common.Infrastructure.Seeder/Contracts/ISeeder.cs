@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 
 namespace Common.Infrastructure.Persistence.Seeds.Base
 {

@@ -6,9 +6,9 @@ using Security.Domain.Filters.Queries;
 using Security.Application.DTO;
 using Security.Application.Contracts.Services;
 using Security.Infrastructure.Contracts;
-using Common.Infrastructure.Repositories;
 using Common.Domain.Entities;
 using MapsterMapper;
+using Common.Infrastructure.Contracts;
 
 namespace Security.Application
 {

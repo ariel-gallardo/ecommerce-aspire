@@ -1,7 +1,7 @@
-﻿using Common.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Product.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Common.Infrastructure.Persistence;
 
 
 namespace Product.Infrastructure.Persistence.Configurations

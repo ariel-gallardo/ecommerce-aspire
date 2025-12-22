@@ -1,10 +1,10 @@
 ﻿
 using Common.Application.Profiles.Base;
 using Common.Application.Services;
-using Common.Contracts;
 using Common.Extensions;
 using Common.Infrastructure;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;

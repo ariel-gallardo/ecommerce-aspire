@@ -1,4 +1,4 @@
-﻿using Common.Domain.Enums;
+﻿using Common.Infrastructure.Entities.Enums;
 
 namespace Common.Application.DTO.ValueObjects
 {

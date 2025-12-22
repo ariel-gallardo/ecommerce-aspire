@@ -1,4 +1,4 @@
-﻿using Common.Infrastructure;
+﻿using Common.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using CartEntity = Cart.Domain.Entities.Cart;
 namespace Cart.Infrastructure.Persistence.Configurations

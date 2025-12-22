@@ -1,8 +1,6 @@
-﻿using Common.Domain.Enums;
-using Common.Domain.ValueObjects;
-using Common.Infrastructure;
+﻿using Common.Infrastructure.Entities.Enums;
+using Common.Infrastructure.Persistence;
 using Inventory.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 

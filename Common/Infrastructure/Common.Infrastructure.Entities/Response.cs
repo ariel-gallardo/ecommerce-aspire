@@ -1,4 +1,4 @@
-﻿using Common.Infrastructure.Entities.Contracts;
+﻿using Common.Infrastructure.Contracts;
 
 namespace Common.Infrastructure.Entities
 {

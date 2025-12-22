@@ -1,5 +1,5 @@
 ﻿using Common.Application.DTO.Base.Entities;
-using Common.Contracts.DTO.ABM;
+using Common.Infrastructure.Contracts;
 
 namespace Invoice.Application.DTO
 {

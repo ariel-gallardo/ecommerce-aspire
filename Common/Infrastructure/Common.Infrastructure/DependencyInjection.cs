@@ -1,11 +1,9 @@
-﻿using Common.Contracts;
-using Common.Infrastructure.Configurations;
+﻿using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Messages.Entities;
 using Common.Infrastructure.Persistence;
 using Logs.Infrastructure.Messaging.Consumer;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using System.Reflection;
 
 namespace Common.Infrastructure

@@ -1,5 +1,4 @@
 ﻿using Common.Domain.Entities.Base;
-using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
 
 namespace Order.Domain.Entities

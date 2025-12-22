@@ -1,5 +1,5 @@
 ﻿using Common.Api.Controllers;
-using Common.Contracts;
+using Common.Infrastructure.Contracts;
 using Product.Application.DTO;
 using Product.Controllers.Contracts;
 using Product.Domain.Filters.Querie;

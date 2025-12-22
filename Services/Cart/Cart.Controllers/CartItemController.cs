@@ -3,7 +3,7 @@ using Cart.Controllers.Contracts;
 using Cart.Domain.Entities;
 using Cart.Domain.Filters.Queries;
 using Common.Api.Controllers;
-using Common.Contracts;
+using Common.Infrastructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Cart.Controllers

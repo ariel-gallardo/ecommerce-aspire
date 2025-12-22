@@ -1,12 +1,7 @@
-﻿using Common.Contracts;
-using Common.Contracts.DTO.ABM;
-using Common.Contracts.DTO.Base;
-using Common.Contracts.Entities;
-using Common.Contracts.Queries;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Common.Infrastructure.Repositories
+namespace Common.Infrastructure.Contracts
 {
     public interface IUnitOfWork : IScoped
     {

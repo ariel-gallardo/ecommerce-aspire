@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Security.Application.DTO;
 using Security.Domain.Entities;

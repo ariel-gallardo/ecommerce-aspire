@@ -1,13 +1,4 @@
-﻿using Common.Contracts;
-using Common.Contracts.Behavior.Add;
-using Common.Contracts.Behavior.Delete;
-using Common.Contracts.Behavior.Search;
-using Common.Contracts.Behavior.Update;
-using Common.Contracts.DTO.ABM;
-using Common.Contracts.DTO.Base;
-using Common.Contracts.Entities;
-using Common.Contracts.Queries;
-using Common.Infrastructure.Entities;
+﻿using Common.Infrastructure.Contracts;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Common.Application.Services
@@ -24,7 +15,7 @@ namespace Common.Application.Services
         }
 
 
-        public async Task<BaseResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
+        public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
         where AddDTO : class, IEntityDTO, IAddDTO
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
@@ -36,7 +27,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entities, CancellationToken cancellationToken)
+        public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entities, CancellationToken cancellationToken)
         where AddDTO : class, IEntityDTO, IAddDTO
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
@@ -48,7 +39,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> DeleteAsync<Key, DomainEntity>(Key entityId, CancellationToken cancellationToken)
+        public async Task<IResponse> DeleteAsync<Key, DomainEntity>(Key entityId, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             var behaviors = _provider.GetServices<IDeleteSingleBehavior<DomainEntity,Key>>().OrderBy(x => x.Order);
@@ -58,7 +49,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> DeleteAsync<Key, DomainEntity>(IList<Key> entityIds, CancellationToken cancellationToken)
+        public async Task<IResponse> DeleteAsync<Key, DomainEntity>(IList<Key> entityIds, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         {
             var behaviors = _provider.GetServices<IDeleteBulkBehavior<DomainEntity, Key>>().OrderBy(x => x.Order);
@@ -68,7 +59,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchAsync<Key, DomainEntity, ResultDTO>(Key entityId, CancellationToken cancellationToken)
+        public async Task<IResponse> SearchAsync<Key, DomainEntity, ResultDTO>(Key entityId, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
@@ -79,7 +70,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        public async Task<IResponse> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
@@ -90,7 +81,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchAsync<Key, DomainEntity, ResultDTO>(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
+        public async Task<IResponse> SearchAsync<Key, DomainEntity, ResultDTO>(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
@@ -101,7 +92,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
+        public async Task<IResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
         {
@@ -112,7 +103,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
+        public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO
@@ -124,7 +115,7 @@ namespace Common.Application.Services
             return response;
         }
 
-        public async Task<BaseResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entities, CancellationToken cancellationToken)
+        public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entities, CancellationToken cancellationToken)
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
         where DomainEntity : class, IEntity
         where ResultDTO : class, IEntityDTO, IResultDTO

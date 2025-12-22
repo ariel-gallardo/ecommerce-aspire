@@ -1,7 +1,7 @@
 ﻿using Cart.Application.DTO;
 using Cart.Domain.Entities;
 using Cart.Domain.Filters.Queries;
-using Common.Contracts;
+using Common.Infrastructure.Contracts;
 
 namespace Cart.Controllers.Contracts
 {

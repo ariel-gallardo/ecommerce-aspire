@@ -1,10 +1,8 @@
 ﻿
 using Common.Extensions;
 using Common.Infrastructure.Cache;
-using Common.Infrastructure.Cache.Key;
-using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
-using Common.Infrastructure.Repositories;
+using Common.Infrastructure.Contracts;
 using MapsterMapper;
 using MassTransit;
 using Security.Domain.Entities;
@@ -27,11 +25,11 @@ namespace Security.Infrastructure.Messaging.Consumer
             if (await _unitOfWork.ExistsAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default))
             {
                 var permission = await _unitOfWork.SearchOneAsync<Permission>(_mapper.Map<PermissionQuerieFilter>(request), default);
-                await context.RespondAsync<Message<string>>(new Message<string> { Data = permission.Policy.AsStringUsingMemberValue() });
+                await context.RespondAsync(new Message<string> { Data = permission.Policy.AsStringUsingMemberValue() });
             }
             else
             {
-                await context.RespondAsync<Message<string>>(new Message<string> { Data = null });
+                await context.RespondAsync(new Message<string> { Data = null });
             }
         }
     }

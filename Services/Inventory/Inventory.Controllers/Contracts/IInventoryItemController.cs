@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 using Inventory.Application.DTO;
 using Inventory.Domain.Entities;
 using Inventory.Domain.Filters.Querie;

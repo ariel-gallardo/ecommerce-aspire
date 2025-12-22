@@ -1,4 +1,4 @@
-﻿using Common.Contracts.Entities;
+﻿using Common.Infrastructure.Contracts;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 
 namespace Common.Domain.Entities.Base

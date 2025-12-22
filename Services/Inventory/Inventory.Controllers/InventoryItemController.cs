@@ -1,5 +1,5 @@
 ﻿using Common.Api.Controllers;
-using Common.Contracts;
+using Common.Infrastructure.Contracts;
 using Inventory.Application.DTO;
 using Inventory.Controllers.Contracts;
 using Inventory.Domain.Entities;
