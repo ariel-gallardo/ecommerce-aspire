@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="$(CommonApi)\Common.Api.CustomAttributes\Common.Api.CustomAttributes.csproj" />
-    <ProjectReference Include="$(Common)\Contracts\Common.Contracts\Common.Contracts.csproj" />
+    
     <ProjectReference Include="$(Common)\Domain\Common.Domain\Common.Domain.csproj" />
   </ItemGroup>
 

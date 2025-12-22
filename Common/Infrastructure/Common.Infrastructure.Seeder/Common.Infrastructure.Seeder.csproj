@@ -11,7 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(Common)\Contracts\Common.Contracts\Common.Contracts.csproj" />
+    
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Cache\Common.Infrastructure.Cache.csproj" />
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure\Common.Infrastructure.csproj" />
   </ItemGroup>

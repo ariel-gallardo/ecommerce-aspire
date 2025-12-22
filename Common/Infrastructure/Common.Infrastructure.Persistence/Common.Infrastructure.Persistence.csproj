@@ -13,8 +13,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Services\Security\Infrastructure\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
-    <ProjectReference Include="..\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
+	  <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Entities\Common.Infrastructure.Entities.csproj" />  
   </ItemGroup>
 
 </Project>

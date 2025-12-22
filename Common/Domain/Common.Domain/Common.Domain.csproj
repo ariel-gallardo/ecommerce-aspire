@@ -13,7 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(Common)\Contracts\Common.Contracts\Common.Contracts.csproj" />
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Entities\Common.Infrastructure.Entities.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,7 +12,7 @@
 
   <ItemGroup>
 	 <ProjectReference Include="$(CommonApp)\Common.Application.DTO\Common.Application.DTO.csproj" />
-	 <ProjectReference Include="$(Common)\Contracts\Common.Contracts\Common.Contracts.csproj" />
+	 
     <ProjectReference Include="$(Inventory)\Inventory.Domain\Inventory.Domain.csproj" />
   </ItemGroup>
 
