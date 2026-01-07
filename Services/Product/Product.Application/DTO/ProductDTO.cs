@@ -4,7 +4,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Product.Application.DTO
 {
-    public class ProductDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class ProductDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string Name { get; set; }
         public string Description { get; set; }

@@ -4,7 +4,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Security.Application.DTO
 {
-    public class PersonaDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class PersonaDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string Name { get; set; }
         public string Lastname { get; set; }

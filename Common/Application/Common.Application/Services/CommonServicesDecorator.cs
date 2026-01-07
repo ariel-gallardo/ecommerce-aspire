@@ -18,7 +18,7 @@ namespace Common.Application.Services
         public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
         where AddDTO : class, IEntityDTO, IAddDTO
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<IAddSingleBehavior<AddDTO, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) entity = await b.OnBeforeAsync(entity, cancellationToken);
@@ -30,7 +30,7 @@ namespace Common.Application.Services
         public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entities, CancellationToken cancellationToken)
         where AddDTO : class, IEntityDTO, IAddDTO
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<IAddBulkBehavior<AddDTO, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) entities = await b.OnBeforeAsync(entities, cancellationToken);
@@ -61,7 +61,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchAsync<Key, DomainEntity, ResultDTO>(Key entityId, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<ISearchKeySingleBehavior<Key, DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) await b.OnBeforeAsync(entityId, cancellationToken);
@@ -72,7 +72,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<ISearchQuerieBulkBehavior<DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) filters = await b.OnBeforeAsync(filters, cancellationToken);
@@ -83,7 +83,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchAsync<Key, DomainEntity, ResultDTO>(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<ISearchKeyBulkBehavior<Key, DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) await b.OnBeforeAsync(entityIds, cancellationToken);
@@ -94,7 +94,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<ISearchQuerieSingleBehavior<DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) filters = await b.OnBeforeAsync(filters, cancellationToken);
@@ -106,7 +106,7 @@ namespace Common.Application.Services
         public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<IUpdateSingleBehavior<UpdateDTO, DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) entity = await b.OnBeforeAsync(entity, cancellationToken);
@@ -118,7 +118,7 @@ namespace Common.Application.Services
         public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entities, CancellationToken cancellationToken)
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var behaviors = _provider.GetServices<IUpdateBulkBehavior<UpdateDTO, DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) entities = await b.OnBeforeAsync(entities, cancellationToken);

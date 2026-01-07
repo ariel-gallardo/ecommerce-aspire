@@ -17,7 +17,7 @@ namespace Common.Application.Services
         public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO, IAddDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var result = await _unitOfWork.AddAsync<AddDTO,DomainEntity,ResultDTO>(entity, cancellationToken);
             return new Response<ResultDTO>
@@ -31,7 +31,7 @@ namespace Common.Application.Services
         public async Task<IResponse> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entities, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO, IAddDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var results = await _unitOfWork.AddAsync<AddDTO, DomainEntity, ResultDTO>(entities, cancellationToken);
             return new Response<IList<ResultDTO>>
@@ -47,7 +47,7 @@ namespace Common.Application.Services
         public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
             where UpdateDTO : class, IEntityDTO, IUpdateDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var result = await _unitOfWork.UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(entity, cancellationToken);
             return new Response<ResultDTO>
@@ -61,7 +61,7 @@ namespace Common.Application.Services
         public async Task<IResponse> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entities, CancellationToken cancellationToken)
             where UpdateDTO : class, IEntityDTO, IUpdateDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             var results = await _unitOfWork.UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(entities, cancellationToken);
             return new Response<IList<ResultDTO>>
@@ -103,7 +103,7 @@ namespace Common.Application.Services
         public async Task<IResponse> SearchAsync<Key,DomainEntity, ResultDTO>(Key entityId, CancellationToken cancellationToken)
             
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             BaseResponse response;
             var result = await _unitOfWork.SearchAsync<Key,DomainEntity,ResultDTO>(entityId, cancellationToken);
@@ -124,7 +124,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             BaseResponse response;
             var result = await _unitOfWork.SearchAsync<DomainEntity,ResultDTO>(filters, cancellationToken);
@@ -145,7 +145,7 @@ namespace Common.Application.Services
 
         public async Task<IResponse> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         {
             BaseResponse response;
             var result = await _unitOfWork.SearchFirstAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
@@ -167,7 +167,7 @@ namespace Common.Application.Services
         public async Task<IResponse> SearchAsync<Key,DomainEntity, ResultDTO>(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken)
             
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class, IEntityDTO, IReadDTO
         {
             BaseResponse response;
             var result = await _unitOfWork.SearchAsync<Key,DomainEntity,ResultDTO>(entityIds, page, pageSize, cancellationToken);

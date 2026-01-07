@@ -10,7 +10,7 @@ namespace Cart.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class CartItemController : CommonController<Guid, CartItem, CartItemDTO, CartItemDTO, CartItemResultDTO, CartItemQuerieFilter>, ICartItemController
+    public class CartItemController : CommonController<Guid, CartItem, CartItemDTO, CartItemDTO, CartItemReadDTO, CartItemQuerieFilter>, ICartItemController
     {
         public CartItemController(ICommonServices services) : base(services)
         {

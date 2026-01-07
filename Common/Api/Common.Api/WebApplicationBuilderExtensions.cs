@@ -104,10 +104,13 @@ namespace Common.Api
                         "GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS", "HEAD"
                     }.Contains(apiDesc.HttpMethod);
                 });
-            });
+                c.UseInlineDefinitionsForEnums();
+            })
+            .AddSwaggerGenNewtonsoftSupport();
             builder.Services.AddOpenApi(c =>
             {
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
+                c.AddSchemaTransformer<StandardNameSchemaFilter>();
                 c.ShouldInclude = (api) => true;
             });
             builder.Services.AddGrpc();

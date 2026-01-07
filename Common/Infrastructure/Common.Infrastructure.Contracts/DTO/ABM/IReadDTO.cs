@@ -1,6 +1,6 @@
 ﻿namespace Common.Infrastructure.Contracts
 {
-    public interface IResultDTO
+    public interface IReadDTO
     {
     }
 }

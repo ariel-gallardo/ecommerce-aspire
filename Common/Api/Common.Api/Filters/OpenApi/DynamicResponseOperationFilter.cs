@@ -18,6 +18,7 @@ using Microsoft.OpenApi.Models;
 using Security.Infrastructure.gRPC.Protos;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using static Security.Infrastructure.gRPC.Protos.PermissionService;
 
 namespace Common.Api.Filters.OpenApi
@@ -38,10 +39,38 @@ namespace Common.Api.Filters.OpenApi
         private readonly ICommonScopedDataServices _commonData;
         private readonly ICacheManagerServices _cache;
         private readonly PermissionServiceClient _permissionServiceClient;
+        private static readonly Regex CleanRegex =
+            new("(NullableOf|DTO|PagedList|Result|\\d+)", RegexOptions.Compiled);
+
+        private OpenApiSchema HandleSchema(OpenApiSchema schema)
+        {
+            if (!string.IsNullOrWhiteSpace(schema.Title))
+            {
+                schema.Title = CleanRegex.Replace(schema.Title, string.Empty);
+            }
+            
+            if (!string.IsNullOrWhiteSpace(schema.Reference?.Id))
+            {
+                schema.Reference.Id = CleanRegex.Replace(schema.Reference.Id, string.Empty);
+            }
+            
+
+            if (schema.Annotations?.TryGetValue("x-schema-id", out var raw) == true &&
+                raw is string value)
+            {
+                schema.Annotations["x-schema-id"] = CleanRegex.Replace(value, string.Empty);
+            }
+            
+            if (schema.Items != null)
+                HandleSchema(schema.Items);
+            
+
+            return schema;
+        }
 
         private async Task<IList<OpenApiSecurityRequirement>> AssignSecuritySchema(string controller, string action)
         {
-            if(!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
+            if (!string.IsNullOrWhiteSpace(controller) && !string.IsNullOrWhiteSpace(action))
             {
                 var cacheKey = CacheKeyCommon.PolicyActionName(controller, action);
                 string policy = await _cache.GetAsync<string>(cacheKey);
@@ -84,12 +113,13 @@ namespace Common.Api.Filters.OpenApi
                         [security] = new string[] { }
                     };
                     return new OpenApiSecurityRequirement[] { requirement };
-                };
+                }
+                ;
             }
             return Array.Empty<OpenApiSecurityRequirement>();
         }
 
-        public DynamicResponseOperationTransformer(ISchemaGenerator schemaGenerator, ICommonScopedDataServices commonData, 
+        public DynamicResponseOperationTransformer(ISchemaGenerator schemaGenerator, ICommonScopedDataServices commonData,
             PermissionServiceClient permissionServiceClient,
             ICacheManagerServices cache)
         {
@@ -100,19 +130,18 @@ namespace Common.Api.Filters.OpenApi
         }
         public async Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
         {
-            
             var split = context.Description.RelativePath.Split('/');
             var subPath = split.Last();
             var httpMethod = context.Description.HttpMethod;
 
-            if(context.Description.ActionDescriptor is ControllerActionDescriptor cAA)
+            if (context.Description.ActionDescriptor is ControllerActionDescriptor cAA)
             {
                 if (!operation.Security.Any())
                     operation.Security = await AssignSecuritySchema(cAA.ControllerName, cAA.ActionName);
             }
 
             if (context.Description.ActionDescriptor is ControllerActionDescriptor cA
-                && commonMethods.Contains(cA.MethodInfo.Name) 
+                && commonMethods.Contains(cA.MethodInfo.Name)
                 && cA.ControllerTypeInfo.BaseType != null
                 && cA.ControllerTypeInfo.BaseType is TypeInfo tI
                 && tI.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
@@ -130,81 +159,144 @@ namespace Common.Api.Filters.OpenApi
                         bool methodMatch = httpAttr.HttpMethods.Any(y => string.Equals(y, httpMethod, StringComparison.OrdinalIgnoreCase));
                         return templateMatch && methodMatch;
                     });
-                    _commonData.ProcessedMethods.Add(method);
+                _commonData.ProcessedMethods.Add(method);
 
-                    var args = tI.GetGenericArguments();
-                    var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
+                var args = tI.GetGenericArguments();
+                var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
 
-                    operation.Responses.Clear();
-                    if (responseMethods.Contains(method.Name))
+                operation.Responses.Clear();
+                if (responseMethods.Contains(method.Name))
+                {
+                    var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
+                    || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
+
+
+                    if (excludedPagination.Contains(method.Name))
                     {
-                        var schemaRepository = new SchemaRepository();
-                        
-                        var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
-                        || (x.ParameterType.BaseType != null && x.ParameterType.BaseType == typeof(QuerieFilter)));
-                       
-                        var schema = _schemaGenerator.GenerateSchema(returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO, schemaRepository);
-                        if (excludedPagination.Contains(method.Name))
+                        operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();
+                    }
+
+                    Type cType = returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO;
+
+
+                    if (!new SchemaRepository().Schemas.ContainsKey(cType.Name))
+                    {
+                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(cType, new SchemaRepository()));
+
+                        if (schema.Reference != null)
                         {
-                            operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();
+                            schema.Reference.Id = schema.Reference.Id;
+                            operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
+                            {
+                                Description = "Success",
+                                Reference = new OpenApiReference
+                                {
+                                    Id = schema.Reference.Id,
+                                    Type = ReferenceType.Schema,
+                                }
+                            };
+                        }
+                        else
+                        {
+                            operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
+                            {
+                                Description = "Success",
+                                Content =
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = schema,
+                                    }
+                                }
+                            };
                         }
 
-                        operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
-                        {
-                            Description = "Success",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType
-                                {
-                                    Schema = schema,
-                                }
-                            }
-                        };
                     }
                     else
                     {
-                        var schemaRepository = new SchemaRepository();
-                        var schema = _schemaGenerator.GenerateSchema(typeof(BaseResponse), schemaRepository);
-
-                        operation.Responses[status200String] = new OpenApiResponse
+                        operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
                         {
                             Description = "Success",
-                            Content =
+                            Reference = new OpenApiReference
                             {
-                                ["application/json"] = new OpenApiMediaType
-                                {
-                                    Schema = schema,
-                                }
+                                Type = ReferenceType.Schema,
+                                Id = cType.Name
                             }
                         };
                     }
-                    if (validationMethods.Contains(method.Name))
+
+                }
+                else
+                {
+
+                    if (!new SchemaRepository().Schemas.ContainsKey(typeof(BaseResponse).Name))
                     {
-                        var schemaRepository = new SchemaRepository();
-                        var schema = _schemaGenerator.GenerateSchema(typeof(ValidationError), schemaRepository);
-
-                        var properties = (method.Name == "AddAsync" ? addDTO : updateDTO)
-                            .GetProperties(BindingFlags.Public | BindingFlags.Instance);
-                        var validationErrors = new List<ValidationError>();
-                        foreach (var prop in properties)
-                            validationErrors.Add(new ValidationError
-                            {
-                                Property = prop.Name.ToCamelCase(),
-                                Message = $"Error message."
-                            });
-
-                        var openApiArray = new OpenApiArray();
-                        foreach (var error in validationErrors)
+                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(BaseResponse), new SchemaRepository()));
+                        if (schema.Reference != null)
                         {
-                            var obj = new OpenApiObject
+                            schema.Reference.Id = Regex.Replace(
+                                schema.Reference.Id,
+                                "(DTO|PagedList|Result|NullableOf|\\d)",
+                                string.Empty
+                            );
+                        }
+                        else
+                        {
+                            operation.Responses[status200String] = new OpenApiResponse
                             {
-                                ["property"] = new OpenApiString(error.Property),
-                                ["message"] = new OpenApiString(error.Message)
+                                Description = "Success",
+                                Content =
+                                {
+                                    ["application/json"] = new OpenApiMediaType
+                                    {
+                                        Schema = schema,
+                                    }
+                                }
                             };
-                            openApiArray.Add(obj);
                         }
 
+                    }
+                    else
+                    {
+                        operation.Responses[status200String] = new OpenApiResponse
+                        {
+                            Description = "Success",
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = typeof(BaseResponse).Name
+                            }
+                        };
+                    }
 
+                }
+                if (validationMethods.Contains(method.Name))
+                {
+                    var properties = (method.Name == "AddAsync" ? addDTO : updateDTO)
+                        .GetProperties(BindingFlags.Public | BindingFlags.Instance);
+                    var validationErrors = new List<ValidationError>();
+                    foreach (var prop in properties)
+                        validationErrors.Add(new ValidationError
+                        {
+                            Property = prop.Name.ToCamelCase(),
+                            Message = $"Error message."
+                        });
+
+                    var openApiArray = new OpenApiArray();
+                    foreach (var error in validationErrors)
+                    {
+                        var obj = new OpenApiObject
+                        {
+                            ["property"] = new OpenApiString(error.Property),
+                            ["message"] = new OpenApiString(error.Message)
+                        };
+                        openApiArray.Add(obj);
+                    }
+
+
+                    if (!new SchemaRepository().Schemas.ContainsKey(typeof(ValidationError).Name))
+                    {
+                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(ValidationError), new SchemaRepository()));
                         operation.Responses[status400String] = new OpenApiResponse
                         {
                             Description = "Validation Errors.",
@@ -223,9 +315,35 @@ namespace Common.Api.Filters.OpenApi
                             }
                         };
                     }
-                
+                    else
+                    {
+                        operation.Responses[status400String] = new OpenApiResponse
+                        {
+                            Description = "Validation Errors.",
+                            Content =
+                            {
+                                ["application/json"] = new OpenApiMediaType
+                                {
+                                    Example = new OpenApiObject
+                                    {
+                                        ["statusCode"] = new OpenApiLong(StatusCodes.Status400BadRequest),
+                                        ["data"] = openApiArray,
+                                        ["errors"] = new OpenApiString("Validation Errors.")
+                                    }
+                                }
+                            },
+                            Reference = new OpenApiReference
+                            {
+                                Type = ReferenceType.Schema,
+                                Id = typeof(ValidationError).Name
+                            }
+                        };
+                    }
+                }
+
+
             }
-            else if(
+            else if (
                 context.Description.ActionDescriptor is ControllerActionDescriptor cA2
                 && cA2.ControllerTypeInfo is TypeInfo tI2
                 && tI2.ImplementedInterfaces.Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ICommonController<,,,,,>)))
@@ -261,22 +379,44 @@ namespace Common.Api.Filters.OpenApi
 
                     if (typeMember != null && typeMember.TypedValue.Value is Type t)
                     {
-                        var schemaRepository = new SchemaRepository();
-                        var schema = _schemaGenerator.GenerateSchema(t, schemaRepository);
-                        operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
+                        if (!new SchemaRepository().Schemas.ContainsKey(t.Name))
                         {
-                            Description = "Success",
-                            Content =
+                            var schema = HandleSchema(_schemaGenerator.GenerateSchema(t, new SchemaRepository()));
+                            operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
+                            {
+                                Description = "Success",
+                                Content =
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
                                         Schema = schema,
                                     }
                                 }
-                        };
+                            };
+                        }
+                        else
+                        {
+                            var schema = HandleSchema(_schemaGenerator.GenerateSchema(t, new SchemaRepository()));
+                            operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
+                            {
+                                Description = "Success",
+                                Reference = new OpenApiReference
+                                {
+                                    Type = ReferenceType.Schema,
+                                    Id = t.Name
+                                }
+                            };
+                        }
+
                     }
                 }
 
+            }
+
+            if(operation?.RequestBody?.Content != null)
+            foreach (var key in operation.RequestBody.Content.Keys)
+            {
+                operation.RequestBody.Content[key].Schema = HandleSchema(operation.RequestBody.Content[key].Schema);
             }
         }
     }

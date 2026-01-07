@@ -4,7 +4,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Shipping.Application.DTO
 {
-    public class ShipmentDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class ShipmentDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string TrackingNumber { get; set; }
         public string Carrier { get; set; }

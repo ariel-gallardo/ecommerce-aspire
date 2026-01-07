@@ -4,7 +4,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Cart.Application.DTO
 {
-    public class CartItemDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class CartItemDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public Guid ProductId { get; set; }
         public QuantityDTO Quantity { get; set; }

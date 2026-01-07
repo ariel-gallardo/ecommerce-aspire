@@ -3,7 +3,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Logs.Application.DTO
 {
-    public class LogErrorDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class LogErrorDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string Exception { get; set; }
         public string StackTrace { get; set; }
