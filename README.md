@@ -1,4 +1,4 @@
-[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ariel-gallardo/clean-code)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/ariel-gallardo/ecommerce-aspire)
 
 ## Description
 This project is a full e-commerce solution built with **.NET / ASP.NET Core**, using a **layered architecture** and **microservices** integrated with Aspire .NET. The system is structured to separate responsibilities clearly across layers while allowing microservices communication.  
