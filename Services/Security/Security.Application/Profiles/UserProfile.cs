@@ -2,9 +2,7 @@
 using Common.Domain.Entities;
 using Mapster;
 using Security.Application.DTO;
-using Security.Domain.Const;
 using Security.Domain.Filters.Queries;
-using System.Security.Claims;
 
 namespace Security.Application.Profiles
 {

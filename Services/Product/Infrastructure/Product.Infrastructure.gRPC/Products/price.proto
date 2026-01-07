@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package product;
+
+option csharp_namespace = "Product.Infrastructure.gRPC.Protos";
+
+message Price {
+  double value = 1;
+  string unit = 2; 
+}

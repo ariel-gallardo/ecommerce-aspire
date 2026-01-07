@@ -5,6 +5,6 @@ namespace Cart.Application.DTO
 {
     public class CartDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
     {
-        public List<CartItemDTO> Items { get; set; } = new();
+        public List<CartItemResultDTO> Items { get; set; } = new();
     }
 }

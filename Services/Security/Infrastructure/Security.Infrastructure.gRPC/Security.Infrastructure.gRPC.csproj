@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Infrastructure\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
+  </ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Permissions/permission_dto.proto" GrpcServices="Both" />
+		<Protobuf Include="Permissions/permission_service.proto" GrpcServices="Both" />
+	</ItemGroup>
+
+</Project>

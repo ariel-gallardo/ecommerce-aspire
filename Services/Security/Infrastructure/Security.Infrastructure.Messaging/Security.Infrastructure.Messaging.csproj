@@ -28,4 +28,9 @@
     <ProjectReference Include="..\..\..\Logs\Logs.Domain\Logs.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Consumer\" />
+    <Folder Include="Messages\Request\" />
+  </ItemGroup>
+
 </Project>

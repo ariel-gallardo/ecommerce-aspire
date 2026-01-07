@@ -15,6 +15,8 @@ namespace Product.Domain.Filters.Querie
         public string Category { get; set; }
         [FromQuery]
         public Guid? CategoryId { get; set; }
+        [FromQuery]
+        public IList<Guid>? Ids { get; set; }
 
         #region Expressions
         private Expression<Func<Entities.Product, bool>>? FindByName
@@ -34,6 +36,10 @@ namespace Product.Domain.Filters.Querie
         private Expression<Func<Entities.Product, bool>>? FindByCategoryId
         {
             get => CategoryId.HasValue ? x => x.CategoryId == CategoryId : null;
+        }
+        private Expression<Func<Entities.Product, bool>>? FindByIds
+        {
+            get => Ids != null && Ids.Any() ? x => Ids.Contains(x.Id) : null;
         }
         #endregion
     }

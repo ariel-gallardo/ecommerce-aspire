@@ -98,7 +98,7 @@ namespace Common.Application.Services
         {
             var behaviors = _provider.GetServices<ISearchQuerieSingleBehavior<DomainEntity, ResultDTO>>().OrderBy(x => x.Order);
             foreach (var b in behaviors) filters = await b.OnBeforeAsync(filters, cancellationToken);
-            var response = await _inner.SearchAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
+            var response = await _inner.SearchFirstAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
             foreach (var b in behaviors) response = await b.OnAfterAsync(response, cancellationToken);
             return response;
         }

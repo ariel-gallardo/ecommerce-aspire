@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Mapster" Version="7.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Common\Extensions\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
+    <ProjectReference Include="..\..\Infrastructure\Security.Infrastructure.gRPC\Security.Infrastructure.gRPC.csproj" />
+    <ProjectReference Include="..\..\Security.Domain\Security.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

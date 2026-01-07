@@ -12,11 +12,14 @@ using FluentValidation;
 using Mapster;
 using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Security.Application.gRPC;
+using Security.Application.gRPC.Profiles;
 using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
@@ -29,7 +32,7 @@ namespace Common.Application
         public static IServiceCollection AddApplicationMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
             var config = new TypeAdapterConfig();
-            config.Scan(assemblies.Concat(new[] { typeof(IdentifiableProfile).Assembly }).ToArray());
+            config.Scan(assemblies.Concat(new[] { typeof(IdentifiableProfile).Assembly, typeof(PermissionProfile).Assembly }).ToArray());
             services.AddSingleton(config);
             services.AddScoped<IMapper, ServiceMapper>();
             return services;
@@ -117,6 +120,55 @@ namespace Common.Application
             services.AddScoped<ICommonServices, CommonServices>();
             services.Decorate<ICommonServices, CommonServicesDecorator>();
             return services;
+        }
+
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services, params Assembly[] assemblies)
+        {
+            var grpcServiceTypes = assemblies.Concat(new[] { typeof(PermissionGrpcService).Assembly })
+                .SelectMany(a => a.GetTypes())
+                .Where(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    typeof(IGrpcServiceServer).IsAssignableFrom(t)
+                )
+                .ToList();
+
+            foreach (var grpcServiceType in grpcServiceTypes)
+                services = services.AddScoped(grpcServiceType);
+            return services;
+        }
+
+        public static WebApplication AddGrpcApplication(
+            this WebApplication app,
+            params Assembly[] assemblies)
+        {
+            var grpcServiceTypes = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    typeof(IGrpcServiceServer).IsAssignableFrom(t)
+                );
+
+            foreach (var serviceType in grpcServiceTypes)
+            {
+                MapGrpcService(app, serviceType);
+            }
+
+            return app;
+        }
+
+        private static void MapGrpcService(WebApplication app, Type serviceType)
+        {
+            var mapMethod = typeof(GrpcEndpointRouteBuilderExtensions)
+                .GetMethods()
+                .First(m =>
+                    m.Name == "MapGrpcService" &&
+                    m.IsGenericMethod &&
+                    m.GetParameters().Length == 1);
+
+            var genericMethod = mapMethod.MakeGenericMethod(serviceType);
+            genericMethod.Invoke(null, new object[] { app });
         }
     }
 }

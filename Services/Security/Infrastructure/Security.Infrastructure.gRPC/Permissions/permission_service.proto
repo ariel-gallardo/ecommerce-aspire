@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package security;
+
+option csharp_namespace = "Security.Infrastructure.gRPC.Protos";
+
+import "Permissions/permission_dto.proto";
+
+service PermissionService {
+  rpc GetPolicy (PermissionRequest) returns (PermissionResponse);
+  rpc CreatePolicy (PermissionRequest) returns (PermissionResponse);
+}

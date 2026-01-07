@@ -1,4 +1,5 @@
 ﻿using Common.Domain.Entities;
+using Common.Extensions;
 using Security.Domain.Const;
 using System.Security.Claims;
 
@@ -24,7 +25,7 @@ namespace Security.Application.DTO
         public UserClaimsDTO(User user)
         {
             Id = user.Id;
-            Rol = user.Rol.ToString();
+            Rol = user.Rol.AsStringUsingMemberValue();
             Username = user.Username;
             Email = user.Email;
             Name = user.Persona?.Name;

@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Entities\Common.Infrastructure.Entities.csproj" />
+    <ProjectReference Include="$(ProductInfra)\Product.Infrastructure.gRPC\Product.Infrastructure.gRPC.csproj" />
+    <ProjectReference Include="$(Cart)\Cart.Application\Cart.Application.csproj" />
+  </ItemGroup>
+
+</Project>

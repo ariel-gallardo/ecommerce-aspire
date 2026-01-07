@@ -17,6 +17,7 @@
     <ProjectReference Include="$(CommonApi)\Common.Api.Controllers\Common.Api.Controllers.csproj" />
     <ProjectReference Include="$(CommonApi)\Common.Api.CustomAttributes\Common.Api.CustomAttributes.csproj" />
     <ProjectReference Include="$(CommonApi)\Common.Api.ServiceDefaults\Common.Api.ServiceDefaults.csproj" />
+    <ProjectReference Include="..\..\..\Services\Security\Infrastructure\Security.Infrastructure.gRPC\Security.Infrastructure.gRPC.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Converters\Factory\" />

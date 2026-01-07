@@ -2,7 +2,6 @@
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
 using Common.Infrastructure.Entities;
-using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using MassTransit;
@@ -11,20 +10,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Security.Infrastructure.Contracts;
-using Security.Infrastructure.Messaging.Messages.Request;
+using Security.Infrastructure.gRPC.Protos;
+using static Security.Infrastructure.gRPC.Protos.PermissionService;
 
 namespace Common.Api.Filters
 {
     public class PolicyFilter : IAsyncAuthorizationFilter
     {
         private readonly ICacheManagerServices _cache;
-        private readonly IRequestClient<LoadPermissionRequest> _policyClient;
+        private readonly PermissionServiceClient _permissionServiceClient;
         private readonly IAuthServices _authServices;
 
-        public PolicyFilter(ICacheManagerServices cache, IRequestClient<LoadPermissionRequest> policyClient, IAuthServices authServices)
+        public PolicyFilter(ICacheManagerServices cache, PermissionServiceClient permissionServiceClient, IAuthServices authServices)
         {
             _cache = cache;
-            _policyClient = policyClient;
+            _permissionServiceClient = permissionServiceClient;
             _authServices = authServices;
         }
         public async Task OnAuthorizationAsync(AuthorizationFilterContext context)
@@ -62,12 +62,12 @@ namespace Common.Api.Filters
                 {
                     try
                     {
-                        var response = await _policyClient.GetResponse<Message<string>>(
+                        var response = await _permissionServiceClient.GetPolicyAsync(
                             String.IsNullOrWhiteSpace(policyUrl) ?
-                            new LoadPermissionRequest { Controller = controller, Action = action }
-                            : new LoadPermissionRequest { Url = policyUrl }
+                            new PermissionRequest { Controller = controller, Action = action }
+                            : new PermissionRequest { Url = policyUrl }
                             );
-                        var data = response.Message.Data;
+                        var data = response.Policy;
                         if (!String.IsNullOrWhiteSpace(data))
                         {
                             policy = data;

@@ -1,8 +1,10 @@
-using Common.Api;
-using Cart.Infrastructure.Persistence;
+using Cart.Application.Pipelines.AssociatePriceAndName.Cart;
 using Cart.Application.Profiles;
 using Cart.Controllers;
+using Cart.Infrastructure.Persistence;
 using Cart.Infrastructure.Seeders;
+using Common.Api;
+using Product.Infrastructure.gRPC.Extensions;
 
 namespace Cart.API
 {
@@ -16,7 +18,10 @@ namespace Cart.API
             .AddSeederAssemblies(typeof(CartSeeder).Assembly)
             .AddValidatorAssemblies()
             .AddServiceAssemblies()
+            .AddPipelinesAssemblies(typeof(SearchQuerieSinglePipeline).Assembly)
+            .AddGrpcProductClients()
             .BuildApi<CartDbContext>();
+            
             app.Run();
         }
     }

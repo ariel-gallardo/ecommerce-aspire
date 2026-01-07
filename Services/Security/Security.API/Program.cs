@@ -1,9 +1,9 @@
 using Common.Api;
 using Security.Application;
+using Security.Application.gRPC;
 using Security.Application.Profiles;
 using Security.Application.Rules;
 using Security.Controllers;
-using Security.Infrastructure.Messaging.Messages.Request;
 using Security.Infrastructure.Persistence;
 using Security.Infrastructure.Seeders;
 
@@ -13,7 +13,8 @@ var app = WebApplication.CreateBuilder(args)
     .AddValidatorAssemblies(typeof(UserLoginDTOValidator).Assembly)
     .AddServiceAssemblies(typeof(UserServices).Assembly)
     .AddSeederAssemblies(typeof(UserSeeder).Assembly)
-    .AddMessageAssemblies(typeof(LoadPermissionRequest).Assembly)
+    .AddMessageAssemblies()
+    .AddGrpcAssemblies(typeof(PermissionGrpcService).Assembly)
     .BuildApi<SecurityDbContext>();
 
 app.Run();

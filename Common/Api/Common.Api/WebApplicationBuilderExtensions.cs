@@ -9,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
+using Security.Infrastructure.gRPC;
 
 namespace Common.Api
 {
@@ -20,6 +21,7 @@ namespace Common.Api
         private static Assembly[] _controllerAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _seederAssemblies = Array.Empty<Assembly>();
         private static Assembly[] _messageAssemblies = Array.Empty<Assembly>();
+        private static Assembly[] _grpcAssemblies = Array.Empty<Assembly>();
 
         public static WebApplicationBuilder AddAutoMapperAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
         {
@@ -69,6 +71,12 @@ namespace Common.Api
             return builder;
         }
 
+        public static WebApplicationBuilder AddGrpcAssemblies(this WebApplicationBuilder builder, params Assembly[] assemblies)
+        {
+            _grpcAssemblies = _grpcAssemblies.Concat(assemblies).ToArray();
+            return builder;
+        }
+
         public static WebApplication BuildApi<DBContext>(this WebApplicationBuilder builder)
             where DBContext : DbContext
         {
@@ -83,6 +91,7 @@ namespace Common.Api
             builder.Services.AddInfrastructure<DBContext>(builder.Configuration, env,_messageAssemblies);
             builder.Services.AddApplicationRedis(builder.Configuration);
             builder.Services.AddApplicationServices(_serviceAssemblies);
+            builder.Services.AddGrpcServices(_grpcAssemblies);
             builder.Services.AddApplicationMapper(env,_mapperAssemblies);
             builder.Services.AddApplicationValidators(_validatorAssemblies);
             builder.Services.AddSeeders(env, _seederAssemblies);
@@ -101,8 +110,11 @@ namespace Common.Api
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
                 c.ShouldInclude = (api) => true;
             });
+            builder.Services.AddGrpc();
             builder.AddServiceDefaults();
+            builder.AddGrpcSecurityClients();
             var app = builder.Build();
+            app.AddGrpcApplication(_grpcAssemblies);
             app.UseMiddleware<GlobalExceptionMiddleware>();
             app.UseCors("AllowMySite");
             app.MapDefaultEndpoints();

@@ -1,6 +1,6 @@
 ﻿namespace Common.Infrastructure.Contracts
 {
-    public interface IResponse<T> where T : class
+    public interface IResponse<T> : IResponse where T : class
     {
         T Data { get; set; }
     }

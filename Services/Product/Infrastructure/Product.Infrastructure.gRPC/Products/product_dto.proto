@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package product;
+
+option csharp_namespace = "Product.Infrastructure.gRPC.Protos";
+import "Products/price.proto";
+
+message ProductInfo {
+  string id = 1;
+  string name = 2;
+  Price price = 3;
+  string currency = 4;
+}

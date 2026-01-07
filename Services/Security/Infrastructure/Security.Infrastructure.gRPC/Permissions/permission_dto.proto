@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package security;
+
+option csharp_namespace = "Security.Infrastructure.gRPC.Protos";
+
+message PermissionRequest {
+  string url = 1;
+  string action = 2;
+  string controller = 3;
+}
+
+message PermissionResponse {
+  string policy = 1;
+}
+

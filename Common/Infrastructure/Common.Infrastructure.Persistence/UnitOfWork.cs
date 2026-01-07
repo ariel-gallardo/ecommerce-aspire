@@ -65,8 +65,8 @@ namespace Common.Infrastructure
         public async Task<ResultDTO> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
-        => (await AddAsync(entity.Adapt<DomainEntity>(), cancellationToken)).Adapt<ResultDTO>();
+            where ResultDTO : class
+        => (await AddAsync(entity.Adapt<DomainEntity>(_mapper.Config), cancellationToken)).Adapt<ResultDTO>();
 
         public async Task<IList<DomainEntity>> AddAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
@@ -98,11 +98,11 @@ namespace Common.Infrastructure
         public async Task<IList<ResultDTO>> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entity, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class
         {
             var entities = entity.Adapt<IList<DomainEntity>>();
             await AddAsync(entities, cancellationToken);
-            return entities.Adapt<IList<ResultDTO>>();
+            return entities.Adapt<IList<ResultDTO>>(_mapper.Config);
         }
 
         #endregion
@@ -111,7 +111,6 @@ namespace Common.Infrastructure
         public async Task<DomainEntity> UpdateAsync<DomainEntity>(DomainEntity entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
-
             if (entity is IAuditable)
             {
                 (entity as IAuditable).UpdatedAt = DateTime.UtcNow;
@@ -135,41 +134,15 @@ namespace Common.Infrastructure
         public async Task<ResultDTO> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
             where UpdateDTO : class, IEntityDTO, IUpdateDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class
         {
             DomainEntity dbEntity;
-            if (entity is IIdentifiableDTO iE)
-            {
-                if (!await ExistsAsync<ulong, DomainEntity>(iE.Id, cancellationToken))
-                    throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iE.Id.ToString());
-                else
-                {
-                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iE.Id);
-                    return (await UpdateAsync(entity.Adapt(dbEntity), cancellationToken)).Adapt<ResultDTO>();
-                }
-            }else if (entity is IIdentifiableGuidDTO iEGuid)
-            {
-                if (!await ExistsAsync<Guid, DomainEntity>(iEGuid.Id, cancellationToken))
-                    throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, iEGuid.Id.ToString());
-                else
-                {
-                    dbEntity = await _ctx.Set<DomainEntity>().FindAsync(iEGuid.Id);
-                    return (await UpdateAsync(entity.Adapt(dbEntity), cancellationToken)).Adapt<ResultDTO>();
-                }
-            }
-            return null;
+            return (await UpdateAsync(entity.Adapt<DomainEntity>(_mapper.Config), cancellationToken)).Adapt<ResultDTO>();
         }
+
         public async Task<IList<DomainEntity>> UpdateAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
         {
-            IList<ulong> ids;
-            if (entity is IList<IEntity> iE)
-            {
-                ids = iE.Adapt<IList<ulong>>();
-                var (all, notFoundIds) = await ExistsAsync<ulong, DomainEntity>(ids, cancellationToken);
-                if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Update, notFoundIds.Select(x => x.ToString()).ToList());
-            }
-
             var entities = entity.Select<DomainEntity, IEntity>( e =>
             {
                 if (e is IAuditable a)
@@ -180,6 +153,8 @@ namespace Common.Infrastructure
                     _ctx.Entry(existing).CurrentValues.SetValues(a);
                     _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedAt).IsModified = false;
                     _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedAt).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditable).CreatedById).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditable).DeletedById).IsModified = false;
                     return existing;
                 }
                 else if (e is IAuditableGuid b)
@@ -190,6 +165,8 @@ namespace Common.Infrastructure
                     _ctx.Entry(existing).CurrentValues.SetValues(b);
                     _ctx.Entry(existing).Property(x => (x as IAuditableGuid).CreatedAt).IsModified = false;
                     _ctx.Entry(existing).Property(x => (x as IAuditableGuid).DeletedAt).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditableGuid).CreatedById).IsModified = false;
+                    _ctx.Entry(existing).Property(x => (x as IAuditableGuid).DeletedById).IsModified = false;
                     return existing;
                 }
                 return e;
@@ -201,7 +178,7 @@ namespace Common.Infrastructure
         public async Task<IList<ResultDTO>> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entity, CancellationToken cancellationToken)
             where UpdateDTO : class, IEntityDTO, IUpdateDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class
         {
             var entities = entity.Adapt<IList<DomainEntity>>();
             await UpdateAsync(entities, cancellationToken);
@@ -256,7 +233,6 @@ namespace Common.Infrastructure
             var (all, notFoundIds) = await ExistsAsync<Key, DomainEntity>(ids, cancellationToken);
             if (!all) throw new EntityNotFoundException(typeof(DomainEntity).Name, ActionEnum.Delete, notFoundIds.Select(x => x.ToString()).ToList());
 
-            var set = _ctx.Set<DomainEntity>().AsNoTracking().Cast<IIdentifiable>();
             var currentTime = DateTime.UtcNow;
 
             if (typeof(IAuditable).IsAssignableFrom(typeof(DomainEntity)))
@@ -372,7 +348,7 @@ namespace Common.Infrastructure
 
         public async Task<ResultDTO> SearchOneAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class
         {
             var querie = _ctx.Set<DomainEntity>().AsQueryable().IgnoreAutoIncludes();
             if (filters != null)
@@ -419,7 +395,7 @@ namespace Common.Infrastructure
         }
         public async Task<ResultDTO> SearchAsync<Key, DomainEntity, ResultDTO>(Key id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
                 return await _ctx.Set<DomainEntity>().IgnoreAutoIncludes().AsNoTracking().Cast<IIdentifiable>().Where(x => x.Id.Equals(id)).Cast<DomainEntity>().ApplyModifiers(_sp).ProjectToType<ResultDTO>().FirstOrDefaultAsync(cancellationToken);
@@ -440,7 +416,7 @@ namespace Common.Infrastructure
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<Key,DomainEntity, ResultDTO>(IList<Key> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class
         {
             if (typeof(DomainEntity).IsAssignableTo(typeof(IIdentifiable)))
                 return await _ctx.Set<DomainEntity>().IgnoreAutoIncludes().AsNoTracking().Cast<IIdentifiable>().Where(x => ids.Cast<ulong>().Contains(x.Id) ).ApplyModifiers(_sp).PaginateAsync<ResultDTO>(_mapper,page, pageSize);
@@ -456,7 +432,7 @@ namespace Common.Infrastructure
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IEntityDTO, IResultDTO
+            where ResultDTO : class
              => await _ctx.Set<DomainEntity>().IgnoreAutoIncludes().AsNoTracking().Where(where).ApplyModifiers(_sp).PaginateAsync<DomainEntity,ResultDTO>(_mapper,page, pageSize);
 
         public async Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
@@ -477,7 +453,7 @@ namespace Common.Infrastructure
 
         public async Task<ResultDTO> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class
         {
             var querie = _ctx.Set<DomainEntity>().AsQueryable().IgnoreAutoIncludes();
             if (filters != null)
@@ -494,7 +470,7 @@ namespace Common.Infrastructure
 
         public async Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class
         {
             var querie = _ctx.Set<DomainEntity>().AsQueryable().IgnoreAutoIncludes();
             querie = querie.ApplyModifiers(_sp);

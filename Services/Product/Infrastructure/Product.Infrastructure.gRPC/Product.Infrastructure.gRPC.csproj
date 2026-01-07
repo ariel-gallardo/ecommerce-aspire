@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+	<PackageReference Include="Grpc.AspNetCore" Version="2.76.0" />
+	<ProjectReference Include="..\..\..\..\Common\Infrastructure\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
+	<Protobuf Include="Products/price.proto" GrpcServices="Both" />
+	<Protobuf Include="Products/product_dto.proto" GrpcServices="Both" />
+	<Protobuf Include="Products/product_queries.proto" GrpcServices="Both" />
+	<Protobuf Include="Products/product_service.proto" GrpcServices="Both" />
+  </ItemGroup>
+
+</Project>
