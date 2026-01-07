@@ -26,6 +26,7 @@
   </Folder>
   <Folder Name="/Elementos de la solución/">
     <File Path="Directory.Build.props" />
+    <File Path="README.md" />
   </Folder>
   <Folder Name="/Services/" />
   <Folder Name="/Services/Cart/">

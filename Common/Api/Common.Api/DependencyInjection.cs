@@ -11,8 +11,8 @@ using Microsoft.Extensions.DependencyInjection.Extensions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
+using Swashbuckle.AspNetCore.SwaggerGen;
 using System.Reflection;
-using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace Common.Api
@@ -57,14 +57,14 @@ namespace Common.Api
             {
                 options.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
                 options.SerializerSettings.Converters.Add(new StringEnumConverter(namingStrategy: new CamelCaseNamingStrategy()));
-            }).ConfigureApiBehaviorOptions(options =>
+        }).ConfigureApiBehaviorOptions(options =>
             {
                 options.SuppressModelStateInvalidFilter = true;
             });
             services.Replace(ServiceDescriptor.Transient<IControllerActivator, ControllerActivatorServices>());
             services.AddFluentValidationAutoValidation();
             services.AddEndpointsApiExplorer();
-
+            services.AddSingleton(new SchemaRepository());
             return services;
         }
     }

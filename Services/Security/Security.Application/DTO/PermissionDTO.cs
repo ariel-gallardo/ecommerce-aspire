@@ -3,7 +3,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Security.Application.DTO
 {
-    public class PermissionDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class PermissionDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string Url { get; set; }
         public string Controller { get; set; }

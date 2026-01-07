@@ -4,7 +4,7 @@ using Common.Infrastructure.Contracts;
 
 namespace Inventory.Application.DTO
 {
-    public class InventoryItemDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IResultDTO
+    public class InventoryItemDTO : AuditableGuidDTO, IAddDTO, IUpdateDTO, IReadDTO
     {
         public string ProductId { get; set; }
         public virtual QuantityDTO Quantity { get; set; }

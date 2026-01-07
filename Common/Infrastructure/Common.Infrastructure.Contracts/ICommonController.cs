@@ -7,7 +7,7 @@ namespace Common.Infrastructure.Contracts
         where DomainEntity : class, IEntity
         where AddDTO : class, IEntityDTO, IAddDTO
         where UpdateDTO : class, IEntityDTO, IUpdateDTO
-        where ResultDTO : class, IEntityDTO, IResultDTO
+        where ResultDTO : class, IEntityDTO, IReadDTO
         where QuerieFilterEntity : class, IQuerieFilter
     {
         #region Add

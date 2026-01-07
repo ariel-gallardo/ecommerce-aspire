@@ -2,7 +2,7 @@
 
 namespace Cart.Application.DTO
 {
-    public class CartItemResultDTO : CartItemDTO
+    public class CartItemReadDTO : CartItemDTO
     {
         public PriceDTO Price { get; set; }
         public string Name { get; set; }
