@@ -1,4 +1,4 @@
-﻿using Common.Contracts.DTO.Base;
+﻿using Common.Infrastructure.Contracts;
 
 namespace Common.Application.DTO.Base.Entities
 {

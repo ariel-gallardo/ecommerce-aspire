@@ -1,6 +1,6 @@
 ﻿using Common.Infrastructure.Entities;
 using Common.Infrastructure.Messages.Entities;
-using Logs.Infrastructure.Messaging.Messages.Request;
+using Logs.Infrastructure.Messaging.Request;
 using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

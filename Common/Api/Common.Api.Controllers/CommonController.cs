@@ -1,8 +1,4 @@
-﻿using Common.Contracts;
-using Common.Contracts.DTO.ABM;
-using Common.Contracts.DTO.Base;
-using Common.Contracts.Entities;
-using Common.Contracts.Queries;
+﻿using Common.Infrastructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Common.Api.Controllers

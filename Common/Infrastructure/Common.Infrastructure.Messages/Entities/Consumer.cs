@@ -1,6 +1,7 @@
-﻿using AutoMapper;
+﻿
 using Common.Infrastructure.Cache;
-using Common.Infrastructure.Repositories;
+using Common.Infrastructure.Contracts;
+using MapsterMapper;
 using MassTransit;
 
 namespace Common.Infrastructure.Messages.Entities

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <UserSecretsId>0239cb11-bad1-446e-955e-85f636502eca</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <ProjectReference Include="$(CommonApi)\Common.Api\Common.Api.csproj" />
+	  <ProjectReference Include="$(Logs)\Logs.Application\Logs.Application.csproj" />
+	  <ProjectReference Include="$(Logs)\Logs.Controllers\Logs.Controllers.csproj" />
+	  <ProjectReference Include="..\Infrastructure\Logs.Infrastructure.Persistence\Logs.Infrastructure.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

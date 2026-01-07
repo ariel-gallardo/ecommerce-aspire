@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 using System.Security.Claims;
 
 namespace Security.Infrastructure.Contracts

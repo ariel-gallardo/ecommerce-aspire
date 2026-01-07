@@ -1,14 +1,15 @@
-﻿using AutoMapper;
+﻿
 using Cart.Application.DTO;
 using Cart.Domain.Entities;
+using Mapster;
 
 namespace Cart.Application.Profiles
 {
-    public class CartItemProfile : Profile
+    
+	public class CartItemProfile : IRegister 
     {
-        public CartItemProfile()
-        {
-            CreateMap<CartItemDTO, CartItem>().ForMember(dest => dest.Cart, opt => opt.Ignore()).ReverseMap();
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<CartItemDTO, CartItem>().TwoWays();
         }
     }
 }

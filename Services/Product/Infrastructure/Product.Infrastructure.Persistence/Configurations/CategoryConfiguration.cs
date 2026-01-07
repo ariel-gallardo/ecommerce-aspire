@@ -1,7 +1,7 @@
-﻿using Common.Infrastructure;
-using Microsoft.EntityFrameworkCore.Metadata.Builders;
+﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Product.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using Common.Infrastructure.Persistence;
 
 
 namespace Product.Infrastructure.Persistence.Configurations
@@ -14,9 +14,10 @@ namespace Product.Infrastructure.Persistence.Configurations
             builder.Property(x => x.Name).IsRequired(true);
             builder.HasIndex(x => x.Name).IsUnique();
             builder.Property(x => x.Description).IsRequired(false);
+            builder.Property(x => x.ParentId).HasDefaultValue(null);
             builder
-                .HasOne(x => x.Parent)
-                .WithMany(x => x.Children)
+                .HasMany(x => x.Children)
+                .WithOne(x => x.Parent)
                 .HasForeignKey(x => x.ParentId)
                 .OnDelete(DeleteBehavior.Restrict)
                 .IsRequired(false);

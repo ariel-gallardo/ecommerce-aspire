@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+	<ItemGroup>
+		<PackageReference Include="Mapster" Version="7.4.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="$(CommonApp)\Common.Application.DTO\Common.Application.DTO.csproj" />
+	  <ProjectReference Include="$(Logs)\Logs.Domain\Logs.Domain.csproj" />
+	  <ProjectReference Include="..\Infrastructure\Logs.Infrastructure.Messaging\Logs.Infrastructure.Messaging.csproj" />
+	</ItemGroup>
+</Project>

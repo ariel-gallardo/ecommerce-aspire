@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities;
 using Security.Application.DTO;
 

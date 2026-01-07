@@ -1,6 +1,6 @@
 ﻿using Common.Api.Controllers;
-using Common.Contracts;
 using Common.Domain.Entities;
+using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;

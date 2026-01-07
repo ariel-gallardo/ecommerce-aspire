@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/Common/">
-    <Project Path="Common/Contracts/Common.Contracts/Common.Contracts.csproj" />
     <Project Path="Common/Domain/Common.Domain/Common.Domain.csproj" />
     <Project Path="Common/Extensions/Common.Extensions/Common.Extensions.csproj" />
   </Folder>
@@ -17,9 +16,11 @@
   <Folder Name="/Common/Infrastructure/">
     <Project Path="Common/Infrastructure/Common.Infrastructure.Cache.Key/Common.Infrastructure.Cache.Key.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Cache/Common.Infrastructure.Cache.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Configurations/Common.Infrastructure.Configurations.csproj" Id="98402cc1-9b80-46e5-baa6-62a0fc88e9bf" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Contracts/Common.Infrastructure.Contracts.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Entities/Common.Infrastructure.Entities.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Messages/Common.Infrastructure.Messages.csproj" />
+    <Project Path="Common/Infrastructure/Common.Infrastructure.Persistence/Common.Infrastructure.Persistence.csproj" Id="ac3cd36e-1f6c-4b3a-a044-0318d9b570ad" />
     <Project Path="Common/Infrastructure/Common.Infrastructure.Seeder/Common.Infrastructure.Seeder.csproj" />
     <Project Path="Common/Infrastructure/Common.Infrastructure/Common.Infrastructure.csproj" />
   </Folder>
@@ -29,7 +30,6 @@
   <Folder Name="/Services/" />
   <Folder Name="/Services/Cart/">
     <Project Path="Services/Cart/Cart.API/Cart.API.csproj" />
-    <Project Path="Services/Cart/Cart.Application/Cart.Application.csproj" />
     <Project Path="Services/Cart/Cart.Controllers/Cart.Controllers.csproj" />
     <Project Path="Services/Cart/Cart.Domain/Cart.Domain.csproj" />
   </Folder>
@@ -71,13 +71,11 @@
   </Folder>
   <Folder Name="/Services/Product/">
     <Project Path="Services/Product/Product.API/Product.API.csproj" />
-    <Project Path="Services/Product/Product.Application/Product.Application.csproj" />
     <Project Path="Services/Product/Product.Controllers/Product.Controllers.csproj" />
     <Project Path="Services/Product/Product.Domain/Product.Domain.csproj" />
   </Folder>
   <Folder Name="/Services/Security/">
     <Project Path="Services/Security/Security.API/Security.API.csproj" />
-    <Project Path="Services/Security/Security.Application/Security.Application.csproj" />
     <Project Path="Services/Security/Security.Controllers/Security.Controllers.csproj" />
     <Project Path="Services/Security/Security.Domain/Security.Domain.csproj" />
   </Folder>
@@ -86,6 +84,10 @@
     <Project Path="Services/Shipping/Shipping.Application/Shipping.Application.csproj" />
     <Project Path="Services/Shipping/Shipping.Controllers/Shipping.Controllers.csproj" />
     <Project Path="Services/Shipping/Shipping.Domain/Shipping.Domain.csproj" />
+  </Folder>
+  <Folder Name="/Services/Cart/Application/">
+    <Project Path="Services/Cart/Application/Cart.Application.Pipelines/Cart.Application.Pipelines.csproj" Id="76940af2-7a55-426b-9834-8cd27c73fb01" />
+    <Project Path="Services/Cart/Cart.Application/Cart.Application.csproj" />
   </Folder>
   <Folder Name="/Services/Cart/Infrastructure/">
     <Project Path="Services/Cart/Infrastructure/Cart.Infrastructure.Cache.Key/Cart.Infrastructure.Cache.Key.csproj" />
@@ -137,16 +139,27 @@
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Persistence/Payment.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Payment/Infrastructure/Payment.Infrastructure.Seeders/Payment.Infrastructure.Seeders.csproj" />
   </Folder>
+  <Folder Name="/Services/Product/Application/">
+    <Project Path="Services/Product/Application/Product.Application.gRPC/Product.Application.gRPC.csproj" Id="fd99b54b-9ce8-4895-9323-d82eebc90f96" />
+    <Project Path="Services/Product/Application/Product.Application.Pipelines/Product.Application.Pipelines.csproj" />
+    <Project Path="Services/Product/Product.Application/Product.Application.csproj" />
+  </Folder>
   <Folder Name="/Services/Product/Infrastructure/">
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Cache.Key/Product.Infrastructure.Cache.Key.csproj" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Contracts/Product.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Product/Infrastructure/Product.Infrastructure.gRPC/Product.Infrastructure.gRPC.csproj" Id="faf75176-4db7-41f2-9f4a-0f3ebe82a871" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Messaging/Product.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Persistence/Product.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Product/Infrastructure/Product.Infrastructure.Seeders/Product.Infrastructure.Seeders.csproj" />
   </Folder>
+  <Folder Name="/Services/Security/Application/">
+    <Project Path="Services/Security/Application/Security.Application.gRPC/Security.Application.gRPC.csproj" Id="19bed41e-8a27-49e1-b354-167c1d5b7393" />
+    <Project Path="Services/Security/Security.Application/Security.Application.csproj" />
+  </Folder>
   <Folder Name="/Services/Security/Infrastructure/">
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Cache.Key/Security.Infrastructure.Cache.Key.csproj" />
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Contracts/Security.Infrastructure.Contracts.csproj" />
+    <Project Path="Services/Security/Infrastructure/Security.Infrastructure.gRPC/Security.Infrastructure.gRPC.csproj" Id="8bd31414-75db-404c-80ee-26cc0d6e3a55" />
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Messaging/Security.Infrastructure.Messaging.csproj" />
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Persistence/Security.Infrastructure.Persistence.csproj" />
     <Project Path="Services/Security/Infrastructure/Security.Infrastructure.Seeders/Security.Infrastructure.Seeders.csproj" />

@@ -1,5 +1,5 @@
 ﻿using Common.Domain.Entities;
-using Common.Infrastructure;
+using Common.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Security.Infrastructure.Persistence.Configurations

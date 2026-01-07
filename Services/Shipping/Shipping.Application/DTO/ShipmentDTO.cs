@@ -1,6 +1,6 @@
 ﻿using Common.Application.DTO.Base.Entities;
 using Common.Application.DTO.ValueObjects;
-using Common.Contracts.DTO.ABM;
+using Common.Infrastructure.Contracts;
 
 namespace Shipping.Application.DTO
 {

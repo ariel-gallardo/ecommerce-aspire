@@ -1,6 +1,6 @@
 ﻿using Common.Api.Controllers;
-using Common.Contracts;
 using Common.Domain.Entities;
+using Common.Infrastructure.Contracts;
 using Security.Application.DTO;
 using Security.Controllers.Contracts;
 using Security.Domain.Filters.Queries;

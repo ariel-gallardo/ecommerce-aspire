@@ -1,4 +1,4 @@
-﻿using Common.Domain.Contracts.Entities;
+﻿using Common.Infrastructure.Contracts;
 
 namespace Common.Domain.Entities.Base
 {

@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package product;
+
+option csharp_namespace = "Product.Infrastructure.gRPC.Protos";
+
+import "Products/product_queries.proto";
+
+service ProductService {
+  rpc GetProductInfo (GetProductRequest) returns (GetProductResponse);
+  rpc GetProductsInfo (GetProductsRequest) returns (GetProductsResponse);
+}

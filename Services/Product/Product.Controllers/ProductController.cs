@@ -2,8 +2,8 @@
 using Product.Application.DTO;
 using Common.Api.Controllers;
 using Product.Domain.Filters.Querie;
-using Common.Contracts;
 using Product.Controllers.Contracts;
+using Common.Infrastructure.Contracts;
 
 namespace Product.Controllers
 {

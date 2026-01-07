@@ -1,15 +1,13 @@
 ﻿using Common.Application.Contracts;
-using Common.Contracts;
 using Common.Domain.Entities.Base;
 using Common.Extensions;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Cache.Key;
+using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities;
-using Common.Infrastructure.Entities.Const;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Messages.Entities;
 using FluentValidation;
-using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
@@ -17,12 +15,10 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
-using Security.Infrastructure.Messaging.Messages.Request;
+using Security.Infrastructure.gRPC.Protos;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Reflection.Metadata;
+using static Security.Infrastructure.gRPC.Protos.PermissionService;
 
 namespace Common.Api.Filters.OpenApi
 {
@@ -40,9 +36,8 @@ namespace Common.Api.Filters.OpenApi
         private static string status400String = StatusCodes.Status400BadRequest.ToString();
         private readonly ISchemaGenerator _schemaGenerator;
         private readonly ICommonScopedDataServices _commonData;
-        private readonly IRequestClient<LoadPermissionRequest> _loadPermissionClient;
-        private readonly IRequestClient<CreatePermissionRequest> _createPermissionClient;
         private readonly ICacheManagerServices _cache;
+        private readonly PermissionServiceClient _permissionServiceClient;
 
         private async Task<IList<OpenApiSecurityRequirement>> AssignSecuritySchema(string controller, string action)
         {
@@ -52,14 +47,21 @@ namespace Common.Api.Filters.OpenApi
                 string policy = await _cache.GetAsync<string>(cacheKey);
                 if (string.IsNullOrEmpty(policy))
                 {
-                    MassTransit.Response<Message<string>> message = null;
-                    message = await _loadPermissionClient.GetResponse<Message<string>>(new LoadPermissionRequest { Action = action, Controller = controller });
-                    policy = message.Message.Data;
+                    var data = await _permissionServiceClient.GetPolicyAsync(new PermissionRequest
+                    {
+                        Action = action,
+                        Controller = controller
+                    });
+                    policy = data.Policy;
                     await _cache.SaveAsync(cacheKey, policy);
                     if (string.IsNullOrEmpty(policy))
                     {
-                        message = await _createPermissionClient.GetResponse<Message<string>>(new CreatePermissionRequest { Action = action, Controller = controller });
-                        policy = message.Message.Data;
+                        data = await _permissionServiceClient.CreatePolicyAsync(new PermissionRequest
+                        {
+                            Action = action,
+                            Controller = controller
+                        });
+                        policy = data.Policy;
                         await _cache.SaveAsync(cacheKey, policy);
                     }
                 }
@@ -88,15 +90,13 @@ namespace Common.Api.Filters.OpenApi
         }
 
         public DynamicResponseOperationTransformer(ISchemaGenerator schemaGenerator, ICommonScopedDataServices commonData, 
-            IRequestClient<LoadPermissionRequest> loadPermissionClient, 
-            IRequestClient<CreatePermissionRequest> createPermissionClient,
+            PermissionServiceClient permissionServiceClient,
             ICacheManagerServices cache)
         {
             _schemaGenerator = schemaGenerator;
             _commonData = commonData;
-            _loadPermissionClient = loadPermissionClient;
-            _createPermissionClient = createPermissionClient;
             _cache = cache;
+            _permissionServiceClient = permissionServiceClient;
         }
         public async Task TransformAsync(OpenApiOperation operation, OpenApiOperationTransformerContext context, CancellationToken cancellationToken)
         {

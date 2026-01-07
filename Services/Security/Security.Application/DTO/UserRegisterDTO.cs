@@ -1,5 +1,5 @@
 ﻿using Common.Api.CustomAttributes;
-using Common.Contracts.DTO.ABM;
+using Common.Infrastructure.Contracts;
 
 namespace Security.Application.DTO
 {

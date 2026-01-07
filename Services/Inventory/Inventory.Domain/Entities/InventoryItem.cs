@@ -1,6 +1,6 @@
 ﻿using Common.Domain.Entities.Base;
-using Common.Domain.Enums;
 using Common.Domain.ValueObjects;
+using Common.Infrastructure.Entities.Enums;
 
 namespace Inventory.Domain.Entities
 {

@@ -9,21 +9,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    
     <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
     <PackageReference Include="EFCore.NamingConventions" Version="9.0.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.11">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.9" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.9" />
-    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.9" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="9.0.11" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="9.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="9.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.11" />
+    <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="9.0.11" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="9.0.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.35.0" />
 	<PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
@@ -33,9 +34,10 @@
     <ProjectReference Include="$(LogsInfra)\Logs.Infrastructure.Messaging\Logs.Infrastructure.Messaging.csproj" />
     <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Contracts\Security.Infrastructure.Contracts.csproj" />
     <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Messaging\Security.Infrastructure.Messaging.csproj" />
-    <ProjectReference Include="$(Common)\Contracts\Common.Contracts\Common.Contracts.csproj" />
+    
     <ProjectReference Include="$(Common)\Domain\Common.Domain\Common.Domain.csproj" />
     <ProjectReference Include="$(Common)\Extensions\Common.Extensions\Common.Extensions.csproj" />
+    <ProjectReference Include="..\Common.Infrastructure.Persistence\Common.Infrastructure.Persistence.csproj" />
   </ItemGroup>
 
 </Project>

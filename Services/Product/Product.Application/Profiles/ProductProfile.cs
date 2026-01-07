@@ -1,13 +1,15 @@
-﻿using AutoMapper;
+﻿
+using Mapster;
 using Product.Application.DTO;
 
 namespace Product.Application.Profiles
 {
-    public class ProductProfile : Profile
+    
+	public class ProductProfile : IRegister 
     {
-        public ProductProfile()
+        public void Register(TypeAdapterConfig config)        
         {
-            CreateMap<Domain.Entities.Product, ProductDTO>().ReverseMap();
+            config.NewConfig<Domain.Entities.Product, ProductDTO>().TwoWays();
         }
     }
 }

@@ -1,9 +1,11 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿
+
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using Mapster;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Product.Domain.Entities;
@@ -14,10 +16,10 @@ namespace Product.Infrastructure.Seeders
 {
     public class CategorySeeder : Seeder, IDevelopmentSeeder
     {
+
         private IEnumerable<Category> Categories { get; set; }
         public CategorySeeder(IOptions<AppSettings> options, ICacheManagerServices cache, IMapper mapper, IServiceProvider sp) : base(options, cache, mapper, sp)
         {
-
         }
         public async Task<IEnumerable<object>> SeedAsync(CancellationToken cancellationToken = default)
         {
@@ -26,7 +28,7 @@ namespace Product.Infrastructure.Seeders
             await _cache.RemoveAsync(CacheKeyCategory.SeedIds, CacheKeyCategory.SeedCreatedIds);
             if (await Set<Category>().AnyAsync(cancellationToken))
             {
-                await _cache.SaveAsync(CacheKeyCategory.SeedIds, await Set<Category>().Where(x => !x.Children.Any()).Take(_quantity).ProjectTo<Guid>(_mapper.ConfigurationProvider).ToListAsync());
+                await _cache.SaveAsync(CacheKeyCategory.SeedIds, await Set<Category>().Where(x => !x.Children.Any()).Take(_quantity).ProjectToType<Guid>().ToListAsync());
                 await _cache.SaveAsync(CacheKeyCategory.SeedCreatedIds, true);
                 return Array.Empty<object>();
             }
@@ -42,7 +44,7 @@ namespace Product.Infrastructure.Seeders
 
             var catA = Enumerable.Range(1, aCount).Select(i =>
             {
-                var entity = new Category
+                var entity = new Category(null)
                 {
                     Id = Guid.NewGuid(),
                     Name = $"Category {i}",
@@ -54,7 +56,7 @@ namespace Product.Infrastructure.Seeders
 
             var catB = Enumerable.Range(aCount + 1, bCount).Select(i =>
             {
-                var entity = new Category
+                var entity = new Category(null)
                 {
                     Id = Guid.NewGuid(),
                     Name = $"Category {i}",
@@ -67,7 +69,7 @@ namespace Product.Infrastructure.Seeders
 
             var catC = Enumerable.Range(aCount + bCount + 1, cCount).Select(i =>
             {
-                var entity = new Category
+                var entity = new Category(null)
                 {
                     Id = Guid.NewGuid(),
                     Name = $"Category {i}",

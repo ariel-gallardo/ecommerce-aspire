@@ -1,10 +1,9 @@
-﻿
-using AutoMapper;
-using Common.Domain.Contracts.Entities;
-using Common.Domain.Enums;
-using Common.Domain.ValueObjects;
+﻿using Common.Domain.ValueObjects;
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Contracts;
+using Common.Infrastructure.Entities.Enums;
+using MapsterMapper;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.DependencyInjection;

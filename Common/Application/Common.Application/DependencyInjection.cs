@@ -1,19 +1,25 @@
-﻿using AutoMapper;
+﻿
 using Common.Application.Profiles.Base;
 using Common.Application.Services;
-using Common.Contracts;
 using Common.Extensions;
 using Common.Infrastructure;
+using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
+using Common.Infrastructure.Contracts;
 using Common.Infrastructure.Entities.Enums;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using FluentValidation;
+using Mapster;
+using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Security.Application.gRPC;
+using Security.Application.gRPC.Profiles;
 using Security.Infrastructure;
 using Security.Infrastructure.Entities;
 using System.Reflection;
@@ -23,53 +29,12 @@ namespace Common.Application
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplicationAutoMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
+        public static IServiceCollection AddApplicationMapper(this IServiceCollection services, IHostEnvironment env, params Assembly[] assemblies)
         {
-            if (env.IsDevelopment())
-            {
-                MapperConfiguration mapper = null;
-                try
-                {
-                    mapper = new MapperConfiguration(cfg =>
-                    {
-                        cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-                        cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
-                        cfg.ShouldMapProperty = pi =>
-                        {
-                            var ignoredProperties = new[]
-                            {
-                            "CreatedById",
-                            "UpdatedById",
-                            "DeletedById",
-                            "CreatedAt",
-                            "UpdatedAt",
-                            "DeletedAt",
-                            "OrderBy",
-                            "Page",
-                            "PageSize",
-                            "Quantity",
-                            "Price",
-                            "Coordinate",
-                            "Address",
-                        };
-                            return !ignoredProperties.Any(prefix => pi.Name.StartsWith(prefix, StringComparison.OrdinalIgnoreCase));
-                        };
-
-                    });
-                }
-                catch (MethodAccessException)
-                {
-
-                }
-                if(mapper != null)
-                mapper.AssertConfigurationIsValid();
-            }
-            services.AddAutoMapper(cfg =>
-            {
-                cfg.ConstructServicesUsing(type => services.BuildServiceProvider().GetService(type));
-                cfg.AddMaps(assemblies.Concat(new[] { typeof(CommonProfile).Assembly }));
-
-            });
+            var config = new TypeAdapterConfig();
+            config.Scan(assemblies.Concat(new[] { typeof(IdentifiableProfile).Assembly, typeof(PermissionProfile).Assembly }).ToArray());
+            services.AddSingleton(config);
+            services.AddScoped<IMapper, ServiceMapper>();
             return services;
         }
 
@@ -131,7 +96,11 @@ namespace Common.Application
                 };
             });
             services.AddHttpContextAccessor();
-            var allTypes = assemblies.Concat(new[] { typeof(AuthServices).Assembly, typeof(UnitOfWork).Assembly, typeof(CommonServices).Assembly }).Distinct()
+            var allTypes = assemblies.Concat(new[] { typeof(AuthServices).Assembly, 
+                typeof(UnitOfWork).Assembly, 
+                typeof(CommonServices).Assembly,
+                typeof(CacheManagerServices).Assembly
+            }).Distinct()
             .SelectMany(a => a.GetTypes())
             .Where(t => t.IsClass && !t.IsAbstract &&
                    (
@@ -148,7 +117,58 @@ namespace Common.Application
                 else if (typeof(ISingleton).IsAssignableFrom(type)) services.AddSingleton(@interface, type);
                 else if (typeof(ITransient).IsAssignableFrom(type)) services.AddTransient(@interface, type);
             }
+            services.AddScoped<ICommonServices, CommonServices>();
+            services.Decorate<ICommonServices, CommonServicesDecorator>();
             return services;
+        }
+
+        public static IServiceCollection AddGrpcServices(this IServiceCollection services, params Assembly[] assemblies)
+        {
+            var grpcServiceTypes = assemblies.Concat(new[] { typeof(PermissionGrpcService).Assembly })
+                .SelectMany(a => a.GetTypes())
+                .Where(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    typeof(IGrpcServiceServer).IsAssignableFrom(t)
+                )
+                .ToList();
+
+            foreach (var grpcServiceType in grpcServiceTypes)
+                services = services.AddScoped(grpcServiceType);
+            return services;
+        }
+
+        public static WebApplication AddGrpcApplication(
+            this WebApplication app,
+            params Assembly[] assemblies)
+        {
+            var grpcServiceTypes = assemblies
+                .SelectMany(a => a.GetTypes())
+                .Where(t =>
+                    t.IsClass &&
+                    !t.IsAbstract &&
+                    typeof(IGrpcServiceServer).IsAssignableFrom(t)
+                );
+
+            foreach (var serviceType in grpcServiceTypes)
+            {
+                MapGrpcService(app, serviceType);
+            }
+
+            return app;
+        }
+
+        private static void MapGrpcService(WebApplication app, Type serviceType)
+        {
+            var mapMethod = typeof(GrpcEndpointRouteBuilderExtensions)
+                .GetMethods()
+                .First(m =>
+                    m.Name == "MapGrpcService" &&
+                    m.IsGenericMethod &&
+                    m.GetParameters().Length == 1);
+
+            var genericMethod = mapMethod.MakeGenericMethod(serviceType);
+            genericMethod.Invoke(null, new object[] { app });
         }
     }
 }

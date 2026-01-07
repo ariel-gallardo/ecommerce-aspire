@@ -1,8 +1,9 @@
-﻿using AutoMapper;
+﻿
 using Common.Infrastructure.Cache;
 using Common.Infrastructure.Configurations;
 using Common.Infrastructure.Persistence.Seeds.Base;
 using Common.Infrastructure.Seeder.Entities;
+using MapsterMapper;
 using Microsoft.Extensions.Options;
 
 namespace Shipping.Infrastructure.Seeders

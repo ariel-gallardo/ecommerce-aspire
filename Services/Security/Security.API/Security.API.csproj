@@ -20,6 +20,7 @@
     <ProjectReference Include="$(SecurityInfra)\Security.Infrastructure.Seeders\Security.Infrastructure.Seeders.csproj" />
     <ProjectReference Include="$(Security)\Security.Application\Security.Application.csproj" />
     <ProjectReference Include="$(Security)\Security.Controllers\Security.Controllers.csproj" />
+    <ProjectReference Include="..\Application\Security.Application.gRPC\Security.Application.gRPC.csproj" />
   </ItemGroup>
 
 </Project>

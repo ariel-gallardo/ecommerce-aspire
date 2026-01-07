@@ -1,12 +1,7 @@
-﻿using Common.Contracts;
-using Common.Contracts.DTO.ABM;
-using Common.Contracts.DTO.Base;
-using Common.Contracts.Entities;
-using Common.Contracts.Queries;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
 
-namespace Common.Infrastructure.Repositories
+namespace Common.Infrastructure.Contracts
 {
     public interface IUnitOfWork : IScoped
     {
@@ -17,13 +12,13 @@ namespace Common.Infrastructure.Repositories
         Task<ResultDTO> AddAsync<AddDTO, DomainEntity, ResultDTO>(AddDTO entity, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IResultDTO, IEntityDTO;
+            where ResultDTO : class;
         Task<IList<DomainEntity>> AddAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity;
         Task<IList<ResultDTO>> AddAsync<AddDTO, DomainEntity, ResultDTO>(IList<AddDTO> entity, CancellationToken cancellationToken)
             where AddDTO : class, IEntityDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IResultDTO, IEntityDTO;
+            where ResultDTO : class;
         #endregion
 
         #region Update
@@ -32,13 +27,13 @@ namespace Common.Infrastructure.Repositories
         Task<ResultDTO> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(UpdateDTO entity, CancellationToken cancellationToken)
             where UpdateDTO : class, IUpdateDTO, IEntityDTO 
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IResultDTO, IEntityDTO;
+            where ResultDTO : class;
         Task<IList<DomainEntity>> UpdateAsync<DomainEntity>(IList<DomainEntity> entity, CancellationToken cancellationToken)
             where DomainEntity : class, IEntity;
         Task<IList<ResultDTO>> UpdateAsync<UpdateDTO, DomainEntity, ResultDTO>(IList<UpdateDTO> entity, CancellationToken cancellationToken)
             where UpdateDTO : class, IUpdateDTO, IEntityDTO
             where DomainEntity : class, IEntity
-            where ResultDTO : class, IResultDTO, IEntityDTO;
+            where ResultDTO : class;
         #endregion
 
 
@@ -67,7 +62,7 @@ namespace Common.Infrastructure.Repositories
         where DomainEntity : class, IEntity;
         Task<ResultDTO> SearchOneAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
         #endregion
 
         #region Search
@@ -75,27 +70,27 @@ namespace Common.Infrastructure.Repositories
         where DomainEntity : class, IEntity;
         Task<ResultDTO> SearchAsync<Key, DomainEntity, ResultDTO>(Key id, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
 
         Task<IPagedList<DomainEntity>> SearchAsync<Key,DomainEntity>(IList<Key> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
         Task<IPagedList<ResultDTO>> SearchAsync<Key,DomainEntity, ResultDTO>(IList<Key> ids, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
         Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
         Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(Expression<Func<DomainEntity, bool>> where, int page, int pageSize, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
 
         Task<IPagedList<DomainEntity>> SearchAsync<DomainEntity>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity;
         Task<ResultDTO> SearchFirstAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
         Task<IPagedList<ResultDTO>> SearchAsync<DomainEntity, ResultDTO>(IQuerieFilter filters, CancellationToken cancellationToken)
         where DomainEntity : class, IEntity
-        where ResultDTO : class, IEntityDTO, IResultDTO;
+        where ResultDTO : class;
         #endregion
 
         #region Transactions

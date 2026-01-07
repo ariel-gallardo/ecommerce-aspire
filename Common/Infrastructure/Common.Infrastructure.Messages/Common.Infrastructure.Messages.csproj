@@ -7,7 +7,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="14.0.0" />
+    
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    
     <PackageReference Include="MassTransit" Version="8.5.5" />
     <PackageReference Include="RabbitMQ.Client" Version="7.1.2" />
   </ItemGroup>
@@ -19,7 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Cache\Common.Infrastructure.Cache.csproj" />
     <ProjectReference Include="$(CommonInfra)\Common.Infrastructure.Contracts\Common.Infrastructure.Contracts.csproj" />
-    <ProjectReference Include="..\..\Application\Common.Application.DTO\Common.Application.DTO.csproj" />
+    <ProjectReference Include="$(CommonApp)\Common.Application.DTO\Common.Application.DTO.csproj" />
     <ProjectReference Include="..\..\Domain\Common.Domain\Common.Domain.csproj" />
   </ItemGroup>
 

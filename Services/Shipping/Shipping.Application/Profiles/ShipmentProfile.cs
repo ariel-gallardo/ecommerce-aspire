@@ -1,18 +1,14 @@
-﻿using AutoMapper;
-using Common.Application.DTO.Base.Entities;
-using Common.Domain.Entities.Base;
+﻿using Mapster;
 using Shipping.Application.DTO;
 using Shipping.Domain.Entities;
 
 namespace Shipping.Application.Profiles
 {
-    public class ShipmentProfile : Profile
+    
+	public class ShipmentProfile : IRegister 
     {
-        public ShipmentProfile()
-        {
-            CreateMap<ShipmentDTO, Shipment>()
-                .IncludeBase<AuditableGuidDTO, AuditableGuidEntity>()
-                .ReverseMap();
+        public void Register(TypeAdapterConfig config)        {
+            config.NewConfig<ShipmentDTO, Shipment>().TwoWays();
         }
     }
 }

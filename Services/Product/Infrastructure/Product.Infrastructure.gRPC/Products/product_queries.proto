@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+package product;
+
+option csharp_namespace = "Product.Infrastructure.gRPC.Protos";
+
+import "Products/product_dto.proto";
+
+message GetProductRequest {
+  string id = 1;
+}
+
+message GetProductsRequest {
+  repeated string ids = 1;
+}
+
+message GetProductResponse {
+  ProductInfo product = 1;
+}
+
+message GetProductsResponse {
+  repeated ProductInfo products = 1;
+}

@@ -1,4 +1,4 @@
-﻿using Common.Contracts;
+﻿using Common.Infrastructure.Contracts;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
@@ -30,7 +30,6 @@ namespace Common.Api.Filters.Controllers
 
                 var dataType = dataValue.GetType();
 
-                // detectar si Data implementa IPagedList<>
                 var pagedInterface = dataType
                     .GetInterfaces()
                     .FirstOrDefault(i =>
