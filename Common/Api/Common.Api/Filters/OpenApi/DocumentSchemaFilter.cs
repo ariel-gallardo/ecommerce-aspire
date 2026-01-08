@@ -1,8 +1,6 @@
-﻿using Common.Infrastructure.Entities;
-using Microsoft.AspNetCore.OpenApi;
+﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Data;
 
 namespace Common.Api.Filters.OpenApi
 {
@@ -31,15 +29,24 @@ namespace Common.Api.Filters.OpenApi
                 document.Components.Schemas = new Dictionary<string, OpenApiSchema>();
             }
 
-            var customSchemaTypes = new[] { typeof(ValidationError) };
-            foreach (var type in customSchemaTypes)
+            var schemaName = "ValidationError";
+
+            if (!document.Components.Schemas.ContainsKey(schemaName))
             {
-                if (!document.Components.Schemas.ContainsKey(type.Name))
+                var validationErrorSchema = new OpenApiSchema
                 {
-                    var validationErrorSchema = _schemaGenerator.GenerateSchema(type,new SchemaRepository());
-                    document.Components.Schemas[type.Name] = validationErrorSchema;
-                }
+                    Type = "object",
+                    Properties = new Dictionary<string, OpenApiSchema>
+                    {
+                        ["property"] = new OpenApiSchema { Type = "string" },
+                        ["message"] = new OpenApiSchema { Type = "string" }
+                    }
+                };
+
+                document.Components.Schemas[schemaName] = validationErrorSchema;
             }
+
+            await Task.CompletedTask;
         }
     }
 }
