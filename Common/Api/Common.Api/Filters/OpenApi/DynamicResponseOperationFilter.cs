@@ -179,95 +179,36 @@ namespace Common.Api.Filters.OpenApi
                     Type cType = returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO;
 
 
-                    if (!new SchemaRepository().Schemas.ContainsKey(cType.Name))
-                    {
-                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(cType, new SchemaRepository()));
+                    var schema = HandleSchema(_schemaGenerator.GenerateSchema(cType, new SchemaRepository()));
 
-                        if (schema.Reference != null)
-                        {
-                            schema.Reference.Id = schema.Reference.Id;
-                            operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
-                            {
-                                Description = "Success",
-                                Reference = new OpenApiReference
-                                {
-                                    Id = schema.Reference.Id,
-                                    Type = ReferenceType.Schema,
-                                }
-                            };
-                        }
-                        else
-                        {
-                            operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
-                            {
-                                Description = "Success",
-                                Content =
+                    operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
+                    {
+                        Description = "Success",
+                        Content =
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
                                         Schema = schema,
                                     }
                                 }
-                            };
-                        }
-
-                    }
-                    else
-                    {
-                        operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
-                        {
-                            Description = "Success",
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = cType.Name
-                            }
-                        };
-                    }
+                    };
 
                 }
                 else
                 {
 
-                    if (!new SchemaRepository().Schemas.ContainsKey(typeof(BaseResponse).Name))
+                    var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(BaseResponse), new SchemaRepository()));
+                    operation.Responses[status200String] = new OpenApiResponse
                     {
-                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(BaseResponse), new SchemaRepository()));
-                        if (schema.Reference != null)
-                        {
-                            schema.Reference.Id = Regex.Replace(
-                                schema.Reference.Id,
-                                "(DTO|PagedList|Result|NullableOf|\\d)",
-                                string.Empty
-                            );
-                        }
-                        else
-                        {
-                            operation.Responses[status200String] = new OpenApiResponse
-                            {
-                                Description = "Success",
-                                Content =
+                        Description = "Success",
+                        Content =
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
                                         Schema = schema,
                                     }
                                 }
-                            };
-                        }
-
-                    }
-                    else
-                    {
-                        operation.Responses[status200String] = new OpenApiResponse
-                        {
-                            Description = "Success",
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = typeof(BaseResponse).Name
-                            }
-                        };
-                    }
+                    };
 
                 }
                 if (validationMethods.Contains(method.Name))
@@ -293,14 +234,12 @@ namespace Common.Api.Filters.OpenApi
                         openApiArray.Add(obj);
                     }
 
+                    var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(ValidationError), new SchemaRepository()));
 
-                    if (!new SchemaRepository().Schemas.ContainsKey(typeof(ValidationError).Name))
+                    operation.Responses[status400String] = new OpenApiResponse
                     {
-                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(ValidationError), new SchemaRepository()));
-                        operation.Responses[status400String] = new OpenApiResponse
-                        {
-                            Description = "Validation Errors.",
-                            Content =
+                        Description = "Validation Errors.",
+                        Content =
                             {
                                 ["application/json"] = new OpenApiMediaType
                                 {
@@ -313,32 +252,7 @@ namespace Common.Api.Filters.OpenApi
                                     }
                                 }
                             }
-                        };
-                    }
-                    else
-                    {
-                        operation.Responses[status400String] = new OpenApiResponse
-                        {
-                            Description = "Validation Errors.",
-                            Content =
-                            {
-                                ["application/json"] = new OpenApiMediaType
-                                {
-                                    Example = new OpenApiObject
-                                    {
-                                        ["statusCode"] = new OpenApiLong(StatusCodes.Status400BadRequest),
-                                        ["data"] = openApiArray,
-                                        ["errors"] = new OpenApiString("Validation Errors.")
-                                    }
-                                }
-                            },
-                            Reference = new OpenApiReference
-                            {
-                                Type = ReferenceType.Schema,
-                                Id = typeof(ValidationError).Name
-                            }
-                        };
-                    }
+                    };
                 }
 
 
@@ -379,35 +293,18 @@ namespace Common.Api.Filters.OpenApi
 
                     if (typeMember != null && typeMember.TypedValue.Value is Type t)
                     {
-                        if (!new SchemaRepository().Schemas.ContainsKey(t.Name))
+                        var schema = HandleSchema(_schemaGenerator.GenerateSchema(t, new SchemaRepository()));
+                        operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
                         {
-                            var schema = HandleSchema(_schemaGenerator.GenerateSchema(t, new SchemaRepository()));
-                            operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
-                            {
-                                Description = "Success",
-                                Content =
+                            Description = "Success",
+                            Content =
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
                                         Schema = schema,
                                     }
                                 }
-                            };
-                        }
-                        else
-                        {
-                            var schema = HandleSchema(_schemaGenerator.GenerateSchema(t, new SchemaRepository()));
-                            operation.Responses[status200Response != null ? status200String : status201String] = new OpenApiResponse
-                            {
-                                Description = "Success",
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.Schema,
-                                    Id = t.Name
-                                }
-                            };
-                        }
-
+                        };
                     }
                 }
 
