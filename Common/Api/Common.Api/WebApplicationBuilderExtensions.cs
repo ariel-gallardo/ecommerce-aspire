@@ -1,6 +1,7 @@
 ﻿using Common.Api.Filters.OpenApi;
 using Common.Application;
 using Common.Infrastructure;
+using Common.Infrastructure.Entities;
 using Common.Infrastructure.Seeder;
 using Logs.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
@@ -8,8 +9,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System.Reflection;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
 using Security.Infrastructure.gRPC;
+using System.Reflection;
 
 namespace Common.Api
 {
@@ -105,12 +108,14 @@ namespace Common.Api
                     }.Contains(apiDesc.HttpMethod);
                 });
                 c.UseInlineDefinitionsForEnums();
+
             })
             .AddSwaggerGenNewtonsoftSupport();
             builder.Services.AddOpenApi(c =>
             {
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
                 c.AddSchemaTransformer<StandardNameSchemaFilter>();
+                c.AddDocumentTransformer<DocumentSchemaFilter>();
                 c.ShouldInclude = (api) => true;
             });
             builder.Services.AddGrpc();
