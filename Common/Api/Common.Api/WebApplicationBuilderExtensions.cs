@@ -108,6 +108,7 @@ namespace Common.Api
                     }.Contains(apiDesc.HttpMethod);
                 });
                 c.UseInlineDefinitionsForEnums();
+                c.CustomSchemaIds(x => x.Name);
 
             })
             .AddSwaggerGenNewtonsoftSupport();
@@ -116,7 +117,23 @@ namespace Common.Api
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
                 c.AddSchemaTransformer<StandardNameSchemaFilter>();
                 c.AddDocumentTransformer<DocumentSchemaFilter>();
-                c.ShouldInclude = (api) => true;
+                c.CreateSchemaReferenceId = jsonTypeInfo =>
+                {
+                    var type = jsonTypeInfo.Type;
+
+                    if (type == null || type.IsGenericType || type.IsPrimitive || type == typeof(string)
+                    || type == typeof(decimal)
+                    || type == typeof(Guid))
+                    return null;
+                    
+                    if (type.IsEnum)
+                    return type.Name;
+                    
+                    if (Nullable.GetUnderlyingType(type) != null)
+                    return Nullable.GetUnderlyingType(type).Name;
+                    
+                    return type.Name;
+                };
             });
             builder.Services.AddGrpc();
             builder.AddServiceDefaults();

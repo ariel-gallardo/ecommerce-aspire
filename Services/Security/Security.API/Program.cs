@@ -6,6 +6,7 @@ using Security.Application.Rules;
 using Security.Controllers;
 using Security.Infrastructure.Persistence;
 using Security.Infrastructure.Seeders;
+using Security.Infrastructure.gRPC;
 
 var app = WebApplication.CreateBuilder(args)
     .AddAutoMapperAssemblies(typeof(UserProfile).Assembly)
@@ -15,6 +16,7 @@ var app = WebApplication.CreateBuilder(args)
     .AddSeederAssemblies(typeof(UserSeeder).Assembly)
     .AddMessageAssemblies()
     .AddGrpcAssemblies(typeof(PermissionGrpcService).Assembly)
+    .AddGrpcSecurityClients()
     .BuildApi<SecurityDbContext>();
 
 app.Run();

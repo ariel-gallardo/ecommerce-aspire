@@ -1,6 +1,4 @@
-﻿using Common.Infrastructure.Entities.Enums;
-using MassTransit.Transports;
-using Microsoft.AspNetCore.OpenApi;
+﻿using Microsoft.AspNetCore.OpenApi;
 using Microsoft.EntityFrameworkCore.ChangeTracking.Internal;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
@@ -21,16 +19,13 @@ namespace Common.Api.Filters.OpenApi
             .Where(t => t.IsEnum)
             .ToList();
 
-        private OpenApiSchema HandleSchema(OpenApiSchema schema)
+        private OpenApiSchema HandleSchema(OpenApiSchema schema, bool isItem = false)
         {
-
-
-
             if (!string.IsNullOrWhiteSpace(schema.Title))
             {
                 schema.Title = CleanRegex.Replace(schema.Title, string.Empty);
             }
-
+            
             if (schema.Annotations?.TryGetValue("x-schema-id", out var raw) == true &&
                 raw is string value)
             {
@@ -47,11 +42,21 @@ namespace Common.Api.Filters.OpenApi
                         .ToList();
                     return schema;
                 }
+                if (isItem && schema.Properties.Any() && schema.Type == "object")
+                {
+                    schema.Properties.Clear();
+                    schema.Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = value
+                    };
+                    return schema;
+                }
             }
 
             if (schema.Items != null)
             {
-                HandleSchema(schema.Items);
+                HandleSchema(schema.Items,true);
             }
             return schema;
         }
@@ -61,6 +66,7 @@ namespace Common.Api.Filters.OpenApi
             if (schema == null) return;
             
             schema =  HandleSchema(schema);
+            if(schema.Properties != null && schema.Properties.Keys != null)
             foreach (var key in schema.Properties.Keys)
             {
                 schema.Properties[key] = HandleSchema(schema.Properties[key]);

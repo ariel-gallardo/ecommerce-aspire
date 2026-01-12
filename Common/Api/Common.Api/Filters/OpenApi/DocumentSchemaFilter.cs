@@ -12,6 +12,26 @@ namespace Common.Api.Filters.OpenApi
         {
             _schemaGenerator = schemaGenerator;
         }
+
+        private void AddValidationErrorSchema(OpenApiDocument document)
+        {
+            var schemaName = "ValidationError";
+            if (document.Components.Schemas.ContainsKey(schemaName))
+            {
+                return;
+            }
+            var validationErrorSchema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["property"] = new OpenApiSchema { Type = "string" },
+                    ["message"] = new OpenApiSchema { Type = "string" }
+                }
+            };
+            document.Components.Schemas[schemaName] = validationErrorSchema;
+        }
+
         public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
         {
             if (document == null)
@@ -29,24 +49,7 @@ namespace Common.Api.Filters.OpenApi
                 document.Components.Schemas = new Dictionary<string, OpenApiSchema>();
             }
 
-            var schemaName = "ValidationError";
-
-            if (!document.Components.Schemas.ContainsKey(schemaName))
-            {
-                var validationErrorSchema = new OpenApiSchema
-                {
-                    Type = "object",
-                    Properties = new Dictionary<string, OpenApiSchema>
-                    {
-                        ["property"] = new OpenApiSchema { Type = "string" },
-                        ["message"] = new OpenApiSchema { Type = "string" }
-                    }
-                };
-
-                document.Components.Schemas[schemaName] = validationErrorSchema;
-            }
-
-            await Task.CompletedTask;
+            AddValidationErrorSchema(document);
         }
     }
 }
