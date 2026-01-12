@@ -40,9 +40,9 @@ namespace Common.Api.Filters.OpenApi
         private readonly ICacheManagerServices _cache;
         private readonly PermissionServiceClient _permissionServiceClient;
         private static readonly Regex CleanRegex =
-            new("(NullableOf|DTO|PagedList|Result|\\d+)", RegexOptions.Compiled);
+            new("(NullableOf|DTO|PagedList|WithChildren|Result|\\d+)", RegexOptions.Compiled);
 
-        private OpenApiSchema HandleSchema(OpenApiSchema schema)
+        private OpenApiSchema HandleSchema(OpenApiSchema schema, bool isProperty = false)
         {
             if (!string.IsNullOrWhiteSpace(schema.Title))
             {
@@ -63,8 +63,10 @@ namespace Common.Api.Filters.OpenApi
             
             if (schema.Items != null)
                 HandleSchema(schema.Items);
-            
 
+            if (schema.Properties != null)
+                foreach (var item in schema.Properties)
+                    HandleSchema(item.Value, true);
             return schema;
         }
 
@@ -163,7 +165,6 @@ namespace Common.Api.Filters.OpenApi
 
                 var args = tI.GetGenericArguments();
                 var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
-
                 operation.Responses.Clear();
                 if (responseMethods.Contains(method.Name))
                 {
