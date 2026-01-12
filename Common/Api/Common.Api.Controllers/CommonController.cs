@@ -70,28 +70,28 @@ namespace Common.Api.Controllers
         #region Search
 
         [HttpGet]
-        public async Task<IActionResult> SearchAsync([FromQuery] Key entityId, CancellationToken cancellationToken)
+        public async Task<ActionResult<ResultDTO>> SearchAsync([FromQuery] Key entityId, CancellationToken cancellationToken)
         {
             var response = await _services.SearchAsync<Key,DomainEntity,ResultDTO>(entityId, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("filters")]
-        public async Task<IActionResult> SearchAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken)
+        public async Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken)
         {
             var response = await _services.SearchAsync<DomainEntity,ResultDTO>(filters, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("filters-first")]
-        public async Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken)
+        public async Task<ActionResult<ResultDTO>> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken)
         {
             var response = await _services.SearchFirstAsync<DomainEntity, ResultDTO>(filters, cancellationToken);
             return StatusCode(response.StatusCode, response);
         }
 
         [HttpGet("ids")]
-        public async Task<IActionResult> SearchAsync([FromQuery] IList<Key>? entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
+        public async Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync([FromQuery] IList<Key>? entityIds, [FromQuery] int page, [FromQuery] int pageSize, CancellationToken cancellationToken)
         {
             if (entityIds == null) entityIds = Array.Empty<Key>();
             var response = await _services.SearchAsync<Key,DomainEntity, ResultDTO>(entityIds,page, pageSize, cancellationToken);
