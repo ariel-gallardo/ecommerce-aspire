@@ -177,10 +177,7 @@ namespace Common.Api.Filters.OpenApi
                         operation.Parameters = operation.Parameters.Where(x => !excludeSingleParameters.Contains(x.Name)).ToList();
                     }
 
-                    Type cType = returnsCollection ? typeof(PagedList<>).MakeGenericType(resultDTO) : resultDTO;
-
-
-                    var schema = HandleSchema(_schemaGenerator.GenerateSchema(cType, new SchemaRepository()));
+                    var schema = HandleSchema(_schemaGenerator.GenerateSchema(resultDTO, new SchemaRepository()));
 
                     operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
                     {
@@ -189,7 +186,47 @@ namespace Common.Api.Filters.OpenApi
                                 {
                                     ["application/json"] = new OpenApiMediaType
                                     {
-                                        Schema = schema,
+                                        Schema = returnsCollection ?
+                                        new OpenApiSchema
+                                            {
+                                                Type = "object",
+                                                Properties = new Dictionary<string, OpenApiSchema>
+                                                {
+                                                    ["items"] = new OpenApiSchema
+                                                    {
+                                                        Type = "array",
+                                                        Items = new OpenApiSchema
+                                                        {
+                                                            Reference = new OpenApiReference
+                                                            {
+                                                                Type = ReferenceType.Schema,
+                                                                Id = schema.Reference.Id
+                                                            },
+                                                        },
+                                                    },
+                                                    ["currentPage"] = new OpenApiSchema
+                                                    {
+                                                        Type = "integer",
+                                                        Format = "int32"
+                                                    },
+                                                    ["totalPages"] = new OpenApiSchema
+                                                    {
+                                                        Type = "integer",
+                                                        Format = "int32"
+                                                    },
+                                                    ["pageSize"] = new OpenApiSchema
+                                                    {
+                                                        Type = "integer",
+                                                        Format = "int32"
+                                                    },
+                                                    ["totalCount"] = new OpenApiSchema
+                                                    {
+                                                        Type = "integer",
+                                                        Format = "int32"
+                                                    }
+                                                }
+                                            }
+                                        : schema,
                                     }
                                 }
                     };

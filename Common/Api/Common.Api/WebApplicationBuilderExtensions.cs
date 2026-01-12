@@ -117,15 +117,21 @@ namespace Common.Api
                 c.AddOperationTransformer<DynamicResponseOperationTransformer>();
                 c.AddSchemaTransformer<StandardNameSchemaFilter>();
                 c.AddDocumentTransformer<DocumentSchemaFilter>();
-                c.CreateSchemaReferenceId = jsonTypeInfo =>
+                /*c.CreateSchemaReferenceId = jsonTypeInfo =>
                 {
                     var type = jsonTypeInfo.Type;
 
-                    if (type == null || type.IsGenericType || type.IsPrimitive || type == typeof(string)
+                    if (type == null || type.IsPrimitive || type == typeof(string)
                     || type == typeof(decimal)
                     || type == typeof(Guid))
                     return null;
-                    
+
+                    if (type.GetGenericTypeDefinition() == typeof(IEnumerable<>) || 
+                    type.GetGenericTypeDefinition() == typeof(IList<>))
+                    {
+                        return type.GetGenericArguments()[0].Name;
+                    }
+
                     if (type.IsEnum)
                     return type.Name;
                     
@@ -133,7 +139,7 @@ namespace Common.Api
                     return Nullable.GetUnderlyingType(type).Name;
                     
                     return type.Name;
-                };
+                };*/
             });
             builder.Services.AddGrpc();
             builder.AddServiceDefaults();

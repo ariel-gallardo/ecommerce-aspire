@@ -32,12 +32,12 @@ namespace Common.Infrastructure.Contracts
 
         #region Search
         
-        Task<IActionResult> SearchAsync(Key entityId, CancellationToken cancellationToken);
+        Task<ActionResult<ResultDTO>> SearchAsync(Key entityId, CancellationToken cancellationToken);
 
-        Task<IActionResult> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
-        Task<IActionResult> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
+        Task<ActionResult<ResultDTO>> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
+        Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
-        Task<IActionResult> SearchAsync(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken);
+        Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken);
         #endregion
     }
 }
