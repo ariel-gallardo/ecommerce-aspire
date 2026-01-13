@@ -11,33 +11,33 @@ namespace Common.Infrastructure.Contracts
         where QuerieFilterEntity : class, IQuerieFilter
     {
         #region Add
-        Task<IActionResult> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<ResultDTO>>> AddAsync([FromBody] AddDTO entity, CancellationToken cancellationToken);
         
-        Task<IActionResult> AddAsync(IList<AddDTO> entities, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<IList<ResultDTO>>>> AddAsync(IList<AddDTO> entities, CancellationToken cancellationToken);
         #endregion
 
         #region Update
-        
-        Task<IActionResult> UpdateAsync(UpdateDTO entity, CancellationToken cancellationToken);
-        
-        Task<IActionResult> UpdateAsync(IList<UpdateDTO> entities, CancellationToken cancellationToken);
+
+        Task<ActionResult<IResponse<ResultDTO>>> UpdateAsync(UpdateDTO entity, CancellationToken cancellationToken);
+
+        Task<ActionResult<IResponse<IList<ResultDTO>>>> UpdateAsync(IList<UpdateDTO> entities, CancellationToken cancellationToken);
         #endregion
 
         #region Delete
         
-        Task<IActionResult> DeleteAsync(Key entityId, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse>> DeleteAsync(Key entityId, CancellationToken cancellationToken);
         
-        Task<IActionResult> DeleteAsync(IList<Key> entityIds, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse>> DeleteAsync(IList<Key> entityIds, CancellationToken cancellationToken);
         #endregion
 
         #region Search
         
-        Task<ActionResult<ResultDTO>> SearchAsync(Key entityId, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<ResultDTO>>> SearchAsync(Key entityId, CancellationToken cancellationToken);
 
-        Task<ActionResult<ResultDTO>> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
-        Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<ResultDTO>>> SearchFirstAsync([FromQuery] QuerieFilterEntity filters, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<IPagedList<ResultDTO>>>> SearchAsync(QuerieFilterEntity filters, CancellationToken cancellationToken);
         
-        Task<ActionResult<IPagedList<ResultDTO>>> SearchAsync(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken);
+        Task<ActionResult<IResponse<IPagedList<ResultDTO>>>> SearchAsync(IList<Key> entityIds, int page, int pageSize, CancellationToken cancellationToken);
         #endregion
     }
 }
