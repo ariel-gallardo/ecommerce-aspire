@@ -17,6 +17,7 @@ using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Security.Infrastructure.gRPC.Protos;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using System.ComponentModel;
 using System.Reflection;
 using System.Text.RegularExpressions;
 using static Security.Infrastructure.gRPC.Protos.PermissionService;
@@ -40,33 +41,52 @@ namespace Common.Api.Filters.OpenApi
         private readonly ICacheManagerServices _cache;
         private readonly PermissionServiceClient _permissionServiceClient;
         private static readonly Regex CleanRegex =
-            new("(NullableOf|DTO|PagedList|WithChildren|Result|\\d+)", RegexOptions.Compiled);
+            new("(NullableOf|DTO|WithChildren|Result|\\d+)", RegexOptions.Compiled);
 
         private OpenApiSchema HandleSchema(OpenApiSchema schema, bool isProperty = false)
         {
             if (!string.IsNullOrWhiteSpace(schema.Title))
             {
-                schema.Title = CleanRegex.Replace(schema.Title, string.Empty);
+                schema.Title = CleanRegex.Replace(schema.Title, string.Empty)
+                    .Replace("IPagedList", "Pagination")
+                    .Replace("IResponseOf", "ResponseOf")
+                    .Replace("IResponse", "Response");
             }
             
             if (!string.IsNullOrWhiteSpace(schema.Reference?.Id))
             {
-                schema.Reference.Id = CleanRegex.Replace(schema.Reference.Id, string.Empty);
+                schema.Reference.Id = CleanRegex.Replace(schema.Reference.Id, string.Empty)
+                    .Replace("IPagedList", "Pagination")
+                    .Replace("IResponseOf", "ResponseOf")
+                    .Replace("IResponse", "Response");
             }
             
 
             if (schema.Annotations?.TryGetValue("x-schema-id", out var raw) == true &&
                 raw is string value)
             {
-                schema.Annotations["x-schema-id"] = CleanRegex.Replace(value, string.Empty);
+                schema.Annotations["x-schema-id"] = CleanRegex.Replace(value, string.Empty)
+                    .Replace("IPagedListOf","Pagination")
+                    .Replace("IResponseOf", "ResponseOf")
+                    .Replace("IResponse", "Response");
+                if (isProperty && schema.Properties.Any() && schema.Type == "object")
+                {
+                    schema.Properties.Clear();
+                    schema.Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.Schema,
+                        Id = value
+                    };
+                }
             }
             
             if (schema.Items != null)
-                HandleSchema(schema.Items);
+                schema.Items = HandleSchema(schema.Items);
+
 
             if (schema.Properties != null)
                 foreach (var item in schema.Properties)
-                    HandleSchema(item.Value, true);
+                    schema.Properties[item.Key] = HandleSchema(item.Value, true);
             return schema;
         }
 
@@ -165,7 +185,17 @@ namespace Common.Api.Filters.OpenApi
 
                 var args = tI.GetGenericArguments();
                 var (key, domainEntity, addDTO, updateDTO, resultDTO, querieFilter) = (args[0], args[1], args[2], args[3], args[4], args[5]);
-                operation.Responses.Clear();
+
+                /*if (operation.Responses.Any())
+                {
+                    foreach (var item in operation.Responses.First().Value.Content)
+                        if(item.Key == "application/json")
+                        {
+                            operation.Responses.First().Value.Content[item.Key].Schema =
+                            HandleSchema(item.Value.Schema);
+                        }
+                        else operation.Responses.First().Value.Content.Remove(item.Key);
+                }*/
                 if (responseMethods.Contains(method.Name))
                 {
                     var returnsCollection = !excludedPagination.Contains(method.Name) && method.GetParameters().Any(x => (x.ParameterType.IsGenericType && x.ParameterType.GetGenericTypeDefinition() == typeof(IList<>))
@@ -178,57 +208,45 @@ namespace Common.Api.Filters.OpenApi
                     }
 
                     var schema = HandleSchema(_schemaGenerator.GenerateSchema(resultDTO, new SchemaRepository()));
-
+                    operation.Responses.Clear();
                     operation.Responses[method.Name == "AddAsync" ? status201String : status200String] = new OpenApiResponse
                     {
-                        Description = "Success",
-                        Content =
+                        Content = new Dictionary<string, OpenApiMediaType>()
+                        {
+                            ["application/json"] = new OpenApiMediaType
+                            {
+                                Schema = new OpenApiSchema
                                 {
-                                    ["application/json"] = new OpenApiMediaType
+                                    AllOf = new List<OpenApiSchema>
                                     {
-                                        Schema = returnsCollection ?
                                         new OpenApiSchema
+                                        {
+                                            Reference = new OpenApiReference
                                             {
-                                                Type = "object",
-                                                Properties = new Dictionary<string, OpenApiSchema>
+                                                Id = "Response",
+                                                Type = ReferenceType.Schema
+                                            },
+                                        },
+                                        new OpenApiSchema
+                                        {
+                                            Properties = new Dictionary<string, OpenApiSchema>
+                                            {
+                                                ["data"] = new OpenApiSchema
                                                 {
-                                                    ["items"] = new OpenApiSchema
+                                                    Reference = new OpenApiReference
                                                     {
-                                                        Type = "array",
-                                                        Items = new OpenApiSchema
-                                                        {
-                                                            Reference = new OpenApiReference
-                                                            {
-                                                                Type = ReferenceType.Schema,
-                                                                Id = schema.Reference.Id
-                                                            },
-                                                        },
-                                                    },
-                                                    ["currentPage"] = new OpenApiSchema
-                                                    {
-                                                        Type = "integer",
-                                                        Format = "int32"
-                                                    },
-                                                    ["totalPages"] = new OpenApiSchema
-                                                    {
-                                                        Type = "integer",
-                                                        Format = "int32"
-                                                    },
-                                                    ["pageSize"] = new OpenApiSchema
-                                                    {
-                                                        Type = "integer",
-                                                        Format = "int32"
-                                                    },
-                                                    ["totalCount"] = new OpenApiSchema
-                                                    {
-                                                        Type = "integer",
-                                                        Format = "int32"
+                                                        Id = returnsCollection ? $"PaginationOf{schema.Reference.Id}" : $"{schema.Reference.Id}",
+                                                        Type = ReferenceType.Schema
                                                     }
                                                 }
-                                            }
-                                        : schema,
+                                            },
+                                            Required = new HashSet<string>{"data"}
+                                        }
                                     }
                                 }
+                            }
+                        },
+                        Description = method.Name == "AddAsync" ? $"Created {schema.Reference.Id}" : "Success",
                     };
 
                 }
@@ -236,6 +254,7 @@ namespace Common.Api.Filters.OpenApi
                 {
 
                     var schema = HandleSchema(_schemaGenerator.GenerateSchema(typeof(BaseResponse), new SchemaRepository()));
+                    schema.Reference.Id = "Response";
                     operation.Responses[status200String] = new OpenApiResponse
                     {
                         Description = "Success",
@@ -351,8 +370,22 @@ namespace Common.Api.Filters.OpenApi
             if(operation?.RequestBody?.Content != null)
             foreach (var key in operation.RequestBody.Content.Keys)
             {
-                operation.RequestBody.Content[key].Schema = HandleSchema(operation.RequestBody.Content[key].Schema);
-            }
+                    if (operation.RequestBody.Content[key].Schema != null
+                        && operation.RequestBody.Content[key].Schema.Annotations != null
+                        && operation.RequestBody.Content[key].Schema.Annotations["x-schema-id"] != null)
+                    {
+                        //operation.RequestBody.Reference = 
+                        //operation.RequestBody.Content[key].Schema = null;
+                        operation.RequestBody.Content[key].Schema = new OpenApiSchema
+                        {
+                            Reference = new OpenApiReference
+                            {
+                                Id = (operation.RequestBody.Content[key].Schema.Annotations["x-schema-id"] as string),
+                                Type = ReferenceType.Schema
+                            }
+                        };
+                    }
+                }
         }
     }
 

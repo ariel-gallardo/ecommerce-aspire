@@ -32,6 +32,27 @@ namespace Common.Api.Filters.OpenApi
             document.Components.Schemas[schemaName] = validationErrorSchema;
         }
 
+        private void AddBaseResponseSchema(OpenApiDocument document)
+        {
+            var schemaName = $"Response";
+
+            if (document.Components.Schemas.ContainsKey(schemaName))
+                return;
+
+            var schema = new OpenApiSchema
+            {
+                Type = "object",
+                Properties = new Dictionary<string, OpenApiSchema>
+                {
+                    ["message"] = new OpenApiSchema { Type = "string", Format = "string" },
+                    ["statusCode"] = new OpenApiSchema { Type = "integer", Format = "int32" },
+                }
+            };
+
+            document.Components.Schemas[schemaName] = schema;
+        }
+
+
         public async Task TransformAsync(OpenApiDocument document, OpenApiDocumentTransformerContext context, CancellationToken cancellationToken)
         {
             if (document == null)
@@ -50,6 +71,7 @@ namespace Common.Api.Filters.OpenApi
             }
 
             AddValidationErrorSchema(document);
+            AddBaseResponseSchema(document);
         }
     }
 }

@@ -10,7 +10,7 @@ namespace Common.Api.Filters.OpenApi
     public class StandardNameSchemaFilter : IOpenApiSchemaTransformer
     {
         private static readonly Regex CleanRegex =
-            new("(NullableOf|DTO|PagedList|Result|\\d+)", RegexOptions.Compiled);
+            new("(NullableOf|DTO|Result|\\d+)", RegexOptions.Compiled);
 
 
         private static readonly IList<Type> _enumTypes = Assembly
@@ -23,13 +23,13 @@ namespace Common.Api.Filters.OpenApi
         {
             if (!string.IsNullOrWhiteSpace(schema.Title))
             {
-                schema.Title = CleanRegex.Replace(schema.Title, string.Empty);
+                schema.Title = CleanRegex.Replace(schema.Title, string.Empty).Replace("IPagedListOf", "PaginationOf");
             }
             
             if (schema.Annotations?.TryGetValue("x-schema-id", out var raw) == true &&
                 raw is string value)
             {
-                value = CleanRegex.Replace(value, string.Empty);
+                value = CleanRegex.Replace(value, string.Empty).Replace("IPagedListOf", "PaginationOf");
                 schema.Annotations["x-schema-id"] = value;
                 var enumType = _enumTypes.FirstOrDefault(x => x.Name == value);
                 if (enumType != null)
@@ -55,9 +55,7 @@ namespace Common.Api.Filters.OpenApi
             }
 
             if (schema.Items != null)
-            {
-                HandleSchema(schema.Items,true);
-            }
+                schema.Items = HandleSchema(schema.Items,true);
             return schema;
         }
 
