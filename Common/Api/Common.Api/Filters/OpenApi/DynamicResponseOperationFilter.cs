@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.OpenApi;
 using Microsoft.OpenApi.Any;
+using Microsoft.OpenApi.Interfaces;
 using Microsoft.OpenApi.Models;
 using Security.Infrastructure.gRPC.Protos;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -217,36 +218,17 @@ namespace Common.Api.Filters.OpenApi
                             {
                                 Schema = new OpenApiSchema
                                 {
-                                    AllOf = new List<OpenApiSchema>
+                                    Reference = new OpenApiReference
                                     {
-                                        new OpenApiSchema
-                                        {
-                                            Reference = new OpenApiReference
-                                            {
-                                                Id = "Response",
-                                                Type = ReferenceType.Schema
-                                            },
-                                        },
-                                        new OpenApiSchema
-                                        {
-                                            Properties = new Dictionary<string, OpenApiSchema>
-                                            {
-                                                ["data"] = new OpenApiSchema
-                                                {
-                                                    Reference = new OpenApiReference
-                                                    {
-                                                        Id = returnsCollection ? $"PaginationOf{schema.Reference.Id}" : $"{schema.Reference.Id}",
-                                                        Type = ReferenceType.Schema
-                                                    }
-                                                }
-                                            },
-                                            Required = new HashSet<string>{"data"}
-                                        }
-                                    }
-                                }
+                                        Id = schema.Reference.Id,
+                                        Type = ReferenceType.Schema
+                                    },
+                                    Type = returnsCollection ? "array" : "object"
+                                },
+
                             }
                         },
-                        Description = method.Name == "AddAsync" ? $"Created {schema.Reference.Id}" : "Success",
+                        Description = method.Name == "AddAsync" ? $"{schema.Reference.Id} created." : "Success",
                     };
 
                 }
@@ -378,12 +360,14 @@ namespace Common.Api.Filters.OpenApi
                         //operation.RequestBody.Content[key].Schema = null;
                         operation.RequestBody.Content[key].Schema = new OpenApiSchema
                         {
+                            Type = "object",
                             Reference = new OpenApiReference
                             {
                                 Id = (operation.RequestBody.Content[key].Schema.Annotations["x-schema-id"] as string),
                                 Type = ReferenceType.Schema
                             }
                         };
+                        operation.RequestBody.Content[key].Schema.Annotations = null;
                     }
                 }
         }
